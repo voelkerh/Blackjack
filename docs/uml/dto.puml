@@ -1,0 +1,4 @@
+@startuml
+object dataTransferObject
+dataTransferObject : userID
+@enduml
