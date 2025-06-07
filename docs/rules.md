@@ -1,11 +1,52 @@
 # Rules
 
+Basic set of rules for Blackjack.
+
 ## Goal
+The player tries to beat the dealer.
+They try to get a hand value closer to 21 without going over or make the dealer bust.
+
+## Basics
+- Cards 2-10 are face value
+- Jacks, Queens, Kings count as 10
+- Aces can be 1 or 11 (it's player's choice)
 
 ## Setup
+- 52-card deck with no jokers, shuffled
+- Starting hand:
+  - player receive two cards
+  - dealer receives on card face-up, one face-down
+- Bets:
+  - player submits their bet
 
-## Game Process
+## Gameplay
+- If the player starts with a hand of 21 (ace + Jack/Queen/King) they have a "blackjack"
+- Player decides to "hit" or "stand"
+  - hit: draw another card
+    --> If player's hand exceeds 21, they bust and lose
+  - stand: keep current hand
+
+- Player goes again or turns over to dealer
+
+- Dealer reveals face-down card
+     - Aces count as 11 if the dealer does not bust
+     --> If dealer's hand exceeds 21, they bust and player wins
+     --> If dealer has a blackjack, the player loses unless they have a blackjack themselves
+     - If dealer's hand < 17 - "hit"
+     - If dealer's hand >= 17 end
+
+- Determine winner of the round:
+  - Whoever is closer to 21 wins
+  - If the player's and dealer's hand have an equal value "push"
 
 ## Profit Distribution
+- If player and dealer have a blackjack, the player gets their bet back ("push")
+- If player wins, they get paid at 1 : 1 ration (bet 1, get one)
+- If player loses, they lose their bet
+- If play has a blackjack (and the dealer doesn't), they get paid at 2 : 3 ratio (1,5 times their bet)
 
 ## Simplification
+- no split
+- no doubling down
+- no surrendering (draw back at 50% cost when having a bad hand)
+- no side-betting (insurance)
