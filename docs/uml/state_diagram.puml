@@ -1,0 +1,56 @@
+@startuml
+title State Diagram for Blackjack Game Object
+state "INITIAL" as in {
+    in: 52 cards deck shuffled
+    in: player's hand: 2 cards
+    in: dealer's hand: 2 cards (1 hidden)
+}
+
+state "PLAYER_TURN" as pt {
+    pt: hit: player's hand + 1 card
+    pt: stand: player's hand unaltered
+    pt: bust: player loses
+}
+
+state "DEALER_TURN" as dt {
+    dt: dealer's hand: reveal 2nd card
+    dt: draw: while dealer's hand < 17
+    dt: stand: when dealer's hand >= 17 && < 21
+    dt: bust: player wins
+}
+
+state evaluate <<choice>>
+
+state "DEALER_WIN" as dw {
+    dw: dealer keeps bet
+}
+
+state "PLAYER_WIN" as pw {
+    pw: no blackjack: pay 1:1
+    pw: blackjack: pay 2:3
+}
+
+state PUSH {
+    PUSH: return bet to player
+}
+
+state pw_end <<end>>
+state dw_end <<end>>
+state push_end <<end>>
+
+[*] --> in : Game()
+in --> pt : startGame()
+pt --> pt: hit()
+pt --> dt : stand()
+pt --> dw : bust()
+pw --> pw_end
+dt --> dt : draw()
+dt --> pw : bust()
+dt --> evaluate : stand()
+evaluate --> dw : [21-player > 21-dealer]
+evaluate --> pw : [21-player < 21-dealer]
+evaluate --> PUSH : [player == dealer]
+dw --> dw_end
+PUSH --> push_end
+
+@enduml
