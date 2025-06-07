@@ -30,8 +30,8 @@ state "PLAYER_WIN" as pw {
     pw: blackjack: pay 2:3
 }
 
-state PUSH {
-    PUSH: return bet to player
+state "PUSH" as pu {
+    pu: return bet to player
 }
 
 state pw_end <<end>>
@@ -49,8 +49,8 @@ dt --> pw : bust()
 dt --> evaluate : stand()
 evaluate --> dw : [21-player > 21-dealer]
 evaluate --> pw : [21-player < 21-dealer]
-evaluate --> PUSH : [player == dealer]
+evaluate --> pu : [player == dealer]
 dw --> dw_end
-PUSH --> push_end
+pu --> push_end
 
 @enduml
