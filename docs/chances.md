@@ -1,3 +1,5 @@
 # Chances
 
-Define when and how to calculate chances
+## When to calculate chances
+
+During player's turn
