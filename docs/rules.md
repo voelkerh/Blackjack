@@ -12,6 +12,7 @@ They try to get a hand value closer to 21 without going over or make the dealer 
 - Aces can be 1 or 11 (it's player's choice)
 
 ## Setup
+- 1 player, 1 dealer
 - 52-card deck with no jokers, shuffled
 - Starting hand:
   - player receive two cards
@@ -26,7 +27,7 @@ They try to get a hand value closer to 21 without going over or make the dealer 
     --> If player's hand exceeds 21, they bust and lose
   - stand: keep current hand
 
-- Player goes again or turns over to dealer
+- Player "hits" until they "stand"
 
 - Dealer reveals face-down card
      - Aces count as 11 if the dealer does not bust
@@ -41,12 +42,12 @@ They try to get a hand value closer to 21 without going over or make the dealer 
 
 ## Profit Distribution
 - If player and dealer have a blackjack, the player gets their bet back ("push")
-- If player wins, they get paid at 1 : 1 ration (bet 1, get one)
+- If player wins, they get paid at 1 : 1 ratio (bet 1, get one)
 - If player loses, they lose their bet
 - If play has a blackjack (and the dealer doesn't), they get paid at 2 : 3 ratio (1,5 times their bet)
 
 ## Simplification
 - no split
-- no doubling down
+- no doubling down (if player's inital hand is 9, 10 or 11, double bet but only hit once more)
 - no surrendering (draw back at 50% cost when having a bad hand)
 - no side-betting (insurance)
