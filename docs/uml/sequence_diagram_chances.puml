@@ -1,0 +1,28 @@
+@startuml
+title API Endpoint /api/blackjack/chances
+actor Client
+
+box "REST-Adapter" #LightBlue
+participant Client
+participant ChancesController
+end box
+
+box "Input port"
+participant ChancesUseCase
+end box
+
+box "Domain Logic" #Orange
+participant ChancesServiceImpl
+participant ProbabilityCalculator
+end box
+
+Client -> ChancesController : HTTP-Request POST /api/blackjack/chances (gameState)
+ChancesController -> ChancesUseCase : calculateChances(gameState)
+ChancesUseCase -> ChancesServiceImpl : calculateChances(gameState)
+ChancesServiceImpl -> ProbabilityCalculator : getChances(gameState)
+ProbabilityCalculator -> ChancesServiceImpl : probabilities(hit, stand)
+ChancesServiceImpl -> ChancesUseCase : ChancesDTO
+ChancesUseCase -> ChancesController : ChancesDTO
+ChancesController -> Client : HTTP-Response 200 + JSON (chances (hit, stand))
+
+@enduml
