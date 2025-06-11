@@ -3,9 +3,9 @@
 # Game Interactions
 - api/blackjack/play/...
 
-- api/blackjack/play/start
+- /api/blackjack/play
 POST
-{
+  {
     "userID": "1234",
     "bet": "1"
 }
@@ -14,6 +14,7 @@ Response
 {
     "userID": "1234",
     "bet": "1",
+    "gameId" : "abc123"
     "player_hand": ["card1", "card2"],
     "dealer_hand": ["card1"]
 }
@@ -30,6 +31,20 @@ POST
   },
   "action": "hit" / "stand" (/ "surrender" / "split" / "double_down")
 }
+
+Response
+{
+  "gameId": "abc123",
+  "playerHand": [
+  { "suit": "hearts", "rank": "K" },
+  { "suit": "clubs", "rank": "A" }
+  ],
+  "dealerHand": [{ "suit": "spades", "rank": "9" }],
+  "playerTotal": 21,
+  "dealerTotal": null,
+  "status": "PLAYING", // or "WON", "LOST", "PUSH"
+  "bet": 50
+  }
 
 # Chances
 - api/blackjack/chances
