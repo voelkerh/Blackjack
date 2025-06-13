@@ -12,7 +12,6 @@ participant "FileRulesAdapter\n(Adapter)" as Adapter
 == Request General Rules ==
 
 Player -> Controller : GET /api/blackjack/rules
-Controller -> Controller : validateRequest()
 
     Controller -> UseCase : getGeneralRules()
     UseCase -> Service : getGeneralRules()
@@ -38,6 +37,36 @@ end
 
 == Request Rules For Game State==
 
+Player -> Controller : GET /api/blackjack/rules/{state}
+Controller -> Controller : validateRequest()
 
+alt valid request
+
+        Controller -> UseCase : getStateRules(state)
+        UseCase -> Service : getStateRules(state)
+        note right of Domain: Domain logic kipped, \ndata retrieval without logic
+        Service -> Port : loadRules(state)
+        Port -> Adapter : loadRulesFromFile(state)
+
+    alt resource found
+        Adapter --> Port : rulesText
+        Port --> Service : rulesText
+        Service --> UseCase : rulesText
+        UseCase --> Controller : stateRulesDTO
+        Controller --> Player : 200 OK + game state rules JSON
+
+    else resource not found
+        Adapter --> Port : throws FileNotFound
+        Port --> Service : propagate error
+        Service --> UseCase : error
+        UseCase --> Controller : error
+        Controller --> Player : 404 Not Found
+    end
+
+else invalid state definition
+
+    Controller --> Player : 400 Bad Request
+
+end
 
 @enduml
