@@ -1,28 +1,32 @@
 @startuml
 title API Endpoint /api/blackjack/chances
-actor Client
+actor Player
 
-box "REST-Adapter" #LightBlue
-participant Client
-participant ChancesController
-end box
+participant "BlackjackController\n(Rest Adapter)" as Controller
+participant "BlackjackChances\n(Use Case)" as UseCase
+participant "BlackjackGameService\n(Application Service)" as Service
+participant "BlackjackGame\n(Domain Model)" as Domain
 
-box "Input port"
-participant ChancesUseCase
-end box
+== Request Chances ==
 
-box "Domain Logic" #Orange
-participant ChancesServiceImpl
-participant ProbabilityCalculator
-end box
+Player -> Controller : POST /api/blackjack/chances\n{ playerHand, dealerHand }
+Controller -> Controller : validateRequest()
 
-Client -> ChancesController : HTTP-Request POST /api/blackjack/chances (gameState)
-ChancesController -> ChancesUseCase : calculateChances(gameState)
-ChancesUseCase -> ChancesServiceImpl : calculateChances(gameState)
-ChancesServiceImpl -> ProbabilityCalculator : getChances(gameState)
-ProbabilityCalculator -> ChancesServiceImpl : probabilities(hit, stand)
-ChancesServiceImpl -> ChancesUseCase : ChancesDTO
-ChancesUseCase -> ChancesController : ChancesDTO
-ChancesController -> Client : HTTP-Response 200 + JSON (chances (hit, stand))
+alt correct request
+    Controller -> UseCase : getChances(playerHand, dealerHand)
+    UseCase -> Service : getChances(playerHand, dealerHand)
+    Service -> Domain : calculateHitChances(playerHand, dealerHand)
+    Domain --> Domain : performCalculations
+    Domain --> Service : hit_chances
+    Service --> Domain : calculateStandChances(playerHand, dealerHand)
+    Domain --> Domain : performCalculations
+    Domain --> Service : stand_chances
+    Service --> UseCase : chancesDTO\n{ hit_chances, stand_chances }
+    UseCase --> Controller : chancesDTO\n{ hit_chances, stand_chances }
+    Controller --> Player : 200 OK + chances JSON
+
+else wrong payload syntax
+    Controller -> Player : 400 Bad Request
+end
 
 @enduml
