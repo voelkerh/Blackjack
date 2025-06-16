@@ -1,0 +1,77 @@
+@startuml
+title Perform Game Action – Hit vs Stand
+
+actor Player
+
+participant "BlackjackController\n(Rest Adapter)" as Controller
+participant "PerformAction\n(Use Case)" as UseCase
+participant "BlackjackGameService\n(Application Service)" as Service
+participant "BlackjackGame\n(Domain Model)" as Domain
+participant "GameRepository\n(Port)" as RepoPort
+participant "DatabaseGameRepository\n(Adapter)" as RepoAdapter
+database "Game DB" as DB
+
+== Perform Game Action Request ==
+
+Player -> Controller : PATCH /api/blackjack/play/{gameId}\n{ action, gameState }
+Controller -> UseCase : handleAction(gameId, action, gameState)
+
+alt invalid action
+    UseCase --> Controller : 400 Bad Request
+    Controller --> Player : 400 Bad Request
+
+else gameState.status != "playing"
+    UseCase --> Controller : 405 Method Not Allowed
+    Controller --> Player : 405 Method Not Allowed
+
+else valid action and active game
+
+    == Action: "hit" ==
+
+    alt action == "hit"
+        UseCase -> Service : performAction(gameId, "hit", gameState)
+        Service -> Domain : game.hit()
+        Domain --> Service : updatedGameState
+
+        Service -> Domain : game.checkPlayerBust()
+        Domain --> Service : true or false
+
+        alt Player is bust
+            Service -> Domain : game.getResult()
+            Domain --> Service : result
+            Service -> RepoPort : saveResult(gameId, result)
+            RepoPort -> RepoAdapter : save(gameId, result)
+            RepoAdapter -> DB : INSERT INTO game_result
+            DB --> RepoAdapter
+        end
+
+        Service --> UseCase : updatedGameStateDto
+        UseCase --> Controller : gameStateDto (status=playing)
+        Controller --> Player : 200 OK + new game state
+
+    == Action: "stand" ==
+
+    else action == "stand"
+        UseCase -> Service : performAction(gameId, "stand", gameState)
+        Service -> Domain : game.stand()
+        Domain --> Service : updatedGameState
+
+        Service -> Domain : dealerPlay()
+        Domain --> Service : dealerFinalState
+
+        Service -> Domain : game.getResult()
+        Domain --> Service : result
+
+        Service -> RepoPort : saveResult(gameId, result)
+        RepoPort -> RepoAdapter : save(gameId, result)
+        RepoAdapter -> DB : INSERT INTO game_result
+        DB --> RepoAdapter
+
+        Service --> UseCase : finalGameStateDto
+        UseCase --> Controller : gameStateDto (status=finished)
+        Controller --> Player : 200 OK + final game state
+
+    end
+
+end
+@enduml
