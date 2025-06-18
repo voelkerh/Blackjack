@@ -2,10 +2,10 @@
 title API Endpoint /api/blackjack/chances
 actor Player
 
-participant "BlackjackController\n(Rest Adapter)" as Controller
-participant "BlackjackChances\n(Use Case)" as UseCase
-participant "BlackjackGameService\n(Application Service)" as Service
-participant "BlackjackGame\n(Domain Model)" as Domain
+participant "Controller\n(Rest Adapter)" as Controller
+participant "CalculateChances\n(Use Case)" as UseCase
+participant "GameService\n(Application Service)" as Service
+participant "Game\n(Domain Model)" as Domain
 
 == Request Chances ==
 
