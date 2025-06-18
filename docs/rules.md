@@ -34,7 +34,7 @@ They try to get a hand value closer to 21 without going over or make the dealer 
      --> If dealer's hand exceeds 21, they bust and player wins
      --> If dealer has a blackjack, the player loses unless they have a blackjack themselves
      - If dealer's hand < 17 - "hit"
-     - If dealer's hand >= 17 end
+     - If dealer's hand >= 17 end (except one is an ace - soft 17, dealer keeps hitting)
 
 - Determine winner of the round:
   - Whoever is closer to 21 wins
