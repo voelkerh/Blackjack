@@ -2,10 +2,10 @@
 title API Endpoint /api/blackjack/rules
 actor Player
 
-participant "BlackjackController\n(Rest Adapter)" as Controller
-participant "BlackjackRules\n(Use Case)" as UseCase
-participant "BlackjackRulesService\n(Application Service)" as Service
-participant "BlackjackGame\n(Domain Model)" as Domain
+participant "Controller\n(Rest Adapter)" as Controller
+participant "EmitRules\n(Use Case)" as UseCase
+participant "RulesService\n(Application Service)" as Service
+participant "Game\n(Domain Model)" as Domain
 participant "RulesProvider\n(Outbound Port)" as Port
 participant "FileRulesAdapter\n(Adapter)" as Adapter
 
@@ -15,7 +15,7 @@ Player -> Controller : GET /api/blackjack/rules
 
     Controller -> UseCase : getGeneralRules()
     UseCase -> Service : getGeneralRules()
-    note right of Domain: Domain logic kipped, \ndata retrieval without logic
+    note right of Domain: Domain logic skipped, \ndata retrieval without logic
     Service -> Port : loadRules()
     Port -> Adapter : loadRulesFromFile()
 
@@ -44,7 +44,7 @@ alt valid request
 
         Controller -> UseCase : getStateRules(state)
         UseCase -> Service : getStateRules(state)
-        note right of Domain: Domain logic kipped, \ndata retrieval without logic
+        note right of Domain: Domain logic skipped, \ndata retrieval without logic
         Service -> Port : loadRules(state)
         Port -> Adapter : loadRulesFromFile(state)
 
