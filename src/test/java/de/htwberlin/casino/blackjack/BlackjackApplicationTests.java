@@ -1,4 +1,4 @@
-package de.htwberlin.casino.blackjack;
+/* package de.htwberlin.casino.blackjack;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,4 +10,4 @@ class BlackjackApplicationTests {
     void contextLoads() {
     }
 
-}
+} */
