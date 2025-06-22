@@ -3,10 +3,10 @@ title Start New Game – Sequence Diagram
 
 actor Player
 
-participant "BlackjackController\n(Rest Adapter)" as Controller
+participant "Controller\n(Rest Adapter)" as Controller
 participant "StartGame\n(Use Case)" as UseCase
-participant "BlackjackGameService\n(Application Service)" as Service
-participant "BlackjackGame\n(Domain Model)" as Domain
+participant "GameService\n(Application Service)" as Service
+participant "Game\n(Domain Model)" as Domain
 participant "GameRepository\n(Port)" as RepoPort
 participant "DatabaseGameRepository\n(Adapter)" as RepoAdapter
 database "Game DB" as DB
@@ -25,16 +25,20 @@ Service -> Domain : game.checkInitialBlackjack()
 Domain --> Service : true or false
 
 alt Blackjack detected
-    Service -> Domain : game.getResult()
-    Service -> RepoPort : saveResult(userId, bet, result)
+    Service -> Domain : game.checkDealerBlackjack()
+    Domain --> Service : true or false
+
+    alt Dealer also has Blackjack
+        Service -> RepoPort : saveResult(userId, bet, result = "tie")
+    else Dealer does not have Blackjack
+        Service -> RepoPort : saveResult(userId, bet, result = "won")
+    end
     RepoPort -> RepoAdapter : save(result)
     RepoAdapter -> DB : INSERT game result
-    Service --> Controller : gameStateDto (status=finished)
+    Service --> Controller : gameStateDto (status=result)
     Controller --> Player : 200 OK + game state with finished status
 
 else No Blackjack
-
-
 Service -> RepoPort : createNewGameInstance(userId, bet, playersHand, dealersHand)
 RepoPort -> RepoAdapter : createNewGame(playersHand, dealersHand)
 RepoAdapter -> DB : INSERT INTO game (userId, bet, playersHand, dealersHand)
@@ -42,8 +46,8 @@ DB --> RepoAdapter : gameId
 RepoAdapter --> RepoPort : gameId
 RepoPort --> Service : gameId
 
-Service --> UseCase : gameStateDto { gameId, gameState }
-UseCase --> Controller : gameStateDto { gameId, gameState }
+Service --> UseCase : gameStateDto
+UseCase --> Controller : gameStateDto
 Controller --> Player : 200 OK + full game state with gameId
 end
 @enduml
