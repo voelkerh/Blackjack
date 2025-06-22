@@ -39,10 +39,26 @@ POST
 
 # Statistics
 - api/blackjack/stats/...
-- (GET) (POST)
 
-- api/blackjack/stats/user/{userId}
-- api/blackjack/stats/general
+- GET /api/blackjack/stats/user/{userId}
+  {
+  "userId": "1234",
+  "gamesPlayed": 40,
+  "totalBet": 120,
+  "totalWon": 95,
+  "totalLost": 25,
+  "netResult": -25
+  }
+
+- GET /api/blackjack/stats/overview
+  {
+  "totalGames": 2500,
+  "totalPlayers": 320,
+  "totalBet": 5400,
+  "totalWon": 4100,
+  "totalLost": 1300,
+  "houseProfit": 1300
+  }
 
 # Rules
 - api/blackjack/rules/..
