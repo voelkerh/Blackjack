@@ -3,63 +3,53 @@ title API Endpoint /api/blackjack/rules
 actor Player
 
 participant "Controller\n(Rest Adapter)" as Controller
-participant "EmitRules\n(Use Case)" as UseCase
-participant "RulesService\n(Application Service)" as Service
-participant "Game\n(Domain Model)" as Domain
-participant "RulesProvider\n(Outbound Port)" as Port
-participant "FileRulesAdapter\n(Adapter)" as Adapter
+participant "RulesService\n(Use Case)" as Service
+participant "FileRulesAdapter\n(Outbound Port)" as Adapter
+database PostgresSQL
 
 == Request General Rules ==
 
-Player -> Controller : GET /api/blackjack/rules
-
-    Controller -> UseCase : getGeneralRules()
-    UseCase -> Service : getGeneralRules()
-    note right of Domain: Domain logic skipped, \ndata retrieval without logic
-    Service -> Port : loadRules()
-    Port -> Adapter : loadRulesFromFile()
+    Player --> Controller : GET /api/blackjack/rules
+    Controller --> Service : getRules()
+    Service --> Adapter : retrieveRules()
+    Adapter --> PostgresSQL : SQL Query
 
 alt resource found
-    Adapter --> Port : rulesText
-    Port --> Service : rulesText
-    Service --> UseCase : rulesText
-    UseCase --> Controller : GeneralRulesDTO
-    Controller --> Player : 200 OK + general rules JSON
+
+    PostgresSQL --> Adapter : Rules
+    Adapter --> Service : Rules
+    Service --> Controller : Result
+    Controller --> Player : 200 OK + RulesResponse
 
 else resource not found
-    Adapter --> Port : throws FileNotFound
-    Port --> Service : propagate error
-    Service --> UseCase : error
-    UseCase --> Controller : error
+    PostgresSQL --> Adapter : not found
+    Adapter --> Service : error
+    Service --> Controller : error
     Controller --> Player : 404 Not Found
 
 end
 
-== Request Rules For Game State==
+== Request Rules For Specific Action==
 
-Player -> Controller : GET /api/blackjack/rules/{state}
+Player -> Controller : GET /api/blackjack/rules/{action}
 Controller -> Controller : validateRequest()
 
 alt valid request
 
-        Controller -> UseCase : getStateRules(state)
-        UseCase -> Service : getStateRules(state)
-        note right of Domain: Domain logic skipped, \ndata retrieval without logic
-        Service -> Port : loadRules(state)
-        Port -> Adapter : loadRulesFromFile(state)
+        Controller -> Service : getStateRules(state)
+        Service -> Adapter : retrieveRules(state)
+        Adapter -> PostgresSQL : SQL Query(state)
 
     alt resource found
-        Adapter --> Port : rulesText
-        Port --> Service : rulesText
-        Service --> UseCase : rulesText
-        UseCase --> Controller : stateRulesDTO
-        Controller --> Player : 200 OK + game state rules JSON
+        PostgresSQL --> Adapter : Rules
+        Adapter --> Service : Rules
+        Service --> Controller : Result
+        Controller --> Player : 200 OK + RulesResponse
 
     else resource not found
-        Adapter --> Port : throws FileNotFound
-        Port --> Service : propagate error
-        Service --> UseCase : error
-        UseCase --> Controller : error
+        PostgresSQL --> Adapter : not found
+        Adapter --> Service : error
+        Service --> Controller : error
         Controller --> Player : 404 Not Found
     end
 
