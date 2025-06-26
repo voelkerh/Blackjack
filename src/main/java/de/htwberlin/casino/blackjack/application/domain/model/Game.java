@@ -1,4 +1,4 @@
-package de.htwberlin.casino.blackjack.domain.model;
+package de.htwberlin.casino.blackjack.application.domain.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

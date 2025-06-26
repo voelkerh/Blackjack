@@ -1,8 +1,6 @@
-package de.htwberlin.casino.blackjack.application.chances;
+package de.htwberlin.casino.blackjack.application.service;
 
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class CalculateChancesServiceTest {
 
