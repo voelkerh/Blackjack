@@ -3,8 +3,7 @@
 # Game Interactions
 - api/blackjack/play/...
 
-- api/blackjack/play/start
-POST
+- POST /api/blackjack/play (starts a new blackjack game)
 {
     "userID": "1234",
     "bet": "1"
@@ -14,22 +13,61 @@ Response
 {
     "userID": "1234",
     "bet": "1",
-    "player_hand": ["card1", "card2"],
-    "dealer_hand": ["card1"]
+    "gameId" : "abc123"
+    "gameState": {
+        "status": "playing",  // or "won", "lost", "tie"
+        "playerHand": [{ "suit": "spades", "rank": "10" }, { "suit": "hearts", "rank": "A" }],
+        "dealerHand": [{ "suit": "clubs", "rank": "A" }]     // only face-up card at starting point
+        "playerTotal": 21,
+        "dealerTotal": null // include only once the game is over
+    }
 }
 
-- api/blackjack/play/action
-POST
+- PUT api/blackjack/play/{gameId}/hit
+- PUT api/blackjack/play/{gameId}/stand
 {
-  "userID": "1234",
-  "bet": "1",
-  "gamestate": {
-        "player_hand": ["card1", "card2"],
-        "dealer_hand": ["card1"]
-        "double_down": "False"
-  },
-  "action": "hit" / "stand" (/ "surrender" / "split" / "double_down")
+    "userID": "1234",
+    "bet": "1",
+    "gameState": // leave out gameState if DB will keep this info
+    {
+        "playerHand": [{ "suit": "spades", "rank": "10" }, { "suit": "hearts", "rank": "A" }],
+        "dealerHand": [{ "suit": "clubs", "rank": "A" }]  
+    }
 }
+
+Response
+{
+    "gameId": "abc123",
+    "gameState": {
+        "playerHand": [
+        { "suit": "hearts", "rank": "K" },
+        { "suit": "clubs", "rank": "A" }
+        ],
+        "dealerHand": [{ "suit": "spades", "rank": "9" }],
+        "playerTotal": 21,
+        "dealerTotal": null
+    },
+    "status": "PLAYING", // or "WON", "LOST", "TIE"
+    "bet": 50
+}
+
+- GET api/blackjack/play/{gameId}
+Response
+{
+  "gameId": "abc123",
+  "gameState": {
+  "playerHand": [
+  { "suit": "hearts", "rank": "K" },
+  { "suit": "clubs", "rank": "A" }
+  ],
+  "dealerHand": [{ "suit": "spades", "rank": "9" }],
+  "playerTotal": 21,
+  "dealerTotal": null
+  },
+  "status": "PLAYING", // or "WON", "LOST", "TIE"
+  "bet": 50
+}
+
 
 # Chances
 - api/blackjack/chances

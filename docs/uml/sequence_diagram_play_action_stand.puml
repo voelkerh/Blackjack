@@ -1,0 +1,58 @@
+@startuml
+title Perform Game Action – Stand
+
+actor Player
+
+participant "Controller\n(Rest Adapter)" as Controller
+participant "PerformAction\n(Use Case)" as UseCase
+participant "GameService\n(Application Service)" as Service
+participant "Game\n(Domain Model)" as Domain
+participant "GameRepository\n(Port)" as RepoPort
+participant "DatabaseGameRepository\n(Adapter)" as RepoAdapter
+database "Game DB" as DB
+
+== Perform Stand Action Request ==
+
+Player -> Controller : PATCH /api/blackjack/play/{gameId}/stand\n{ userId, gameState }
+Controller -> UseCase : handleAction(gameId, gameState)
+
+alt gameState.status != "playing"
+    UseCase --> Controller : 405 Method Not Allowed
+    Controller --> Player : 405 Method Not Allowed
+
+else active game
+        UseCase -> Service : performAction(gameId, "stand", gameState)
+        Service -> Domain : game.stand()
+        Domain --> Service : updatedGameState
+
+        loop dealer plays until >= 17
+        Service -> Domain : dealerPlay()
+        Domain --> Service : dealerState
+
+        alt Dealer is bust
+            Service -> RepoPort : saveResult(gameId, result="won")
+            RepoPort -> RepoAdapter : save(gameId, result="won")
+            RepoAdapter -> DB : INSERT INTO game_result
+            DB --> RepoAdapter
+            Service --> UseCase : gameStateDto
+            UseCase --> Controller : gameStateDto (status="won")
+            Controller --> Player : 200 OK + final game state
+        end
+
+        end loop
+
+        Service -> Domain : game.compareHands()
+        Domain --> Service : result ("won" | "lost" | "tie")
+
+        Service -> RepoPort : saveResult(gameId, result)
+        RepoPort -> RepoAdapter : save(gameId, result)
+        RepoAdapter -> DB : INSERT INTO game_result
+        DB --> RepoAdapter
+
+        Service --> UseCase : finalGameStateDto
+        UseCase --> Controller : gameStateDto (status)
+        Controller --> Player : 200 OK + final game state
+
+    end
+
+@enduml
