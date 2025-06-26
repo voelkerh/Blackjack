@@ -1,22 +1,16 @@
 package de.htwberlin.casino.blackjack.application.domain.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
 public class Rules {
 
-    @Id
-    @Enumerated(EnumType.STRING)
-    private RuleOption option;
-
+    private Long id;
+    private String option;
     private String rule;
 
 }
