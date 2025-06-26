@@ -1,9 +1,12 @@
-package de.htwberlin.casino.blackjack.adapter.inbound;
+package de.htwberlin.casino.blackjack.adapter.in.web;
 
-import de.htwberlin.casino.blackjack.ports.inbound.CalculateChancesUseCase;
-import de.htwberlin.casino.blackjack.ports.inbound.EmitRulesUseCase;
-import de.htwberlin.casino.blackjack.ports.inbound.EmitStatsUseCase;
-import de.htwberlin.casino.blackjack.ports.inbound.PlayGameUseCase;
+import de.htwberlin.casino.blackjack.application.domain.model.RuleOption;
+import de.htwberlin.casino.blackjack.application.port.in.calculateChances.CalculateChancesCommand;
+import de.htwberlin.casino.blackjack.application.port.in.calculateChances.CalculateChancesUseCase;
+import de.htwberlin.casino.blackjack.application.port.in.emitRules.EmitRulesQuery;
+import de.htwberlin.casino.blackjack.application.port.in.emitRules.EmitRulesUseCase;
+import de.htwberlin.casino.blackjack.application.port.in.emitStats.EmitStatsUseCase;
+import de.htwberlin.casino.blackjack.application.port.in.playGame.PlayGameUseCase;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,11 +20,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 @RestController
 @RequestMapping("/api/blackjack/")
-public class BlackJackController {
+class BlackJackController {
 
-    private CalculateChancesUseCase calculateChancesUseCase;
-    private PlayGameUseCase playGameUseCase;
-    private EmitStatsUseCase emitStatsUseCase;
+    private final CalculateChancesUseCase calculateChancesUseCase;
+    private final PlayGameUseCase playGameUseCase;
+    private final EmitStatsUseCase emitStatsUseCase;
     private final EmitRulesUseCase emitRulesUseCase;
 
     /**
@@ -57,9 +60,8 @@ public class BlackJackController {
     })
     @GetMapping("/rules")
     public ResponseEntity<?> readRules() {
-
-        var result = emitRulesUseCase.getRules();
-        //TODO: Make this a helper function
+        var query = new EmitRulesQuery(RuleOption.GENERAL);
+        var result = emitRulesUseCase.emitRules(query);
         if (result.isSuccess()) return ResponseEntity.ok(result.getSuccessData().get());
         else return ResponseEntity.status(result.getFailureData().get().getHttpStatus())
                     .body(result.getFailureData().get().getMessage());
@@ -80,8 +82,8 @@ public class BlackJackController {
     })
     @GetMapping("/rules/{action}")
     public ResponseEntity<?> readRules(@PathVariable String action) {
-
-        var result = emitRulesUseCase.getRules(action);
+        var query = new EmitRulesQuery(RuleOption.valueOf(action));
+        var result = emitRulesUseCase.emitRules(query);
 
         if (result.isSuccess()) return ResponseEntity.ok(result.getSuccessData().get());
         else return ResponseEntity.status(result.getFailureData().get().getHttpStatus())
@@ -104,7 +106,8 @@ public class BlackJackController {
     })
     @GetMapping("/chances/{gameId}")
     public ResponseEntity<?> calculateChances(@PathVariable int gameId) {
-        var result = calculateChancesUseCase.calculateChances(gameId);
+        var query = new CalculateChancesCommand(gameId);
+        var result = calculateChancesUseCase.calculateChances(query);
 
         if (result.isSuccess()) return ResponseEntity.ok(result.getSuccessData().get());
         else return ResponseEntity.status(result.getFailureData().get().getHttpStatus())
