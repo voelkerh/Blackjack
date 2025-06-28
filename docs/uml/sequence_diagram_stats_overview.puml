@@ -1,0 +1,29 @@
+@startuml
+title Request Overview Stats
+
+actor User
+
+participant "StatsController\n(Rest Adapter)" as Controller
+participant "GetStatsOverview\n(Use Case)" as UseCase
+participant "StatsService\n(Application Service)" as Service
+participant "StatisticsRepository\n(Port)" as RepoPort
+participant "DatabaseStatsRepository\n(Adapter)" as RepoAdapter
+database "Stats DB" as DB
+
+User -> Controller : GET /api/blackjack/stats/overview
+
+Controller -> UseCase : handleGetOverview()
+UseCase -> Service : getOverviewStats()
+
+Service -> RepoPort : fetchGlobalStats()
+RepoPort -> RepoAdapter : queryGameCount(), queryPlayerCount(), queryTotalBets(), queryTotalWins(), queryTotalLosses()
+RepoAdapter -> DB : SELECT queries
+DB --> RepoAdapter : data
+RepoAdapter --> RepoPort : totalGames, totalPlayers, totalBets, totalWins, totalLosses
+RepoPort --> Service : totalGames, totalPlayers, totalBets, totalWins, totalLosses
+
+Service --> UseCase : StatsOverviewDTO\n{ totalGames, totalPlayers, totalBets, totalWins, totalLosses }
+UseCase --> Controller : StatsOverviewDTO
+Controller --> User : 200 OK + stats JSON
+
+@enduml

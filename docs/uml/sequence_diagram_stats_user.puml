@@ -1,0 +1,29 @@
+@startuml
+title Request User Stats
+
+actor User
+
+participant "StatsController\n(Rest Adapter)" as Controller
+participant "GetUserStats\n(Use Case)" as UseCase
+participant "StatsService\n(Application Service)" as Service
+participant "StatisticsRepository\n(Port)" as RepoPort
+participant "DatabaseStatsRepository\n(Adapter)" as RepoAdapter
+database "Stats DB" as DB
+
+User -> Controller : GET /api/blackjack/stats/user/{userId}
+
+Controller -> UseCase : handleGetUserStats(userId)
+UseCase -> Service : getUserStats(userId)
+
+Service -> RepoPort : fetchUserStats(userId)
+RepoPort -> RepoAdapter : queryUserStats(userId)
+RepoAdapter -> DB : SELECT * FROM ... WHERE userId = {userId}
+DB --> RepoAdapter : data (gamesPlayed, totalBets, totalWins, totalLosses)
+RepoAdapter --> RepoPort : gamesPlayed, totalBets, totalWins, totalLosses
+RepoPort --> Service : gamesPlayed, totalBets, totalWins, totalLosses
+
+Service --> UseCase : UserStatsDTO { userId, gamesPlayed, totalBets, totalWins, totalLosses, netResult }
+UseCase --> Controller : UserStatsDTO
+Controller --> User : 200 OK + user stats JSON
+
+@enduml
