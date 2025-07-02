@@ -1,13 +1,25 @@
 package de.htwberlin.casino.blackjack.adapter.out.persistence;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
-import java.util.UUID;
+import static jakarta.persistence.GenerationType.SEQUENCE;
 
-@Entity
+@Entity(name = "game")
 public class GameJpaEntity {
 
     @Id
-    private UUID id;
+    @SequenceGenerator(
+            name = "game_sequence",
+            sequenceName = "game_sequence",
+            allocationSize = 1
+    )
+    @GeneratedValue(
+            strategy = SEQUENCE,
+            generator = "game_sequence"
+    )
+    @Column(
+            name = "id",
+            updatable = false
+    )
+    private Long id;
 }
