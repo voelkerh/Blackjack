@@ -2,20 +2,22 @@ package de.htwberlin.casino.blackjack.adapter.out.persistence;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
-@Table(name = "rules")
-@Data
+@Entity(name = "rules")
 @AllArgsConstructor
 @NoArgsConstructor
 public class RulesJpaEntity {
 
     @Id
-    @GeneratedValue
-    private Long id;
+    @Column
+    private String option;
 
-    @Column private String option;
-    @Column private String rules;
+    @Column(
+            name = "rules_text",
+            nullable = false,
+            updatable = false,
+            columnDefinition = "TEXT"
+    )
+    private String rules;
 }
