@@ -22,8 +22,8 @@ public enum ErrorWrapper {
     CIRCLE_REQUEST_INVALID_JSON_CANT_BE_MAPPED(
             "The request body could not be mapped to a circle.",
             HttpStatus.BAD_REQUEST),
-    CIRCLE_NOT_FOUND(
-            "A requested circle could not be found.",
+    RULES_NOT_FOUND(
+            "A requested rule set could not be found.",
             HttpStatus.NOT_FOUND),
     SQUARE_NOT_FOUND(
             "A requested square could not be found.",
