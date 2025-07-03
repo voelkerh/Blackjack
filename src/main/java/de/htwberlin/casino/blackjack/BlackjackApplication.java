@@ -17,7 +17,6 @@ public class BlackjackApplication {
     @Bean
     CommandLineRunner loadInitialData(JpaRulesRepository rulesRepo) {
         return args -> {
-            // Beispiel: eine Regel in die DB einfügen
             if (rulesRepo.count() == 0) {
                 String generalText = """
                         # Rules
