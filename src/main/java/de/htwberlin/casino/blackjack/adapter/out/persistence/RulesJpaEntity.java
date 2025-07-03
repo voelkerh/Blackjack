@@ -2,11 +2,13 @@ package de.htwberlin.casino.blackjack.adapter.out.persistence;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity(name = "rules")
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
 public class RulesJpaEntity {
 
     @Id
