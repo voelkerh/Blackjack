@@ -77,10 +77,22 @@ Response
 
 # Statistics
 - api/blackjack/stats/...
-- (GET) (POST)
 
-- api/blackjack/stats/user/{userId}
-- api/blackjack/stats/general
+- GET /api/blackjack/stats/user/{userId}
+  {
+  "gamesPlayed": 40,
+  "winRatio": "1:100:2" (win, loss, tie)
+  "totalBet": 120,
+  "netResult": -25
+  }
+
+- GET /api/blackjack/stats/overview
+  {
+  "totalGames": 2500,
+  "totalPlayers": 320,
+  "totalBet": 5400,
+  "houseProfit": 1300
+  }
 
 # Rules
 - api/blackjack/rules/..
