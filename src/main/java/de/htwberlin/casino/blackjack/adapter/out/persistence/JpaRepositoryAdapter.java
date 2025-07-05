@@ -7,14 +7,23 @@ import de.htwberlin.casino.blackjack.application.port.out.LoadGamePort;
 import de.htwberlin.casino.blackjack.application.port.out.LoadRulesPort;
 import de.htwberlin.casino.blackjack.application.port.out.LoadStatsPort;
 import de.htwberlin.casino.blackjack.application.port.out.ModifyGameStatePort;
+import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+@RequiredArgsConstructor
 @Repository
-class JpaGameRepositoryAdapter implements LoadRulesPort, LoadStatsPort, LoadGamePort, ModifyGameStatePort {
+class JpaRepositoryAdapter implements LoadRulesPort, LoadStatsPort, LoadGamePort, ModifyGameStatePort {
+
+    private final JpaGameRepository gameRepository;
+    private final JpaRulesRepository rulesRepository;
+    private final GameMapper gameMapper;
+    private final RulesMapper rulesMapper;
 
     @Override
     public Rules retrieveRules(RuleOption option) {
-        return null;
+        RulesJpaEntity rulesJpaEntity = rulesRepository.findById(option.toString()).orElseThrow(EntityNotFoundException::new);
+        return rulesMapper.mapToDomainEntity(RuleOption.valueOf(rulesJpaEntity.getOption()), rulesJpaEntity.getRules());
     }
 
     @Override
