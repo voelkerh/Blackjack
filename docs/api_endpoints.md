@@ -42,11 +42,9 @@ POST
 
 - GET /api/blackjack/stats/user/{userId}
   {
-  "userId": "1234",
   "gamesPlayed": 40,
+  "winRatio": "1:100:2" (win, loss, tie)
   "totalBet": 120,
-  "totalWon": 95,
-  "totalLost": 25,
   "netResult": -25
   }
 
@@ -55,8 +53,6 @@ POST
   "totalGames": 2500,
   "totalPlayers": 320,
   "totalBet": 5400,
-  "totalWon": 4100,
-  "totalLost": 1300,
   "houseProfit": 1300
   }
 
