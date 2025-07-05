@@ -1,15 +1,69 @@
 package de.htwberlin.casino.blackjack.adapter.in.web;
 
+import de.htwberlin.casino.blackjack.application.domain.model.StatOption;
+import de.htwberlin.casino.blackjack.application.port.in.emitStats.EmitStatsQuery;
 import de.htwberlin.casino.blackjack.application.port.in.emitStats.EmitStatsUseCase;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/blackjack/")
+@RequestMapping("/api/blackjack/stats")
 public class StatsController {
 
     private final EmitStatsUseCase emitStatsUseCase;
 
+    /**
+     * Retrieves statistics for a specific user.
+     *
+     * @param userId The ID of the user.
+     * @return a {@link ResponseEntity} containing user stats or an error message.
+     */
+    @Operation(summary = "Retrieve user stats", description = "Fetch blackjack stats for a specific user.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Stats found successfully",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = UserStatsResponse.class))),
+            @ApiResponse(responseCode = "404", description = "Stats not found", content = @Content)
+    })
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<?> readUserStats(@PathVariable String userId) {
+        var query = new EmitStatsQuery(StatOption.USER, userId);
+        var result = emitStatsUseCase.emitStats(query);
+
+        if (result.isSuccess()) return ResponseEntity.ok(result.getSuccessData().get());
+        else return ResponseEntity.status(result.getFailureData().get().getHttpStatus())
+                .body(result.getFailureData().get().getMessage());
+    }
+
+    /**
+     * Retrieves overall blackjack statistics.
+     *
+     * @return a {@link ResponseEntity} containing overall stats or an error message.
+     */
+    @Operation(summary = "Retrieve overall stats", description = "Fetch overall blackjack statistics.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Stats found successfully",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = OverviewStatsResponse.class))),
+            @ApiResponse(responseCode = "404", description = "Stats not found", content = @Content)
+    })
+    @GetMapping("/overview")
+    public ResponseEntity<?> readOverviewStats() {
+        var query = new EmitStatsQuery(StatOption.OVERVIEW);
+        var result = emitStatsUseCase.emitStats(query);
+
+        if (result.isSuccess()) return ResponseEntity.ok(result.getSuccessData().get());
+        else return ResponseEntity.status(result.getFailureData().get().getHttpStatus())
+                .body(result.getFailureData().get().getMessage());
+    }
 }
