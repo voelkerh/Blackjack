@@ -1,12 +1,5 @@
 package de.htwberlin.casino.blackjack.application.domain.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+public record Card(Rank rank, Suit suit) {
 
-@AllArgsConstructor
-@Getter
-public class Card {
-
-    private final Rank rank;
-    private final Suit suit;
 }
