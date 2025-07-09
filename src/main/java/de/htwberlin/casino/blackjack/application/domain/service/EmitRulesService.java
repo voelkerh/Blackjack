@@ -10,6 +10,10 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+/**
+ * Application service that handles rule retrieval logic.
+ * Implements the {@link EmitRulesUseCase} port.
+ */
 @AllArgsConstructor
 @Service
 class EmitRulesService implements EmitRulesUseCase {
