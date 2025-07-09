@@ -10,8 +10,8 @@ database PostgresSQL
 == Request General Rules ==
 
     Player --> Controller : GET /api/blackjack/rules
-    Controller --> Service : getRules()
-    Service --> Adapter : retrieveRules()
+    Controller --> Service : emitRules(query)
+    Service --> Adapter : retrieveRules(GENERAL)
     Adapter --> PostgresSQL : SQL Query
 
 alt resource found
@@ -19,7 +19,7 @@ alt resource found
     PostgresSQL --> Adapter : Rules
     Adapter --> Service : Rules
     Service --> Controller : Result
-    Controller --> Player : 200 OK + RulesResponse
+    Controller --> Player : 200 OK + Response
 
 else resource not found
     PostgresSQL --> Adapter : not found
@@ -36,15 +36,15 @@ Controller -> Controller : validateRequest()
 
 alt valid request
 
-        Controller -> Service : getStateRules(state)
-        Service -> Adapter : retrieveRules(state)
+        Controller -> Service : emitRules(query)
+        Service -> Adapter : retrieveRules(HIT/STAND)
         Adapter -> PostgresSQL : SQL Query(state)
 
     alt resource found
         PostgresSQL --> Adapter : Rules
         Adapter --> Service : Rules
         Service --> Controller : Result
-        Controller --> Player : 200 OK + RulesResponse
+        Controller --> Player : 200 OK + Response
 
     else resource not found
         PostgresSQL --> Adapter : not found
