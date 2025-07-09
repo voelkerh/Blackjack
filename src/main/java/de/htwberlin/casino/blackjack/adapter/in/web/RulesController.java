@@ -1,6 +1,7 @@
 package de.htwberlin.casino.blackjack.adapter.in.web;
 
 import de.htwberlin.casino.blackjack.application.domain.model.RuleOption;
+import de.htwberlin.casino.blackjack.application.domain.model.Rules;
 import de.htwberlin.casino.blackjack.application.port.in.emitRules.EmitRulesQuery;
 import de.htwberlin.casino.blackjack.application.port.in.emitRules.EmitRulesUseCase;
 import io.swagger.v3.oas.annotations.Operation;
@@ -15,6 +16,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * REST controller that exposes endpoints to retrieve blackjack rules.
+ * Delegates to {@link EmitRulesUseCase}.
+ */
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/blackjack/")
@@ -32,7 +37,7 @@ public class RulesController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Rules found successfully",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = RulesResponse.class))),
+                            schema = @Schema(implementation = Rules.class))),
             @ApiResponse(responseCode = "404", description = "Rules not found", content = @Content)
     })
     @GetMapping("/rules")
@@ -54,7 +59,7 @@ public class RulesController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Rules found successfully",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = RulesResponse.class))),
+                            schema = @Schema(implementation = Rules.class))),
             @ApiResponse(responseCode = "404", description = "Rules not found", content = @Content)
     })
     @GetMapping("/rules/{action}")
