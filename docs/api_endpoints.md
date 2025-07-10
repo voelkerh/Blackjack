@@ -13,41 +13,28 @@ Response
 {
     "userID": "1234",
     "bet": "1",
-    "gameId" : "abc123"
-    "gameState": {
-        "status": "playing",  // or "won", "lost", "tie"
-        "playerHand": [{ "suit": "spades", "rank": "10" }, { "suit": "hearts", "rank": "A" }],
-        "dealerHand": [{ "suit": "clubs", "rank": "A" }]     // only face-up card at starting point
-        "playerTotal": 21,
-        "dealerTotal": null // include only once the game is over
-    }
+    "gameId" : "abc123",
+    "gameState": "PLAYING", // or "WON", "LOST", "PUSH"
+    "playerHand": [{ "suit": "spades", "rank": "10" }, { "suit": "hearts", "rank": "A" }],
+    "dealerHand": [{ "suit": "clubs", "rank": "A" }]     // only face-up card at starting point
+    "playerTotal": 21,
+    "dealerTotal": null // include only once the game is over
 }
 
 - PUT api/blackjack/play/{gameId}/hit
 - PUT api/blackjack/play/{gameId}/stand
-{
-    "userID": "1234",
-    "bet": "1",
-    "gameState": // leave out gameState if DB will keep this info
-    {
-        "playerHand": [{ "suit": "spades", "rank": "10" }, { "suit": "hearts", "rank": "A" }],
-        "dealerHand": [{ "suit": "clubs", "rank": "A" }]  
-    }
-}
 
 Response
 {
     "gameId": "abc123",
-    "gameState": {
-        "playerHand": [
-        { "suit": "hearts", "rank": "K" },
-        { "suit": "clubs", "rank": "A" }
-        ],
-        "dealerHand": [{ "suit": "spades", "rank": "9" }],
-        "playerTotal": 21,
-        "dealerTotal": null
-    },
-    "status": "PLAYING", // or "WON", "LOST", "TIE"
+    "gameState": "PLAYING", // or "WON", "LOST", "PUSH"
+    "playerHand": [
+    { "suit": "hearts", "rank": "K" },
+    { "suit": "clubs", "rank": "A" }
+    ],
+    "dealerHand": [{ "suit": "spades", "rank": "9" }],
+    "playerTotal": 21,
+    "dealerTotal": null,
     "bet": 50
 }
 
@@ -55,16 +42,14 @@ Response
 Response
 {
   "gameId": "abc123",
-  "gameState": {
+  "gameState": "PLAYING", // or "WON", "LOST", "PUSH"
   "playerHand": [
   { "suit": "hearts", "rank": "K" },
   { "suit": "clubs", "rank": "A" }
   ],
   "dealerHand": [{ "suit": "spades", "rank": "9" }],
   "playerTotal": 21,
-  "dealerTotal": null
-  },
-  "status": "PLAYING", // or "WON", "LOST", "TIE"
+  "dealerTotal": null,
   "bet": 50
 }
 
