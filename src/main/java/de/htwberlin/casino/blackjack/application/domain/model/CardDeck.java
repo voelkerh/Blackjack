@@ -34,4 +34,12 @@ public class CardDeck {
         return deck.removeFirst();
     }
 
+    /**
+     * Remove all dealt cards included in player and dealer hand from card deck.
+     *
+     * @param dealtCards list constructed from player and dealer hand in services
+     */
+    public void removeDealtCards(List<Card> dealtCards) {
+    }
+
 }
