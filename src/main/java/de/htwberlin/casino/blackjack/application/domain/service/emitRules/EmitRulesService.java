@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
  */
 @AllArgsConstructor
 @Service
-class EmitRulesService implements EmitRulesUseCase {
+public class EmitRulesService implements EmitRulesUseCase {
 
     private final LoadRulesPort loadRulesPort;
 
