@@ -1,4 +1,4 @@
-package de.htwberlin.casino.blackjack.application.domain.service;
+package de.htwberlin.casino.blackjack.application.domain.service.emitRules;
 
 import de.htwberlin.casino.blackjack.application.domain.model.Rules;
 import de.htwberlin.casino.blackjack.application.port.in.emitRules.EmitRulesQuery;

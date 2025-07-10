@@ -1,4 +1,4 @@
-package de.htwberlin.casino.blackjack.application.domain.service;
+package de.htwberlin.casino.blackjack.application.domain.service.emitStats;
 
 import de.htwberlin.casino.blackjack.application.port.in.emitStats.EmitStatsQuery;
 import de.htwberlin.casino.blackjack.application.port.in.emitStats.EmitStatsUseCase;
