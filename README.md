@@ -11,6 +11,7 @@ Studierende: Johanna Menzler, Henriette Voelker
 
 Dieses Repository enthält einen Microservice mit RESTful-API für Blackjack.
 Das Projekt ist mit Docker containerisiert.
+Die Implementierung orientiert sich an den Prinzipien YAGNI, KISS, SOLID und DRY.
 
 ### Architektur
 
