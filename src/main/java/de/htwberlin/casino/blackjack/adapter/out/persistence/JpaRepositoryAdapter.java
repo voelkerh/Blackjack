@@ -1,8 +1,9 @@
 package de.htwberlin.casino.blackjack.adapter.out.persistence;
 
+import de.htwberlin.casino.blackjack.application.domain.model.Game;
 import de.htwberlin.casino.blackjack.application.domain.model.RuleOption;
 import de.htwberlin.casino.blackjack.application.domain.model.Rules;
-import de.htwberlin.casino.blackjack.application.port.out.LoadGameStatePort;
+import de.htwberlin.casino.blackjack.application.port.out.LoadGamePort;
 import de.htwberlin.casino.blackjack.application.port.out.LoadRulesPort;
 import de.htwberlin.casino.blackjack.application.port.out.LoadStatsPort;
 import de.htwberlin.casino.blackjack.application.port.out.ModifyGameStatePort;
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Repository;
 
 @RequiredArgsConstructor
 @Repository
-class JpaRepositoryAdapter implements LoadRulesPort, LoadStatsPort, LoadGameStatePort, ModifyGameStatePort {
+class JpaRepositoryAdapter implements LoadRulesPort, LoadStatsPort, LoadGamePort, ModifyGameStatePort {
 
     private final JpaGameRepository gameRepository;
     private final JpaRulesRepository rulesRepository;
@@ -23,5 +24,10 @@ class JpaRepositoryAdapter implements LoadRulesPort, LoadStatsPort, LoadGameStat
     public Rules retrieveRules(RuleOption option) {
         RulesJpaEntity rulesJpaEntity = rulesRepository.findById(option.toString()).orElseThrow(EntityNotFoundException::new);
         return rulesMapper.mapToDomainEntity(RuleOption.valueOf(rulesJpaEntity.getOption()), rulesJpaEntity.getRules());
+    }
+
+    @Override
+    public Game retrieveGame(int gameId) {
+        return null;
     }
 }

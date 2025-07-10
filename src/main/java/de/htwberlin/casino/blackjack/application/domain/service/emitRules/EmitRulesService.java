@@ -1,4 +1,4 @@
-package de.htwberlin.casino.blackjack.application.domain.service;
+package de.htwberlin.casino.blackjack.application.domain.service.emitRules;
 
 import de.htwberlin.casino.blackjack.application.domain.model.Rules;
 import de.htwberlin.casino.blackjack.application.port.in.emitRules.EmitRulesQuery;
@@ -10,6 +10,10 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+/**
+ * Application service that handles rule retrieval logic.
+ * Implements the {@link EmitRulesUseCase} port.
+ */
 @AllArgsConstructor
 @Service
 class EmitRulesService implements EmitRulesUseCase {
