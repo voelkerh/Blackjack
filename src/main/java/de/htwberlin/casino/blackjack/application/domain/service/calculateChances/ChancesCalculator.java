@@ -2,13 +2,13 @@ package de.htwberlin.casino.blackjack.application.domain.service.calculateChance
 
 import de.htwberlin.casino.blackjack.application.domain.model.DealerHand;
 import de.htwberlin.casino.blackjack.application.domain.model.PlayerHand;
-import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
 
-@AllArgsConstructor
-@Service
-public class ChancesCalculator {
-    public Chances calculateChances(PlayerHand playerHand, DealerHand dealerHand) {
-        return new Chances(0, 0);
-    }
+public interface ChancesCalculator {
+
+    /**
+     * Caluculate chances to bust and for having a blackjack with the next draw.
+     *
+     * @return Chances object with two double values for bust and blackjack chances
+     */
+    Chances calculateChances(PlayerHand playerHand, DealerHand dealerHand);
 }
