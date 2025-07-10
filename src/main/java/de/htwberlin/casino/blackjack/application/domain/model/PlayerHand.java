@@ -1,10 +1,12 @@
 package de.htwberlin.casino.blackjack.application.domain.model;
 
 import lombok.Getter;
+import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.List;
 
+@Component
 @Getter
 public class PlayerHand implements Hand {
 

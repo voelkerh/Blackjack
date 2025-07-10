@@ -1,10 +1,13 @@
 package de.htwberlin.casino.blackjack.application.domain.model;
 
+import org.springframework.stereotype.Component;
+
 import java.util.LinkedList;
 import java.util.List;
 
 import static java.util.Collections.shuffle;
 
+@Component
 public class CardDeck {
 
     private static CardDeck instance;
