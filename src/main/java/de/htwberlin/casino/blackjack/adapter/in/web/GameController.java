@@ -52,6 +52,7 @@ public class GameController {
             @ApiResponse(responseCode = "200", description = "Card drawn successfully",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = GameResponse.class))),
+            @ApiResponse(responseCode = "400", description = "Game already concluded"),
             @ApiResponse(responseCode = "404", description = "Game not found", content = @Content)
     })
     @PutMapping("/{gameId}/hit")
@@ -74,6 +75,7 @@ public class GameController {
             @ApiResponse(responseCode = "200", description = "Game updated after standing",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = GameResponse.class))),
+            @ApiResponse(responseCode = "400", description = "Game already concluded"),
             @ApiResponse(responseCode = "404", description = "Game not found", content = @Content)
     })
     @PutMapping("/{gameId}/stand")
