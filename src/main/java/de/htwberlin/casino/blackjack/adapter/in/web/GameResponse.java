@@ -5,12 +5,9 @@ import java.util.List;
 
 public record GameResponse(
         int gameId,
-        int userId,
+        String gameState, // playing, won, lost or push
         List<Card> playerHand,
         List<Card> dealerHand,
-        Integer playerTotal,
-        Integer dealerTotal, // null until game is over
-        String gameState, // playing, won, lost or push
         double bet
 ) {
 }
