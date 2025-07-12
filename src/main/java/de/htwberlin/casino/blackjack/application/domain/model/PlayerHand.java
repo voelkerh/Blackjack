@@ -25,4 +25,9 @@ public class PlayerHand implements Hand {
     public List<Card> getCards() {
         return List.copyOf(cards);
     }
+
+    @Override
+    public int getTotal() {
+        return cards.stream().mapToInt(card -> card.rank().getValue()).sum();
+    }
 }

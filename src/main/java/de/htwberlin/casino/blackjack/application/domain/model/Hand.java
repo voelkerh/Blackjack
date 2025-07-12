@@ -7,4 +7,6 @@ public interface Hand {
     void addCard(Card card);
 
     List<Card> getCards();
+
+    int getTotal();
 }
