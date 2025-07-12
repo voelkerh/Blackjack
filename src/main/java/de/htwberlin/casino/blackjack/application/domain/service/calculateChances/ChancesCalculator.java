@@ -2,6 +2,9 @@ package de.htwberlin.casino.blackjack.application.domain.service.calculateChance
 
 import de.htwberlin.casino.blackjack.application.domain.model.Hand;
 
+/**
+ * Defines requirements for chances calculator implementations.
+ */
 public interface ChancesCalculator {
 
     /**

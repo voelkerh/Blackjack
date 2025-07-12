@@ -7,6 +7,10 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Stream;
 
+/**
+ * Chances calculator implementation.
+ * Generates {@link Chances} objects based on calculations with {@link PlayerHand} and {@link DealerHand}.
+ */
 @RequiredArgsConstructor
 @Service
 public class ChancesCalculatorImpl implements ChancesCalculator {
