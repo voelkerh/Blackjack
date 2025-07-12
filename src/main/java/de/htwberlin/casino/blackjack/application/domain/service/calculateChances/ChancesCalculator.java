@@ -1,8 +1,6 @@
 package de.htwberlin.casino.blackjack.application.domain.service.calculateChances;
 
-import de.htwberlin.casino.blackjack.application.domain.model.DealerHand;
 import de.htwberlin.casino.blackjack.application.domain.model.Hand;
-import de.htwberlin.casino.blackjack.application.domain.model.PlayerHand;
 
 public interface ChancesCalculator {
 
