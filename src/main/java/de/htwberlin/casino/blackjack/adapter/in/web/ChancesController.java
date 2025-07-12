@@ -3,7 +3,6 @@ package de.htwberlin.casino.blackjack.adapter.in.web;
 import de.htwberlin.casino.blackjack.application.domain.service.calculateChances.Chances;
 import de.htwberlin.casino.blackjack.application.port.in.calculateChances.CalculateChancesCommand;
 import de.htwberlin.casino.blackjack.application.port.in.calculateChances.CalculateChancesUseCase;
-import de.htwberlin.casino.blackjack.application.port.in.emitRules.EmitRulesUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
