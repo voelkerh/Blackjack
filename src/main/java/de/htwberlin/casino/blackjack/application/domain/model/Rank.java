@@ -1,7 +1,11 @@
 package de.htwberlin.casino.blackjack.application.domain.model;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
+import java.util.Arrays;
+
+@RequiredArgsConstructor
 @Getter
 public enum Rank {
     TWO(2), THREE(3), FOUR(4), FIVE(5), SIX(6), SEVEN(7), EIGHT(8), NINE(9), TEN(10),
@@ -10,8 +14,20 @@ public enum Rank {
 
     private final int value;
 
-    Rank(int value) {
-        this.value = value;
+    public static Rank fromValue(int value) {
+        return switch (value) {
+            case 2 -> Rank.TWO;
+            case 3 -> Rank.THREE;
+            case 4 -> Rank.FOUR;
+            case 5 -> Rank.FIVE;
+            case 6 -> Rank.SIX;
+            case 7 -> Rank.SEVEN;
+            case 8 -> Rank.EIGHT;
+            case 9 -> Rank.NINE;
+            case 10 -> Rank.TEN;
+            case 11 -> Rank.ACE;
+            default -> throw new IllegalArgumentException("Invalid card value: " + value);
+        };
     }
 
 }
