@@ -1,6 +1,7 @@
 package de.htwberlin.casino.blackjack.application.domain.service.calculateChances;
 
 import de.htwberlin.casino.blackjack.application.domain.model.DealerHand;
+import de.htwberlin.casino.blackjack.application.domain.model.Hand;
 import de.htwberlin.casino.blackjack.application.domain.model.PlayerHand;
 
 public interface ChancesCalculator {
@@ -10,5 +11,6 @@ public interface ChancesCalculator {
      *
      * @return Chances object with two double values for bust and blackjack chances
      */
-    Chances calculateChances(PlayerHand playerHand, DealerHand dealerHand);
+    Chances calculateChances(Hand playerHand, Hand dealerHand);
+
 }
