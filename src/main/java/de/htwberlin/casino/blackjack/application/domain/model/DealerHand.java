@@ -1,12 +1,10 @@
 package de.htwberlin.casino.blackjack.application.domain.model;
 
 import lombok.Getter;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
 @Getter
 public class DealerHand implements Hand {
 
@@ -35,4 +33,5 @@ public class DealerHand implements Hand {
     public int getTotal() {
         return cards.stream().mapToInt(card -> card.rank().getValue()).sum();
     }
+
 }

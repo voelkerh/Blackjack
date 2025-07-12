@@ -1,13 +1,13 @@
 package de.htwberlin.casino.blackjack.application.domain.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.List;
 
-@Component
 @Getter
+@AllArgsConstructor
 public class PlayerHand implements Hand {
 
     private final List<Card> cards;
