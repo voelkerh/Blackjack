@@ -132,7 +132,7 @@ bu ({x | x > bj}, Kartenwerte, für die im nächsten Zug ein Bust eintreten wür
 bj = 21 - playerHandTotal
 P(bj) lässt sich unmittelbar mit den obenstehenden Formeln bestimmen.
 
-Für P(bu) summieren wir alle Wahrscheinlichkeiten für Karten, die einen Bust auslösen, auf.
+Für P(bu) summieren wir alle Wahrscheinlichkeiten für Karten, die einen Bust auslösen,**** auf.
 P(bu) = P(x1) + ... + P(xi)
 
 

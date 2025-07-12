@@ -28,6 +28,7 @@ class JpaRepositoryAdapter implements LoadRulesPort, LoadStatsPort, LoadGamePort
 
     @Override
     public Game retrieveGame(int gameId) {
-        return null;
+        GameJpaEntity gameJpaEntity = gameRepository.findById((long) gameId).orElseThrow(EntityNotFoundException::new);
+        return gameMapper.mapToDomainEntity(null);
     }
 }
