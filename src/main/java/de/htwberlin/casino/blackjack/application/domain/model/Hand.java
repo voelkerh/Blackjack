@@ -20,11 +20,10 @@ public interface Hand {
 
     /**
      * Calculates total hand value.
-     * Player and dealer hands handle ACES differently.
-     * Player: If hand contains ACES and has total value > 21, ACE counts as 1 instead of 11 until total value= < 21.
-     * Dealer: ACE counts as 11.
+     * The behavior may differ depending on the implementing class (PlayerHand or DealerHand).
      *
      * @return total hand value
      */
     int getTotal();
+
 }
