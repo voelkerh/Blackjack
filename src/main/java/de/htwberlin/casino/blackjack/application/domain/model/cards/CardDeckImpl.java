@@ -1,4 +1,4 @@
-package de.htwberlin.casino.blackjack.application.domain.model;
+package de.htwberlin.casino.blackjack.application.domain.model.cards;
 
 import org.springframework.stereotype.Component;
 
@@ -8,18 +8,18 @@ import java.util.List;
 import static java.util.Collections.shuffle;
 
 @Component
-public class CardDeck {
+public class CardDeckImpl implements CardDeck {
 
-    private static CardDeck instance;
+    private static CardDeckImpl instance;
     private final List<Card> deck;
 
-    private CardDeck() {
+    private CardDeckImpl() {
         deck = initializeDeck();
         shuffle(deck);
     }
 
-    public static CardDeck getInstance(){
-        if(instance == null) instance = new CardDeck();
+    public static CardDeckImpl getInstance(){
+        if(instance == null) instance = new CardDeckImpl();
         return instance;
     }
 
@@ -33,16 +33,14 @@ public class CardDeck {
         return deck;
     }
 
+    @Override
     public Card drawCard() {
         return deck.removeFirst();
     }
 
-    /**
-     * Remove all dealt cards included in player and dealer hand from card deck.
-     *
-     * @param dealtCards list constructed from player and dealer hand in services
-     */
-    public void removeDealtCards(List<Card> dealtCards) {
+    @Override
+    public boolean removeDealtCards(List<Card> dealtCards) {
+        return deck.removeAll(dealtCards);
     }
 
 }
