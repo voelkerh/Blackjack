@@ -1,9 +1,9 @@
 package de.htwberlin.casino.blackjack.application.domain.service.calculateChances;
 
-import de.htwberlin.casino.blackjack.application.domain.model.DealerHand;
-import de.htwberlin.casino.blackjack.application.domain.model.Game;
-import de.htwberlin.casino.blackjack.application.domain.model.GameState;
-import de.htwberlin.casino.blackjack.application.domain.model.PlayerHand;
+import de.htwberlin.casino.blackjack.application.domain.model.hands.DealerHand;
+import de.htwberlin.casino.blackjack.application.domain.model.game.GameImpl;
+import de.htwberlin.casino.blackjack.application.domain.model.game.GameState;
+import de.htwberlin.casino.blackjack.application.domain.model.hands.PlayerHand;
 import de.htwberlin.casino.blackjack.application.port.in.calculateChances.CalculateChancesCommand;
 import de.htwberlin.casino.blackjack.application.port.out.LoadGamePort;
 import de.htwberlin.casino.blackjack.utility.ErrorWrapper;
@@ -20,7 +20,7 @@ class CalculateChancesServiceTest {
 
     private LoadGamePort mockPort;
     private ChancesCalculator mockCalculator;
-    private Game mockGame;
+    private GameImpl mockGame;
     private PlayerHand mockPlayerHand;
     private DealerHand mockDealerHand;
     private CalculateChancesService service;
@@ -30,7 +30,7 @@ class CalculateChancesServiceTest {
     void setUp() {
         mockPort = Mockito.mock(LoadGamePort.class);
         mockCalculator = Mockito.mock(ChancesCalculator.class);
-        mockGame = Mockito.mock(Game.class);
+        mockGame = Mockito.mock(GameImpl.class);
         mockPlayerHand = Mockito.mock(PlayerHand.class);
         mockDealerHand = Mockito.mock(DealerHand.class);
 

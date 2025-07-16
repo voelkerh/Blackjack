@@ -1,5 +1,6 @@
-package de.htwberlin.casino.blackjack.application.domain.model;
+package de.htwberlin.casino.blackjack.application.domain.model.hands;
 
+import de.htwberlin.casino.blackjack.application.domain.model.cards.Card;
 import lombok.Getter;
 
 import java.util.ArrayList;

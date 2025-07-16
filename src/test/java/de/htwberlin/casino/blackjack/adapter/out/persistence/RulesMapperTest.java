@@ -1,7 +1,7 @@
 package de.htwberlin.casino.blackjack.adapter.out.persistence;
 
-import de.htwberlin.casino.blackjack.application.domain.model.RuleOption;
-import de.htwberlin.casino.blackjack.application.domain.model.Rules;
+import de.htwberlin.casino.blackjack.application.domain.model.rules.RuleOption;
+import de.htwberlin.casino.blackjack.application.domain.model.rules.Rules;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

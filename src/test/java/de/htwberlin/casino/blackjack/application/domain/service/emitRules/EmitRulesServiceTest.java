@@ -1,7 +1,7 @@
 package de.htwberlin.casino.blackjack.application.domain.service.emitRules;
 
-import de.htwberlin.casino.blackjack.application.domain.model.RuleOption;
-import de.htwberlin.casino.blackjack.application.domain.model.Rules;
+import de.htwberlin.casino.blackjack.application.domain.model.rules.RuleOption;
+import de.htwberlin.casino.blackjack.application.domain.model.rules.Rules;
 import de.htwberlin.casino.blackjack.application.port.in.emitRules.EmitRulesQuery;
 import de.htwberlin.casino.blackjack.application.port.out.LoadRulesPort;
 import de.htwberlin.casino.blackjack.utility.ErrorWrapper;

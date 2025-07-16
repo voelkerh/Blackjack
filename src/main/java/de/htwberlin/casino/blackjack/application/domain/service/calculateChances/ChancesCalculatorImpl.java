@@ -1,6 +1,11 @@
 package de.htwberlin.casino.blackjack.application.domain.service.calculateChances;
 
-import de.htwberlin.casino.blackjack.application.domain.model.*;
+import de.htwberlin.casino.blackjack.application.domain.model.cards.Card;
+import de.htwberlin.casino.blackjack.application.domain.model.cards.Rank;
+import de.htwberlin.casino.blackjack.application.domain.model.cards.Suit;
+import de.htwberlin.casino.blackjack.application.domain.model.hands.DealerHand;
+import de.htwberlin.casino.blackjack.application.domain.model.hands.Hand;
+import de.htwberlin.casino.blackjack.application.domain.model.hands.PlayerHand;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

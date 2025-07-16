@@ -1,5 +1,7 @@
-package de.htwberlin.casino.blackjack.application.domain.model;
+package de.htwberlin.casino.blackjack.application.domain.model.hands;
 
+import de.htwberlin.casino.blackjack.application.domain.model.cards.Card;
+import de.htwberlin.casino.blackjack.application.domain.model.cards.Rank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

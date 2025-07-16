@@ -1,6 +1,6 @@
 package de.htwberlin.casino.blackjack.adapter.in.web;
 
-import de.htwberlin.casino.blackjack.application.domain.model.StatsOption;
+import de.htwberlin.casino.blackjack.application.domain.model.stats.StatsOption;
 import de.htwberlin.casino.blackjack.application.port.in.emitStats.EmitStatsQuery;
 import de.htwberlin.casino.blackjack.application.port.in.emitStats.EmitStatsUseCase;
 import io.swagger.v3.oas.annotations.Operation;

@@ -1,6 +1,10 @@
 package de.htwberlin.casino.blackjack.application.domain.service.calculateChances;
 
-import de.htwberlin.casino.blackjack.application.domain.model.*;
+import de.htwberlin.casino.blackjack.application.domain.model.cards.Card;
+import de.htwberlin.casino.blackjack.application.domain.model.cards.Rank;
+import de.htwberlin.casino.blackjack.application.domain.model.cards.Suit;
+import de.htwberlin.casino.blackjack.application.domain.model.hands.DealerHand;
+import de.htwberlin.casino.blackjack.application.domain.model.hands.PlayerHand;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

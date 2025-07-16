@@ -1,8 +1,8 @@
 package de.htwberlin.casino.blackjack.adapter.out.persistence;
 
-import de.htwberlin.casino.blackjack.application.domain.model.Game;
-import de.htwberlin.casino.blackjack.application.domain.model.RuleOption;
-import de.htwberlin.casino.blackjack.application.domain.model.Rules;
+import de.htwberlin.casino.blackjack.application.domain.model.game.GameImpl;
+import de.htwberlin.casino.blackjack.application.domain.model.rules.RuleOption;
+import de.htwberlin.casino.blackjack.application.domain.model.rules.Rules;
 import de.htwberlin.casino.blackjack.application.port.out.LoadGamePort;
 import de.htwberlin.casino.blackjack.application.port.out.LoadRulesPort;
 import de.htwberlin.casino.blackjack.application.port.out.LoadStatsPort;
@@ -27,7 +27,7 @@ class JpaRepositoryAdapter implements LoadRulesPort, LoadStatsPort, LoadGamePort
     }
 
     @Override
-    public Game retrieveGame(int gameId) {
+    public GameImpl retrieveGame(int gameId) {
         GameJpaEntity gameJpaEntity = gameRepository.findById((long) gameId).orElseThrow(EntityNotFoundException::new);
         return gameMapper.mapToDomainEntity(null);
     }
