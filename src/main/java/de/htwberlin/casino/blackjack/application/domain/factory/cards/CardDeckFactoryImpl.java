@@ -17,7 +17,8 @@ public class CardDeckFactoryImpl implements CardDeckFactory {
     }
 
     @Override
-    public CardDeck fromDrawnCards(List<Card> drawnCards) {
+    public CardDeck withDrawnCards(List<Card> drawnCards) {
+        if (drawnCards.isEmpty()) throw new IllegalArgumentException("No drawn cards");
         return new CardDeckImpl(drawnCards);
     }
 }

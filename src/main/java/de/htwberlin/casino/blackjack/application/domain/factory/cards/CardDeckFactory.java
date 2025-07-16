@@ -23,6 +23,6 @@ public interface CardDeckFactory {
      * @param cards drawn before, which need to be removed from the card deck
      * @return CardDeck
      */
-    CardDeck fromDrawnCards(List<Card> cards);
+    CardDeck withDrawnCards(List<Card> cards);
 
 }
