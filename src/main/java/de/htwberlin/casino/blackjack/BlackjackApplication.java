@@ -1,11 +1,15 @@
 package de.htwberlin.casino.blackjack;
 
+import de.htwberlin.casino.blackjack.adapter.out.persistence.CardJpaEntity;
+import de.htwberlin.casino.blackjack.adapter.out.persistence.JpaCardRepository;
 import de.htwberlin.casino.blackjack.adapter.out.persistence.JpaRulesRepository;
 import de.htwberlin.casino.blackjack.adapter.out.persistence.RulesJpaEntity;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+
+import java.util.List;
 
 @SpringBootApplication
 public class BlackjackApplication {
@@ -15,7 +19,7 @@ public class BlackjackApplication {
     }
 
     @Bean
-    CommandLineRunner loadInitialData(JpaRulesRepository rulesRepo) {
+    CommandLineRunner loadInitialData(JpaRulesRepository rulesRepo, JpaCardRepository cardRepo) {
         return args -> {
             if (rulesRepo.count() == 0) {
                 String generalText = """
@@ -77,6 +81,22 @@ public class BlackjackApplication {
                 rulesRepo.save(new RulesJpaEntity("HIT", "Empty for now"));
                 rulesRepo.save(new RulesJpaEntity("STAND", "Empty for now"));
             }
+            if (cardRepo.count() == 0) {
+                List<String> suits = List.of("Hearts", "Diamonds", "Clubs", "Spades");
+                List<String> ranks = List.of("2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace");
+
+                for (String suit : suits) {
+                    for (String rank : ranks) {
+                        CardJpaEntity card = new CardJpaEntity(null, suit, rank);
+                        cardRepo.save(card);
+                    }
+                }
+            }
+            System.out.println("Total cards in DB: " + cardRepo.count());
+            cardRepo.findAll().forEach(card ->
+                    System.out.println(card.getSuit() + " " + card.getRank())
+            );
+
         };
     }
 
