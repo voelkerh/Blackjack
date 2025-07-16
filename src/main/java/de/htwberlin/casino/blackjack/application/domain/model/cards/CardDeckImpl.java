@@ -1,26 +1,23 @@
 package de.htwberlin.casino.blackjack.application.domain.model.cards;
 
-import org.springframework.stereotype.Component;
-
 import java.util.LinkedList;
 import java.util.List;
 
 import static java.util.Collections.shuffle;
 
-@Component
 public class CardDeckImpl implements CardDeck {
 
-    private static CardDeckImpl instance;
     private final List<Card> deck;
 
-    private CardDeckImpl() {
+    public CardDeckImpl() {
         deck = initializeDeck();
         shuffle(deck);
     }
 
-    public static CardDeckImpl getInstance(){
-        if(instance == null) instance = new CardDeckImpl();
-        return instance;
+    public CardDeckImpl(List<Card> drawnCards) {
+        deck = initializeDeck();
+        removeDealtCards(drawnCards);
+        shuffle(deck);
     }
 
     private List<Card> initializeDeck() {

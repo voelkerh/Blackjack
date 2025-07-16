@@ -35,7 +35,6 @@ public class GameImpl implements Game {
     }
 
     public void initialize() {
-        cardDeck = CardDeckImpl.getInstance();
         playerHand = new PlayerHand(cardDeck.drawCard(), cardDeck.drawCard());
         dealerHand = new DealerHand(cardDeck.drawCard());
         gameState = GameState.PLAYING;
