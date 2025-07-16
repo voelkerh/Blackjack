@@ -1,6 +1,6 @@
 package de.htwberlin.casino.blackjack.application.domain.model;
 
-public enum StatOption {
+public enum StatsOption {
     USER,
     OVERVIEW
 }

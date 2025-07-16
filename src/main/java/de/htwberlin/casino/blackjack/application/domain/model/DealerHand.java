@@ -8,13 +8,15 @@ import java.util.List;
 @Getter
 public class DealerHand implements Hand {
 
-    private final Card upCard;
     private final List<Card> cards;
 
     public DealerHand(Card upCard) {
-        this.upCard = upCard;
         this.cards = new ArrayList<>();
         cards.add(upCard);
+    }
+
+    public Card getUpCard() {
+        return cards.getFirst();
     }
 
     @Override
@@ -26,4 +28,10 @@ public class DealerHand implements Hand {
     public List<Card> getCards() {
         return List.copyOf(cards);
     }
+
+    @Override
+    public int getTotal() {
+        return cards.stream().mapToInt(card -> card.rank().getValue()).sum();
+    }
+
 }

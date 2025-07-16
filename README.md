@@ -110,6 +110,36 @@ Gewinnverteilung:
 
 Vereinfachung: kein Split, kein Double, kein Surrender, kein Side-Betting (Insurance)
 
+### Berechnung der Chancen
+
+Für jeden Spielstand kann ausgegeben werden,
+wie hoch die Wahrscheinlichkeit für einen Blackjack oder einen Bust beim Ziehen der nächsten Karte ist.
+
+Verwendet wurden folgende Formeln:
+
+m := 1 (Anzahl der genutzen CardDecks)
+x (Wert der Karte, für die die Auftrittswahrscheinlichkeit im nächsten Zug bestimmt wird)
+N = (Gesamtanzahl der bereits gezogenen Karten, die jetzt in Spieler- oder Dealerhand sind)
+n(x) (Anzahl der Karten mit dem Wert x, die bereits gezogen wurden und jetzt in Spieler- oder Dealerhand sind)
+
+Wenn x != 10: P(x) = [4m - n(x)] / [52m - N]
+Wenn x == 10: P(10) = [16m - n(10)] / [52m - N]
+
+Wir bestimmen P(bj) und P(bu).
+bj (x-Wert, der für einen Blackjack benötigt wird)
+bu ({x | x > bj}, Kartenwerte, für die im nächsten Zug ein Bust eintreten würde)
+
+bj = 21 - playerHandTotal
+P(bj) lässt sich unmittelbar mit den obenstehenden Formeln bestimmen.
+
+Für P(bu) summieren wir alle Wahrscheinlichkeiten für Karten, die einen Bust auslösen,**** auf.
+P(bu) = P(x1) + ... + P(xi)
+
+
+
+
+
+
 ### Spielen über die API
 
 Spielen:
