@@ -5,6 +5,9 @@ import java.util.List;
 
 import static java.util.Collections.shuffle;
 
+/**
+ * Implementation of the card deck used as a basis during a game of blackjack.
+ */
 public class CardDeckImpl implements CardDeck {
 
     private final List<Card> deck;

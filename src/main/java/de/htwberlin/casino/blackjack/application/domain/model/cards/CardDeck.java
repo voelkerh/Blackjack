@@ -2,6 +2,9 @@ package de.htwberlin.casino.blackjack.application.domain.model.cards;
 
 import java.util.List;
 
+/**
+ * Defines valid interactions with the card deck during a game of blackjack.
+ */
 public interface CardDeck {
 
     /**
