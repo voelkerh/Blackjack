@@ -3,6 +3,9 @@ package de.htwberlin.casino.blackjack.application.domain.model.cards;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Rank used to identify a playing card.
+ */
 @RequiredArgsConstructor
 @Getter
 public enum Rank {
@@ -12,6 +15,13 @@ public enum Rank {
 
     private final int value;
 
+    /**
+     * Creates sample rank from given numeric value.
+     * Used to reverse create playing cards, e.g. for chances calculation.
+     *
+     * @param value of a playing card
+     * @return Rank
+     */
     public static Rank fromValue(int value) {
         return switch (value) {
             case 2 -> Rank.TWO;

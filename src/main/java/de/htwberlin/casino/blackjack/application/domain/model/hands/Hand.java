@@ -4,14 +4,18 @@ import de.htwberlin.casino.blackjack.application.domain.model.cards.Card;
 
 import java.util.List;
 
+/**
+ * Defines interactions with player and dealer hand.
+ */
 public interface Hand {
 
     /**
      * Adds card to the list of cards held in hand.
      *
      * @param card
+     * @return whether adding card was successful
      */
-    void addCard(Card card);
+    boolean addCard(Card card);
 
     /**
      * Returns a copy of the cards held in hand.
