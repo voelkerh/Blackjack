@@ -19,8 +19,8 @@ public class PlayerHand implements Hand {
     }
 
     @Override
-    public void addCard(Card card) {
-        cards.add(card);
+    public boolean addCard(Card card) {
+        return cards.add(card);
     }
 
     @Override
@@ -36,7 +36,7 @@ public class PlayerHand implements Hand {
         long numberOfAces = cards.stream()
                 .filter(card -> card.rank() == Rank.ACE)
                 .count();
-        while (numberOfAces > 0 && total >= 21) {
+        while (numberOfAces > 0 && total > 21) {
             total -= 10;
             numberOfAces--;
         }
