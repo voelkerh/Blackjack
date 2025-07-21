@@ -5,6 +5,7 @@ import de.htwberlin.casino.blackjack.application.domain.model.cards.Rank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -15,11 +16,13 @@ public class PlayerHand implements Hand {
     private final List<Card> cards;
 
     public PlayerHand(Card card1, Card card2) {
-        this.cards = Arrays.asList(card1, card2);
+        if (card1 == null || card2 == null) throw new NullPointerException();
+        this.cards = new ArrayList<>(Arrays.asList(card1, card2));
     }
 
     @Override
     public boolean addCard(Card card) {
+        if (card == null) return false;
         return cards.add(card);
     }
 
