@@ -15,7 +15,7 @@ public class HandFactoryImpl implements  HandFactory {
 
     @Override
     public Hand create(HandType type, List<Card> cards) {
-        if (cards == null) throw new IllegalArgumentException("Cards cannot be null");
+        if (cards == null || type == null) throw new IllegalArgumentException("Parameters cannot be null");
         switch (type) {
             case DEALER:
                 if (cards.size() != 1) throw new IllegalArgumentException("Dealerhand can only be initialized with one card");
