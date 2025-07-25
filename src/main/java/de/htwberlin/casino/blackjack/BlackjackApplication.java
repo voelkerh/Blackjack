@@ -1,14 +1,12 @@
 package de.htwberlin.casino.blackjack;
 
-import de.htwberlin.casino.blackjack.adapter.out.persistence.CardJpaEntity;
-import de.htwberlin.casino.blackjack.adapter.out.persistence.JpaCardRepository;
-import de.htwberlin.casino.blackjack.adapter.out.persistence.JpaRulesRepository;
-import de.htwberlin.casino.blackjack.adapter.out.persistence.RulesJpaEntity;
+import de.htwberlin.casino.blackjack.adapter.out.persistence.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootApplication
@@ -19,7 +17,8 @@ public class BlackjackApplication {
     }
 
     @Bean
-    CommandLineRunner loadInitialData(JpaRulesRepository rulesRepo, JpaCardRepository cardRepo) {
+    CommandLineRunner loadInitialData(JpaRulesRepository rulesRepo, JpaCardRepository cardRepo,
+                                      JpaGameRepository gameRepo, JpaDrawnCardsRepository drawnCardsRepo) {
         return args -> {
             if (rulesRepo.count() == 0) {
                 String generalText = """
@@ -92,12 +91,32 @@ public class BlackjackApplication {
                     }
                 }
             }
-            System.out.println("Total cards in DB: " + cardRepo.count());
-            cardRepo.findAll().forEach(card ->
-                    System.out.println(card.getSuit() + " " + card.getRank())
-            );
+            if (gameRepo.count() == 0) {
+                List<CardJpaEntity> allCards = cardRepo.findAll();
+                if (allCards.size() < 3) {
+                    throw new IllegalStateException("Not enough cards to create sample game");
+                }
+                CardJpaEntity playerCard1 = allCards.get(0);
+                CardJpaEntity playerCard2 = allCards.get(1);
+                CardJpaEntity dealerCard1 = allCards.get(2);
 
+                GameJpaEntity game = new GameJpaEntity(
+                        null,
+                        "IN_PROGRESS",
+                        new ArrayList<>(),
+                        50.0
+                );
+
+                GameJpaEntity savedGame = gameRepo.save(game);
+
+                DrawnCardJpaEntity draw1 = new DrawnCardJpaEntity(game, playerCard1, "player");
+                DrawnCardJpaEntity draw2 = new DrawnCardJpaEntity(game, playerCard2, "player");
+                DrawnCardJpaEntity draw3 = new DrawnCardJpaEntity(game, dealerCard1, "dealer");
+
+                drawnCardsRepo.saveAll(List.of(draw1, draw2, draw3));
+
+                System.out.println("Sample game created with ID: " + savedGame.getId());
+            }
         };
     }
-
 }
