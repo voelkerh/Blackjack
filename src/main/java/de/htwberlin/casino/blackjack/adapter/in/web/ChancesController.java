@@ -36,7 +36,7 @@ public class ChancesController {
             @ApiResponse(responseCode = "404", description = "Game not found", content = @Content)
     })
     @GetMapping("/chances/{gameId}")
-    public ResponseEntity<?> calculateChances(@PathVariable int gameId) {
+    public ResponseEntity<?> calculateChances(@PathVariable Long gameId) {
         var query = new CalculateChancesCommand(gameId);
         var result = calculateChancesUseCase.calculateChances(query);
 
