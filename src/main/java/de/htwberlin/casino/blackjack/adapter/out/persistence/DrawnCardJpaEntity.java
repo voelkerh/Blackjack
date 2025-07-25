@@ -26,12 +26,6 @@ public class DrawnCardJpaEntity {
     private CardJpaEntity cardId;
 
     /**
-     * Index of card in hand
-     */
-    @Column(name = "index")
-    private int index;
-
-    /**
      * Holder of the card (player or dealer)
      */
     @Column(name = "holder")
