@@ -1,7 +1,7 @@
 package de.htwberlin.casino.blackjack.application.port.out;
 
-import de.htwberlin.casino.blackjack.application.domain.model.Game;
+import de.htwberlin.casino.blackjack.application.domain.model.game.GameImpl;
 
 public interface LoadGamePort {
-    Game retrieveGame(Long gameId);
+    GameImpl retrieveGame(Long gameId);
 }

@@ -1,19 +1,22 @@
-package de.htwberlin.casino.blackjack.application.domain.model;
+package de.htwberlin.casino.blackjack.application.domain.model.game;
 
+import de.htwberlin.casino.blackjack.application.domain.model.cards.CardDeckImpl;
+import de.htwberlin.casino.blackjack.application.domain.model.hands.DealerHand;
+import de.htwberlin.casino.blackjack.application.domain.model.hands.PlayerHand;
 import lombok.Getter;
 
 @Getter
-public class Game {
+public class GameImpl implements Game {
 
     private final Long gameId;
     private final Long userId;
-    private CardDeck cardDeck;
+    private CardDeckImpl cardDeck;
     private PlayerHand playerHand;
     private DealerHand dealerHand;
     private GameState gameState;
     private final double bet;
 
-    public Game(Long gameId, Long userId, CardDeck cardDeck,
+    public GameImpl(Long gameId, Long userId, CardDeckImpl cardDeck,
                 PlayerHand playerHand, DealerHand dealerHand, GameState gameState, double bet) {
         this.gameId = gameId;
         this.userId = userId;
@@ -24,7 +27,7 @@ public class Game {
         this.bet = bet;
     }
 
-    public Game(Long gameId, Long userId, double bet) {
+    public GameImpl(Long gameId, Long userId, double bet) {
         this.gameId = gameId;
         this.userId = userId;
         this.bet = bet;
@@ -32,7 +35,6 @@ public class Game {
     }
 
     public void initialize() {
-        cardDeck = CardDeck.getInstance();
         playerHand = new PlayerHand(cardDeck.drawCard(), cardDeck.drawCard());
         dealerHand = new DealerHand(cardDeck.drawCard());
         gameState = GameState.PLAYING;

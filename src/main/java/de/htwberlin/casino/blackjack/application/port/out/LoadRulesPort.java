@@ -1,7 +1,7 @@
 package de.htwberlin.casino.blackjack.application.port.out;
 
-import de.htwberlin.casino.blackjack.application.domain.model.RuleOption;
-import de.htwberlin.casino.blackjack.application.domain.model.Rules;
+import de.htwberlin.casino.blackjack.application.domain.model.rules.RuleOption;
+import de.htwberlin.casino.blackjack.application.domain.model.rules.Rules;
 
 /**
  * Outbound port defining the methods to retrieve rules from persistent data source.

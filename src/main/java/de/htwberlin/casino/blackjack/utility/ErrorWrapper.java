@@ -23,14 +23,14 @@ public enum ErrorWrapper {
             "The request body could not be mapped to a circle.",
             HttpStatus.BAD_REQUEST),
     RULES_NOT_FOUND(
-            "A requested rule set could not be found.",
+            "The requested rule set could not be found.",
             HttpStatus.NOT_FOUND),
-    SQUARE_NOT_FOUND(
-            "A requested square could not be found.",
+    GAME_NOT_FOUND(
+            "The requested game could not be found.",
             HttpStatus.NOT_FOUND),
-    TRIANGLE_NOT_FOUND(
-            "A requested triangle could not be found.",
-            HttpStatus.NOT_FOUND),
+    GAME_NOT_RUNNING(
+            "The requested game is already over.",
+            HttpStatus.BAD_REQUEST),
     CIRCLE_MODEL_INVALID_RADIUS_NOT_GREATER_THAN_ZERO(
             "The radius of a circle must be greater than 0.",
             HttpStatus.BAD_REQUEST),

@@ -1,6 +1,6 @@
 package de.htwberlin.casino.blackjack.adapter.in.web;
 
-import de.htwberlin.casino.blackjack.application.domain.model.StatOption;
+import de.htwberlin.casino.blackjack.application.domain.model.stats.StatsOption;
 import de.htwberlin.casino.blackjack.application.port.in.emitStats.EmitStatsQuery;
 import de.htwberlin.casino.blackjack.application.port.in.emitStats.EmitStatsUseCase;
 import io.swagger.v3.oas.annotations.Operation;
@@ -37,7 +37,7 @@ public class StatsController {
     })
     @GetMapping("/user/{userId}")
     public ResponseEntity<?> readUserStats(@PathVariable String userId) {
-        var query = new EmitStatsQuery(StatOption.USER, userId);
+        var query = new EmitStatsQuery(StatsOption.USER, userId);
         var result = emitStatsUseCase.emitStats(query);
 
         if (result.isSuccess()) return ResponseEntity.ok(result.getSuccessData().get());
@@ -59,7 +59,7 @@ public class StatsController {
     })
     @GetMapping("/overview")
     public ResponseEntity<?> readOverviewStats() {
-        var query = new EmitStatsQuery(StatOption.OVERVIEW);
+        var query = new EmitStatsQuery(StatsOption.OVERVIEW);
         var result = emitStatsUseCase.emitStats(query);
 
         if (result.isSuccess()) return ResponseEntity.ok(result.getSuccessData().get());

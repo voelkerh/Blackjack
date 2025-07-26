@@ -1,6 +1,7 @@
 package de.htwberlin.casino.blackjack.adapter.out.persistence;
 
-import de.htwberlin.casino.blackjack.application.domain.model.*;
+import de.htwberlin.casino.blackjack.application.domain.model.PlayerHand;
+import de.htwberlin.casino.blackjack.application.domain.model.game.GameImpl;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -8,8 +9,8 @@ import java.util.List;
 @Component
 public class GameMapper {
 
-    public Game mapToDomainEntity(GameJpaEntity gameJpaEntity) {
-        return new Game(gameJpaEntity.getId(), gameJpaEntity.getUserId(), CardDeck.getInstance(), mapToPlayerHand(gameJpaEntity), mapToDealerHand(gameJpaEntity), GameState.valueOf(gameJpaEntity.getGameState()), gameJpaEntity.getBet());
+    public GameImpl mapToDomainEntity(GameJpaEntity gameJpaEntity) {
+        return new GameImpl(gameJpaEntity.getId(), gameJpaEntity.getUserId(), CardDeck.getInstance(), mapToPlayerHand(gameJpaEntity), mapToDealerHand(gameJpaEntity), GameState.valueOf(gameJpaEntity.getGameState()), gameJpaEntity.getBet());
     }
 
     private PlayerHand mapToPlayerHand(GameJpaEntity gameJpaEntity) {

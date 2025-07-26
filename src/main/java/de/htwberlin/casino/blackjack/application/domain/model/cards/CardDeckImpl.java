@@ -1,23 +1,26 @@
-package de.htwberlin.casino.blackjack.application.domain.model;
+package de.htwberlin.casino.blackjack.application.domain.model.cards;
 
 import java.util.LinkedList;
 import java.util.List;
 
 import static java.util.Collections.shuffle;
 
-public class CardDeck {
+/**
+ * Implementation of the card deck used as a basis during a game of blackjack.
+ */
+public class CardDeckImpl implements CardDeck {
 
-    private static CardDeck instance;
     private final List<Card> deck;
 
-    private CardDeck() {
+    public CardDeckImpl() {
         deck = initializeDeck();
         shuffle(deck);
     }
 
-    public static CardDeck getInstance(){
-        if(instance == null) instance = new CardDeck();
-        return instance;
+    public CardDeckImpl(List<Card> drawnCards) {
+        deck = initializeDeck();
+        removeDealtCards(drawnCards);
+        shuffle(deck);
     }
 
     private List<Card> initializeDeck() {
@@ -30,17 +33,14 @@ public class CardDeck {
         return deck;
     }
 
+    @Override
     public Card drawCard() {
         return deck.removeFirst();
     }
 
-    /**
-     * Remove all dealt cards included in player and dealer hand from card deck.
-     *
-     * @param dealtCards list constructed from player and dealer hand in services
-     */
-    public void removeDealtCards(List<Card> dealtCards) {
-        deck.removeAll(dealtCards);
+    @Override
+    public boolean removeDealtCards(List<Card> dealtCards) {
+        return deck.removeAll(dealtCards);
     }
 
 }

@@ -1,7 +1,7 @@
 package de.htwberlin.casino.blackjack.adapter.in.web;
 
-import de.htwberlin.casino.blackjack.application.domain.model.RuleOption;
-import de.htwberlin.casino.blackjack.application.domain.model.Rules;
+import de.htwberlin.casino.blackjack.application.domain.model.rules.RuleOption;
+import de.htwberlin.casino.blackjack.application.domain.model.rules.Rules;
 import de.htwberlin.casino.blackjack.application.port.in.emitRules.EmitRulesQuery;
 import de.htwberlin.casino.blackjack.application.port.in.emitRules.EmitRulesUseCase;
 import io.swagger.v3.oas.annotations.Operation;

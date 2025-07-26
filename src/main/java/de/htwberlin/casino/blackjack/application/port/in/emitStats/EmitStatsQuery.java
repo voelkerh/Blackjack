@@ -1,10 +1,10 @@
 package de.htwberlin.casino.blackjack.application.port.in.emitStats;
 
-import de.htwberlin.casino.blackjack.application.domain.model.StatOption;
+import de.htwberlin.casino.blackjack.application.domain.model.stats.StatsOption;
 
-public record EmitStatsQuery(StatOption option, String userId) {
+public record EmitStatsQuery(StatsOption option, String userId) {
 
-    public EmitStatsQuery(StatOption option) {
+    public EmitStatsQuery(StatsOption option) {
         this(option, null); // For overview stats where userId is not needed
     }
 }

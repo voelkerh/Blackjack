@@ -1,9 +1,12 @@
 package de.htwberlin.casino.blackjack.application.port.in.emitRules;
 
-import de.htwberlin.casino.blackjack.application.domain.model.Rules;
+import de.htwberlin.casino.blackjack.application.domain.model.rules.Rules;
 import de.htwberlin.casino.blackjack.utility.ErrorWrapper;
 import de.htwberlin.casino.blackjack.utility.Result;
 
+/**
+ * Inbound port definition for the retrieval of rules.
+ */
 public interface EmitRulesUseCase {
     
     /**
