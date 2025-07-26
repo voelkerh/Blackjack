@@ -43,7 +43,7 @@ public class GameJpaEntity {
      * ID of the user who is playing the game.
      */
     @Column(name="userId", nullable = false)
-    private Long userId;
+    private String userId;
 
     /**
      * Current state of the game (e.g., "WIN", "LOSS", "TIE").

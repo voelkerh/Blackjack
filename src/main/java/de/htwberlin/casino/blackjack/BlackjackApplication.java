@@ -105,7 +105,7 @@ public class BlackjackApplication {
 
                 GameJpaEntity game = new GameJpaEntity(
                         null,
-                        1L,
+                        "1",
                         "IN_PROGRESS",
                         new ArrayList<>(),
                         50.0

@@ -39,10 +39,10 @@ public class GameMapper {
     /**
      * Maps drawn card JPA entities into a domain {@link Hand}, based on the hand type.
      *
-     * @param type          the type of hand to map (PLAYER or DEALER)
+     * @param type          the type of hand to map ("player" or "dealer")
      * @param gameJpaEntity the game entity from which to extract hand information
-     * @param <T>           the concrete subclass of {@link Hand} (e.g., {@link DealerHand}, {@link PlayerHand})
-     * @return the constructed {@link Hand} instance
+     * @param <T>           the concrete subclass of {@link Hand} (e.g., {@code DealerHand}, {@code PlayerHand})
+     * @return the constructed {@link DealerHand} or {@link PlayerHand} instance
      */
     private <T extends Hand> T mapToHand(HandType type, GameJpaEntity gameJpaEntity) {
         List<DrawnCardJpaEntity> drawnCards = (type == HandType.DEALER) ? getDealerHand(gameJpaEntity) : getPlayerHand(gameJpaEntity);

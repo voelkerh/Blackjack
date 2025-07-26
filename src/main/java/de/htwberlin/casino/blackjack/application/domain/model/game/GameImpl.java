@@ -9,14 +9,14 @@ import lombok.Getter;
 public class GameImpl implements Game {
 
     private final Long gameId;
-    private final Long userId;
+    private final String userId;
     private CardDeckImpl cardDeck;
     private PlayerHand playerHand;
     private DealerHand dealerHand;
     private GameState gameState;
     private final double bet;
 
-    public GameImpl(Long gameId, Long userId, CardDeckImpl cardDeck,
+    public GameImpl(Long gameId, String userId, CardDeckImpl cardDeck,
                 PlayerHand playerHand, DealerHand dealerHand, GameState gameState, double bet) {
         this.gameId = gameId;
         this.userId = userId;
@@ -27,7 +27,7 @@ public class GameImpl implements Game {
         this.bet = bet;
     }
 
-    public GameImpl(Long gameId, Long userId, double bet) {
+    public GameImpl(Long gameId, String userId, double bet) {
         this.gameId = gameId;
         this.userId = userId;
         this.bet = bet;
