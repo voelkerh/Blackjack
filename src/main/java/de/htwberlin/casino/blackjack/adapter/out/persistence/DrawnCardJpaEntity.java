@@ -32,7 +32,10 @@ public class DrawnCardJpaEntity {
      */
     @Id
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "card_id", nullable = false)
+    @JoinColumns({
+            @JoinColumn(name = "card_suit", referencedColumnName = "suit", insertable = false, updatable = false),
+            @JoinColumn(name = "card_rank", referencedColumnName = "rank", insertable = false, updatable = false)
+    })
     private CardJpaEntity cardId;
 
     /**
