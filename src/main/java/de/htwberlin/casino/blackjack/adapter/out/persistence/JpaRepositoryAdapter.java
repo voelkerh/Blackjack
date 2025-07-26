@@ -9,7 +9,10 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import static org.antlr.v4.runtime.tree.xpath.XPath.findAll;
 
 @RequiredArgsConstructor
 @Repository
@@ -17,6 +20,7 @@ class JpaRepositoryAdapter implements LoadRulesPort, LoadStatsPort, LoadGamePort
 
     private final JpaGameRepository gameRepository;
     private final JpaRulesRepository rulesRepository;
+    private final JpaDrawnCardsRepository drawnCardsRepository;
     private final GameMapper gameMapper;
     private final RulesMapper rulesMapper;
 
@@ -29,11 +33,24 @@ class JpaRepositoryAdapter implements LoadRulesPort, LoadStatsPort, LoadGamePort
     @Override
     public Game retrieveGame(Long gameId) {
         GameJpaEntity gameJpaEntity = gameRepository.findById(gameId).orElseThrow(EntityNotFoundException::new);
-        return gameMapper.mapToDomainEntity(gameJpaEntity.getId(), null, getCardDeck(gameJpaEntity), getPlayerHand(gameJpaEntity), getDealerHand(gameJpaEntity), GameState.valueOf(gameJpaEntity.getGameState()), gameJpaEntity.getBet());
+        return gameMapper.mapToDomainEntity(gameJpaEntity.getId(), gameJpaEntity.getUserId(), getCardDeck(gameJpaEntity), getPlayerHand(gameJpaEntity), getDealerHand(gameJpaEntity), GameState.valueOf(gameJpaEntity.getGameState()), gameJpaEntity.getBet());
     }
 
     private CardDeck getCardDeck(GameJpaEntity gameJpaEntity) {
-        return CardDeck.getInstance();
+        CardDeck cardDeck = CardDeck.getInstance();
+
+        List<DrawnCardJpaEntity> drawnCardsJpa = drawnCardsRepository.findByGameId(gameJpaEntity);
+
+        List<Card> drawnCards = drawnCardsJpa.stream()
+            .map(drawnCard -> {
+                CardJpaEntity cardJpa = drawnCard.getCardId();
+                return new Card(Rank.valueOf(cardJpa.getRank()), Suit.valueOf(cardJpa.getSuit()));
+            })
+            .toList();
+
+        cardDeck.removeDealtCards(drawnCards);
+
+        return cardDeck;
     }
 
     private PlayerHand getPlayerHand(GameJpaEntity gameJpaEntity) {
