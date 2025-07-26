@@ -105,7 +105,7 @@ public class GameMapper {
 
     public GameJpaEntity mapToJpaEntity(Game game) {
         GameJpaEntity entity = new GameJpaEntity();
-        entity.setId(game.getGameId()); // can be null for new games
+        entity.setId(game.getId()); // can be null for new games
         entity.setUserId(game.getUserId());
         entity.setGameState(game.getGameState().toString());
         entity.setBet(game.getBet());

@@ -117,7 +117,7 @@ public class GameController {
                     .map(card -> new CardResponse(card.rank().name(), card.suit().name()))
                     .toList();
 
-            GameResponse response = new GameResponse(game.getGameId(), game.getGameState().toString(), playerHandResponse, dealerHandResponse, game.getBet());
+            GameResponse response = new GameResponse(game.getId(), game.getGameState().toString(), playerHandResponse, dealerHandResponse, game.getBet());
             return ResponseEntity.ok(response);
         } else return ResponseEntity.status(result.getFailureData().get().getHttpStatus())
                 .body(result.getFailureData().get().getMessage());

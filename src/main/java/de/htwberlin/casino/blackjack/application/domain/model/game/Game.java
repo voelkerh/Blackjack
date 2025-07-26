@@ -3,7 +3,7 @@ package de.htwberlin.casino.blackjack.application.domain.model.game;
 import de.htwberlin.casino.blackjack.application.domain.model.hands.Hand;
 
 public interface Game {
-    Long getGameId();
+    Long getId();
 
     String getUserId();
 
