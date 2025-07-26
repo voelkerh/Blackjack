@@ -15,13 +15,13 @@ public interface JpaGameRepository extends JpaRepository<GameJpaEntity, Long> {
                 SELECT new de.htwberlin.casino.blackjack.application.domain.service.emitStats.UserStats(
                     COUNT(g),
                             CONCAT(
-                                SUM(CASE WHEN g.gameState = 'WIN' THEN 1 ELSE 0 END), ':',
-                                SUM(CASE WHEN g.gameState = 'LOSS' THEN 1 ELSE 0 END), ':',
-                                SUM(CASE WHEN g.gameState = 'TIE' THEN 1 ELSE 0 END)
+                                SUM(CASE WHEN g.gameState = 'WON' THEN 1 ELSE 0 END), ':',
+                                SUM(CASE WHEN g.gameState = 'LOST' THEN 1 ELSE 0 END), ':',
+                                SUM(CASE WHEN g.gameState = 'PUSH' THEN 1 ELSE 0 END)
                             ),
                             COALESCE(SUM(g.bet), 0),
-                            COALESCE(SUM(CASE WHEN g.gameState = 'WIN' THEN g.bet ELSE 0 END), 0) -
-                            COALESCE(SUM(CASE WHEN g.gameState = 'LOSS' THEN g.bet ELSE 0 END), 0)
+                            COALESCE(SUM(CASE WHEN g.gameState = 'WON' THEN g.bet ELSE 0 END), 0) -
+                            COALESCE(SUM(CASE WHEN g.gameState = 'LOST' THEN g.bet ELSE 0 END), 0)
                         )
                 FROM game g
                 WHERE g.userId = :userId
@@ -33,8 +33,8 @@ public interface JpaGameRepository extends JpaRepository<GameJpaEntity, Long> {
         COUNT(g),
         COUNT(DISTINCT g.userId),
         COALESCE(SUM(g.bet), 0),
-        COALESCE(SUM(CASE WHEN g.gameState = 'LOSS' THEN g.bet ELSE 0 END), 0) -
-        COALESCE(SUM(CASE WHEN g.gameState = 'WIN' THEN g.bet ELSE 0 END), 0)
+        COALESCE(SUM(CASE WHEN g.gameState = 'LOST' THEN g.bet ELSE 0 END), 0) -
+        COALESCE(SUM(CASE WHEN g.gameState = 'WON' THEN g.bet ELSE 0 END), 0)
     )
     FROM game g
 """)

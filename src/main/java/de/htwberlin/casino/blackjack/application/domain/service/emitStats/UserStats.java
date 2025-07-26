@@ -9,7 +9,7 @@ package de.htwberlin.casino.blackjack.application.domain.service.emitStats;
  * @param netResult
  */
 public record UserStats(Long gamesPlayed,
-                        String winRatio, // Format: "win:loss:tie"
+                        String winRatio, // Format: "won:lost:push"
                         int totalBet,
                         int netResult) implements Stats {
 }
