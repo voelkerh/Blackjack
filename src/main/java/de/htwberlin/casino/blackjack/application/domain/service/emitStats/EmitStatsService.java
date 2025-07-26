@@ -16,7 +16,7 @@ public class EmitStatsService implements EmitStatsUseCase {
     private final LoadStatsPort loadStatsPort;
 
     @Override
-    public  Result<? extends Stats, ErrorWrapper> emitStats(EmitStatsQuery query) {
+    public Result<? extends Stats, ErrorWrapper> emitStats(EmitStatsQuery query) {
         StatsOption option = query.option();
         switch (option) {
             case USER -> {
@@ -26,15 +26,15 @@ public class EmitStatsService implements EmitStatsUseCase {
                 return emitOverviewStats();
             }
         }
-        return null;
+        return Result.failure(ErrorWrapper.INVALID_STATS_OPTION);
     }
 
     private Result<UserStats, ErrorWrapper> emitUserStats(String userId) {
         if (userId == null || userId.isBlank()) {
-            return Result.failure(ErrorWrapper.USER_NOT_FOUND);
+            return Result.failure(ErrorWrapper.INVALID_USER_ID);
         }
         try {
-            UserStats stats = (UserStats) loadStatsPort.retrieveStats(StatsOption.USER, userId);
+            UserStats stats = loadStatsPort.retrieveUserStats(userId);
             return Result.success(stats);
         } catch (Exception ex) {
             return Result.failure(ErrorWrapper.DATABASE_ERROR);
@@ -43,7 +43,7 @@ public class EmitStatsService implements EmitStatsUseCase {
 
     private Result<OverviewStats, ErrorWrapper> emitOverviewStats() {
         try {
-            OverviewStats stats = (OverviewStats) loadStatsPort.retrieveStats(StatsOption.OVERVIEW, null);
+            OverviewStats stats = loadStatsPort.retrieveOverviewStats();
             return Result.success(stats);
         } catch (Exception ex) {
             return Result.failure(ErrorWrapper.DATABASE_ERROR);

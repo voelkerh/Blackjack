@@ -1,8 +1,6 @@
 package de.htwberlin.casino.blackjack.application.port.out;
 
-import de.htwberlin.casino.blackjack.application.domain.model.stats.StatsOption;
 import de.htwberlin.casino.blackjack.application.domain.service.emitStats.OverviewStats;
-import de.htwberlin.casino.blackjack.application.domain.service.emitStats.Stats;
 import de.htwberlin.casino.blackjack.application.domain.service.emitStats.UserStats;
 
 /**
@@ -11,11 +9,17 @@ import de.htwberlin.casino.blackjack.application.domain.service.emitStats.UserSt
  */
 public interface LoadStatsPort {
     /**
-     * Retrieves statistical data based on the specified stats option.
+     * Retrieves statistical data of a specific user
      *
-     * @param option the type of statistics to retrieve (e.g., USER or OVERVIEW)
-     * @param userId the user identifier for user-specific statistics; may be null if not applicable
-     * @return the statistics data corresponding to the given option (e.g., {@link UserStats} or {@link OverviewStats}
+     * @param userId the ID of the user for whom to retrieve statistics
+     * @return the requested {@link UserStats} data
      */
-    Stats retrieveStats(StatsOption option, String userId);
+    UserStats retrieveUserStats(String userId);
+
+    /**
+     * Retrieves statistical data of blackjack service across all users
+     *
+     * @return the requested {@link OverviewStats} data
+     */
+    OverviewStats retrieveOverviewStats();
 }

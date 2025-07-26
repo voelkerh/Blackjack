@@ -31,20 +31,26 @@ public enum ErrorWrapper {
     USER_NOT_FOUND(
             "The user could not be found.",
             HttpStatus.NOT_FOUND),
+    INVALID_USER_ID(
+            "The provided userId is null, empty, or malformed.",
+            HttpStatus.BAD_REQUEST),
+    INVALID_STATS_OPTION(
+            "The requested stats option does not exist.",
+            HttpStatus.BAD_REQUEST),
     DATABASE_ERROR(
             "Failed to access database",
             HttpStatus.INTERNAL_SERVER_ERROR);
 
     /**
      * -- GETTER --
-     *  Retrieves the error message.
+     * Retrieves the error message.
      *
      * @return the error message.
      */
     private final String message;
     /**
      * -- GETTER --
-     *  Retrieves the associated HTTP status code.
+     * Retrieves the associated HTTP status code.
      *
      * @return the HTTP status code.
      */
