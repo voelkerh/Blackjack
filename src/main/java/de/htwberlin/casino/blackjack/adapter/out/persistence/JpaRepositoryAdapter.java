@@ -3,6 +3,8 @@ package de.htwberlin.casino.blackjack.adapter.out.persistence;
 import de.htwberlin.casino.blackjack.application.domain.model.cards.Card;
 import de.htwberlin.casino.blackjack.application.domain.model.game.Game;
 import de.htwberlin.casino.blackjack.application.domain.model.game.GameImpl;
+import de.htwberlin.casino.blackjack.application.domain.model.game.GameState;
+import de.htwberlin.casino.blackjack.application.domain.model.hands.Hand;
 import de.htwberlin.casino.blackjack.application.domain.model.rules.RuleOption;
 import de.htwberlin.casino.blackjack.application.domain.model.rules.Rules;
 import de.htwberlin.casino.blackjack.application.domain.service.emitStats.OverviewStats;
@@ -53,9 +55,19 @@ class JpaRepositoryAdapter implements LoadRulesPort, LoadStatsPort, LoadGamePort
     }
 
     @Override
-    public void saveGame(Game game) {
+    public Game saveGame(Game game) {
         GameJpaEntity entity = gameMapper.mapToJpaEntity(game);
-        gameRepository.save(entity);
+        GameJpaEntity savedGame = gameRepository.save(entity); // Ensure ID is generated
+
+        saveDrawnCards(savedGame.getId(), game.getPlayerHand(), "player");
+        saveDrawnCards(savedGame.getId(), game.getDealerHand(), "dealer");
+        return game;
+    }
+
+    private void saveDrawnCards(Long gameId, Hand hand, String holder) {
+        for (Card card : hand.getCards()) {
+            saveCardDraw(gameId, card, holder);
+        }
     }
 
     @Override
@@ -73,10 +85,16 @@ class JpaRepositoryAdapter implements LoadRulesPort, LoadStatsPort, LoadGamePort
 
     @Override
     public void updateGameState(Long gameId, String state) {
+        GameState validatedState;
+        try {
+            validatedState = GameState.valueOf(state.toUpperCase()); // Throws IllegalArgumentException if invalid
+        } catch (IllegalArgumentException ex) {
+            throw new IllegalArgumentException(ex.getCause().getMessage());
+        }
         GameJpaEntity game = gameRepository.findById(gameId)
                 .orElseThrow(() -> new EntityNotFoundException("Game not found with ID: " + gameId));
 
-        game.setGameState(state);
+        game.setGameState(validatedState.name());
 
         gameRepository.save(game);
     }

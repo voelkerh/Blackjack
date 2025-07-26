@@ -32,10 +32,16 @@ public enum ErrorWrapper {
             "The user could not be found.",
             HttpStatus.NOT_FOUND),
     INVALID_USER_ID(
-            "The provided userId is null, empty, or malformed.",
+            "The provided userId is null, empty, or otherwise invalid.",
             HttpStatus.BAD_REQUEST),
     INVALID_STATS_OPTION(
             "The requested stats option does not exist.",
+            HttpStatus.BAD_REQUEST),
+    INVALID_INPUT(
+            "The provided input is null, empty, or otherwise invalid.",
+            HttpStatus.BAD_REQUEST),
+    DATABASE_CONSTRAINT_VIOLATION(
+            "",
             HttpStatus.BAD_REQUEST),
     DATABASE_ERROR(
             "Failed to access database",
