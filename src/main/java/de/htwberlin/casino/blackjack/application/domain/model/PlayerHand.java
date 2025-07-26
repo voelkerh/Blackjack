@@ -14,6 +14,10 @@ public class PlayerHand implements Hand {
         this.cards = Arrays.asList(card1, card2);
     }
 
+    public PlayerHand(List<Card> cards) {
+        this.cards = cards;
+    }
+
     @Override
     public void addCard(Card card) {
         cards.add(card);
