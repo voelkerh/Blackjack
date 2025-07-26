@@ -1,12 +1,15 @@
 package de.htwberlin.casino.blackjack;
 
 import de.htwberlin.casino.blackjack.adapter.out.persistence.*;
+import de.htwberlin.casino.blackjack.application.domain.model.cards.Rank;
+import de.htwberlin.casino.blackjack.application.domain.model.cards.Suit;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @SpringBootApplication
@@ -81,8 +84,8 @@ public class BlackjackApplication {
                 rulesRepo.save(new RulesJpaEntity("STAND", "Empty for now"));
             }
             if (cardRepo.count() == 0) {
-                List<String> suits = List.of("Hearts", "Diamonds", "Clubs", "Spades");
-                List<String> ranks = List.of("2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace");
+                List<String> suits = List.of(Arrays.toString(Suit.values()));
+                List<String> ranks = List.of(Arrays.toString(Rank.values()));
 
                 for (String suit : suits) {
                     for (String rank : ranks) {
