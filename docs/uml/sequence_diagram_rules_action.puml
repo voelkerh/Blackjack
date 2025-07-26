@@ -4,7 +4,7 @@ actor Player
 
 participant "Controller\n(Rest Adapter)" as Controller
 participant "RulesService\n(Use Case)" as Service
-participant "FileRulesAdapter\n(Outbound Port)" as Adapter
+participant "JpaRepositoryAdapter\n(Outbound Port)" as Adapter
 database PostgresSQL
 
 == Request Rules For Specific Action==
@@ -12,7 +12,7 @@ database PostgresSQL
 Player -> Controller : GET /api/blackjack/rules/{action}
 Controller -> Controller : validateRequest()
 
-alt valid request
+alt valid actio
 
         Controller -> Service : emitRules(query)
         Service -> Adapter : retrieveRules(HIT/STAND)
@@ -25,13 +25,13 @@ alt valid request
         Controller --> Player : 200 OK + Response
 
     else resource not found
-        PostgresSQL --> Adapter : not found
-        Adapter --> Service : error
-        Service --> Controller : error
+        PostgresSQL --> Adapter : Not Found
+        Adapter --> Service : Error
+        Service --> Controller : Error
         Controller --> Player : 404 Not Found
     end
 
-else invalid state definition
+else invalid action
 
     Controller --> Player : 400 Bad Request
 
