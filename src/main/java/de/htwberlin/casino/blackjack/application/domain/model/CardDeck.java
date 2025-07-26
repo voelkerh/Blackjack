@@ -40,6 +40,7 @@ public class CardDeck {
      * @param dealtCards list constructed from player and dealer hand in services
      */
     public void removeDealtCards(List<Card> dealtCards) {
+        deck.removeAll(dealtCards);
     }
 
 }
