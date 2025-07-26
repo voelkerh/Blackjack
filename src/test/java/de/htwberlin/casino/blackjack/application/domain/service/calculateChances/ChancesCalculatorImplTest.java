@@ -71,8 +71,29 @@ class ChancesCalculatorImplTest {
     }
 
     @Test
-    public void givenPlayerTotal20_whenCalculateChances_thenReturnBustChancesOne() {
+    public void givenPlayerTotalTwenty_whenCalculateChances_thenReturnBustChancesOne() {
         Card card1 = new Card(Rank.TEN, Suit.CLUBS);
+        Card card2 = new Card(Rank.TEN, Suit.HEARTS);
+        PlayerHand playerHand = new PlayerHand(card1, card2);
+        ChancesCalculatorImpl calculator = new ChancesCalculatorImpl();
+
+        double expected = 1.0;
+        double actual = calculator.calculateChances(playerHand, dealerHand).bust();
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void givenPlayerTotalTwenty_whenCalculateChances_thenReturnBlackJackChancesZero() {
+        Card card1 = new Card(Rank.TEN, Suit.CLUBS);
+        Card card2 = new Card(Rank.TEN, Suit.HEARTS);
+        PlayerHand playerHand = new PlayerHand(card1, card2);
+        ChancesCalculatorImpl calculator = new ChancesCalculatorImpl();
+
+        double expected = 0.0;
+        double actual  = calculator.calculateChances(playerHand, dealerHand).blackjack();
+
+        assertEquals(expected, actual);
     }
 
 }
