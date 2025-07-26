@@ -32,6 +32,9 @@ public class GameJpaEntity {
     )
     private Long id;
 
+    @Column(name="userId", nullable = false)
+    private Long userId;
+
     @Column(name = "game_state", nullable = false)
     private String gameState;
 
