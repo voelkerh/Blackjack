@@ -56,7 +56,7 @@ public class GameController {
             @ApiResponse(responseCode = "404", description = "Game not found", content = @Content)
     })
     @PutMapping("/{gameId}/hit")
-    public ResponseEntity<?> hit(@PathVariable String gameId) {
+    public ResponseEntity<?> hit(@PathVariable Long gameId) {
         Result<GameResponse, ErrorWrapper> result = playGameUseCase.hit(new HitCommand(gameId));
 
         if (result.isSuccess()) return ResponseEntity.ok(result.getSuccessData().get());
@@ -79,7 +79,7 @@ public class GameController {
             @ApiResponse(responseCode = "404", description = "Game not found", content = @Content)
     })
     @PutMapping("/{gameId}/stand")
-    public ResponseEntity<?> stand(@PathVariable String gameId) {
+    public ResponseEntity<?> stand(@PathVariable Long gameId) {
         Result<GameResponse, ErrorWrapper> result = playGameUseCase.stand(new StandCommand(gameId));
 
         if (result.isSuccess()) return ResponseEntity.ok(result.getSuccessData().get());
@@ -101,7 +101,7 @@ public class GameController {
             @ApiResponse(responseCode = "404", description = "Game not found", content = @Content)
     })
     @GetMapping("/{gameId}")
-    public ResponseEntity<?> getGame(@PathVariable String gameId) {
+    public ResponseEntity<?> getGame(@PathVariable Long gameId) {
         Result<GameResponse, ErrorWrapper> result = playGameUseCase.getGameState(new GetGameCommand(gameId));
 
         if (result.isSuccess()) return ResponseEntity.ok(result.getSuccessData().get());

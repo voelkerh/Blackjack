@@ -1,3 +1,3 @@
 package de.htwberlin.casino.blackjack.application.port.in.playGame;
 
-public record GetGameCommand(String gameId) {}
+public record GetGameCommand(Long gameId) {}
