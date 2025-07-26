@@ -29,7 +29,7 @@ class ChancesControllerTest {
         Chances chances = mock(Chances.class);
         when(calculateChancesUseCase.calculateChances(any())).thenReturn(Result.success(chances));
 
-        ResponseEntity<?> response = chancesController.calculateChances(12);
+        ResponseEntity<?> response = chancesController.calculateChances(12L);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(chances, response.getBody());
@@ -40,7 +40,7 @@ class ChancesControllerTest {
     void InvalidGameId_WhenCalculateChances_ShouldReturnResponseEntity() {
         when(calculateChancesUseCase.calculateChances(any())).thenReturn(Result.failure(ErrorWrapper.GAME_NOT_FOUND));
 
-        ResponseEntity<?> response = chancesController.calculateChances(12);
+        ResponseEntity<?> response = chancesController.calculateChances(12L);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         assertEquals("The requested game could not be found.", response.getBody());
@@ -51,7 +51,7 @@ class ChancesControllerTest {
     void ValidGameIdButGameEnded_WhenCalculateChances_ShouldReturnResponseEntity() {
         when(calculateChancesUseCase.calculateChances(any())).thenReturn(Result.failure(ErrorWrapper.GAME_NOT_RUNNING));
 
-        ResponseEntity<?> response = chancesController.calculateChances(12);
+        ResponseEntity<?> response = chancesController.calculateChances(12L);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertEquals("The requested game is already over.", response.getBody());

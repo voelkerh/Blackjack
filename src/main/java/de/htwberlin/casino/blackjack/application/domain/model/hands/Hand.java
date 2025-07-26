@@ -12,7 +12,7 @@ public interface Hand {
     /**
      * Adds card to the list of cards held in hand.
      *
-     * @param card
+     * @param card Card to be added
      * @return whether adding card was successful
      */
     boolean addCard(Card card);

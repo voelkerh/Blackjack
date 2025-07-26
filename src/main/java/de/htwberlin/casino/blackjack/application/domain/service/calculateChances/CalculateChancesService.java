@@ -1,7 +1,6 @@
 package de.htwberlin.casino.blackjack.application.domain.service.calculateChances;
 
 import de.htwberlin.casino.blackjack.application.domain.model.game.Game;
-import de.htwberlin.casino.blackjack.application.domain.model.game.GameImpl;
 import de.htwberlin.casino.blackjack.application.domain.model.game.GameState;
 import de.htwberlin.casino.blackjack.application.port.in.calculateChances.CalculateChancesCommand;
 import de.htwberlin.casino.blackjack.application.port.in.calculateChances.CalculateChancesUseCase;

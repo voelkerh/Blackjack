@@ -6,6 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+/**
+ * Repository interface for managing {@link GameJpaEntity} persistence.
+ */
 public interface JpaGameRepository extends JpaRepository<GameJpaEntity, Long> {
 
     @Query("""
