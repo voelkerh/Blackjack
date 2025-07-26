@@ -19,9 +19,6 @@ public enum ErrorWrapper {
     UNEXPECTED_INTERNAL_ERROR_OCCURED(
             "An unexpected internal error occurred.",
             HttpStatus.INTERNAL_SERVER_ERROR),
-    CIRCLE_REQUEST_INVALID_JSON_CANT_BE_MAPPED(
-            "The request body could not be mapped to a circle.",
-            HttpStatus.BAD_REQUEST),
     RULES_NOT_FOUND(
             "The requested rule set could not be found.",
             HttpStatus.NOT_FOUND),
@@ -31,35 +28,29 @@ public enum ErrorWrapper {
     GAME_NOT_RUNNING(
             "The requested game is already over.",
             HttpStatus.BAD_REQUEST),
-    CIRCLE_MODEL_INVALID_RADIUS_NOT_GREATER_THAN_ZERO(
-            "The radius of a circle must be greater than 0.",
+    USER_NOT_FOUND(
+            "The user could not be found.",
+            HttpStatus.NOT_FOUND),
+    INVALID_USER_ID(
+            "The provided userId is null, empty, or malformed.",
             HttpStatus.BAD_REQUEST),
-    SQUARE_MODEL_INVALID_SIDE_LENGTHS_NOT_GREATER_THAN_ZERO(
-            "The width and height of a square must be greater than 0.",
+    INVALID_STATS_OPTION(
+            "The requested stats option does not exist.",
             HttpStatus.BAD_REQUEST),
-    SQUARE_MODEL_INVALID_HEIGHT_NOT_GREATER_THAN_ZERO(
-            "The height of a square must be greater than 0.",
-            HttpStatus.BAD_REQUEST),
-    SQUARE_MODEL_INVALID_WIDTH_NOT_GREATER_THAN_ZERO(
-            "The width of a square must be greater than 0.",
-            HttpStatus.BAD_REQUEST),
-    TRIANGLE_MODEL_INVALID_SIDE_LENGTHS_NOT_GREATER_THAN_ZERO(
-            "The sides of a triangle must be greater than 0.",
-            HttpStatus.BAD_REQUEST),
-    TRIANGLE_MODEL_INVALID_SIDE_INEQUALITY_BROKEN(
-            "The sides of a triangle do not satisfy the triangle inequality.",
-            HttpStatus.BAD_REQUEST);
+    DATABASE_ERROR(
+            "Failed to access database",
+            HttpStatus.INTERNAL_SERVER_ERROR);
 
     /**
      * -- GETTER --
-     *  Retrieves the error message.
+     * Retrieves the error message.
      *
      * @return the error message.
      */
     private final String message;
     /**
      * -- GETTER --
-     *  Retrieves the associated HTTP status code.
+     * Retrieves the associated HTTP status code.
      *
      * @return the HTTP status code.
      */
