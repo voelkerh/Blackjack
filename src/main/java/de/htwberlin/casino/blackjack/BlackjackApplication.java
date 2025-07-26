@@ -93,7 +93,7 @@ public class BlackjackApplication {
                 List<String> ranks = Arrays.stream(Rank.values()).map(Enum::name).toList();
                 for (String suit : suits) {
                     for (String rank : ranks) {
-                        CardJpaEntity card = new CardJpaEntity(null, suit, rank);
+                        CardJpaEntity card = new CardJpaEntity(suit, rank);
                         cardRepo.save(card);
                     }
                 }

@@ -10,35 +10,22 @@ import lombok.NoArgsConstructor;
  * Each card has a suit and a rank (e.g., "Hearts" and "Ace").
  */
 @Entity(name = "cards")
+@IdClass(CardId.class)
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 public class CardJpaEntity {
     /**
-     * Unique identifier for the card.
-     */
-    @Id
-    @SequenceGenerator(
-            name = "card_sequence",
-            sequenceName = "card_sequence",
-            allocationSize = 1
-    )
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "card_sequence"
-    )
-    @Column(name = "id")
-    private Long id;
-
-    /**
      * Suit of the card (e.g., Hearts, Spades, Clubs, Diamonds).
      */
+    @Id
     @Column(name = "suit", nullable = false)
     private String suit;
 
     /**
      * Rank of the card (e.g., 2–10, Jack, Queen, King, Ace).
      */
+    @Id
     @Column(name = "rank", nullable = false)
     private String rank;
 }
