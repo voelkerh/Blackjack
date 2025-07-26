@@ -4,9 +4,7 @@ import de.htwberlin.casino.blackjack.application.domain.model.game.GameImpl;
 import de.htwberlin.casino.blackjack.application.domain.model.rules.RuleOption;
 import de.htwberlin.casino.blackjack.application.domain.model.rules.Rules;
 import de.htwberlin.casino.blackjack.application.domain.model.stats.StatsOption;
-import de.htwberlin.casino.blackjack.application.domain.service.emitStats.OverviewStats;
 import de.htwberlin.casino.blackjack.application.domain.service.emitStats.Stats;
-import de.htwberlin.casino.blackjack.application.domain.service.emitStats.UserStats;
 import de.htwberlin.casino.blackjack.application.port.out.LoadGamePort;
 import de.htwberlin.casino.blackjack.application.port.out.LoadRulesPort;
 import de.htwberlin.casino.blackjack.application.port.out.LoadStatsPort;
@@ -36,16 +34,21 @@ class JpaRepositoryAdapter implements LoadRulesPort, LoadStatsPort, LoadGamePort
         return gameMapper.mapToDomainEntity(null);
     }
 
+    /**
+     * Retrieves statistical data based on the specified statistics option.
+     *
+     * @param option the type of statistics to retrieve; determines the query executed
+     * @param userId the ID of the user for whom to retrieve statistics; used only when option is USER
+     * @return the requested {@link Stats} data corresponding to the option;
+     * returns null if the option is null
+     */
     @Override
     public Stats retrieveStats(StatsOption option, String userId) {
-        return null;
+        return switch (option) {
+            case USER -> gameRepository.fetchUserStats(userId);
+            case OVERVIEW -> gameRepository.fetchOverviewStats();
+            case null -> null;
+        };
     }
 
-    public UserStats retrieveUserStats(String userId) {
-        return null;
-    }
-
-    public OverviewStats retrieveOverviewStats() {
-        return null;
-    }
 }
