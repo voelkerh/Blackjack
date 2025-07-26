@@ -23,6 +23,7 @@ public class BlackjackApplication {
     CommandLineRunner loadInitialData(JpaRulesRepository rulesRepo, JpaCardRepository cardRepo,
                                       JpaGameRepository gameRepo, JpaDrawnCardsRepository drawnCardsRepo) {
         return args -> {
+            System.out.println(rulesRepo.count() + " rules found in database.");
             if (rulesRepo.count() == 0) {
                 String generalText = """
                         # Rules
@@ -82,18 +83,25 @@ public class BlackjackApplication {
                 rulesRepo.save(new RulesJpaEntity("GENERAL", generalText));
                 rulesRepo.save(new RulesJpaEntity("HIT", "Empty for now"));
                 rulesRepo.save(new RulesJpaEntity("STAND", "Empty for now"));
+                System.out.println("Rules saved to database");
             }
-            if (cardRepo.count() == 0) {
-                List<String> suits = List.of(Arrays.toString(Suit.values()));
-                List<String> ranks = List.of(Arrays.toString(Rank.values()));
+            System.out.println(rulesRepo.count() + " rules now in database.");
 
+            System.out.println(cardRepo.count() + " cards found in database.");
+            if (cardRepo.count() == 0) {
+                List<String> suits = Arrays.stream(Suit.values()).map(Enum::name).toList();
+                List<String> ranks = Arrays.stream(Rank.values()).map(Enum::name).toList();
                 for (String suit : suits) {
                     for (String rank : ranks) {
                         CardJpaEntity card = new CardJpaEntity(null, suit, rank);
                         cardRepo.save(card);
                     }
                 }
+                System.out.println("Cards saved to database");
             }
+            System.out.println(cardRepo.count() + " cards now in database.");
+
+            System.out.println(gameRepo.count() + " games found in database.");
             if (gameRepo.count() == 0) {
                 List<CardJpaEntity> allCards = cardRepo.findAll();
                 if (allCards.size() < 3) {
