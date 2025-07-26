@@ -11,6 +11,10 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+/**
+ * Adapts Spring Data JPA repositories to domain ports.
+ * Handles persistence-related operations for rules and games.
+ */
 @RequiredArgsConstructor
 @Repository
 class JpaRepositoryAdapter implements LoadRulesPort, LoadStatsPort, LoadGamePort, ModifyGameStatePort {
@@ -21,12 +25,26 @@ class JpaRepositoryAdapter implements LoadRulesPort, LoadStatsPort, LoadGamePort
     private final GameMapper gameMapper;
     private final RulesMapper rulesMapper;
 
+    /**
+     * Loads a ruleset from the database based on the given option.
+     *
+     * @param option the selected {@link RuleOption}
+     * @return the mapped domain {@link Rules} object
+     * @throws EntityNotFoundException if the ruleset is not found
+     */
     @Override
     public Rules retrieveRules(RuleOption option) {
         RulesJpaEntity rulesJpaEntity = rulesRepository.findById(option.toString()).orElseThrow(EntityNotFoundException::new);
         return rulesMapper.mapToDomainEntity(RuleOption.valueOf(rulesJpaEntity.getOption()), rulesJpaEntity.getRules());
     }
 
+    /**
+     * Loads a game by its ID from the database and maps it to the domain model.
+     *
+     * @param gameId the ID of the game
+     * @return the mapped domain {@link GameImpl} object
+     * @throws EntityNotFoundException if the game is not found
+     */
     @Override
     public GameImpl retrieveGame(Long gameId) {
         GameJpaEntity gameJpaEntity = gameRepository.findById(gameId).orElseThrow(EntityNotFoundException::new);
