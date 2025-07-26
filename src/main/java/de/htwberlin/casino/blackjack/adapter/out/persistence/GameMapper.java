@@ -1,7 +1,13 @@
 package de.htwberlin.casino.blackjack.adapter.out.persistence;
 
-import de.htwberlin.casino.blackjack.application.domain.model.PlayerHand;
+import de.htwberlin.casino.blackjack.application.domain.model.cards.Card;
+import de.htwberlin.casino.blackjack.application.domain.model.cards.CardDeckImpl;
+import de.htwberlin.casino.blackjack.application.domain.model.cards.Rank;
+import de.htwberlin.casino.blackjack.application.domain.model.cards.Suit;
 import de.htwberlin.casino.blackjack.application.domain.model.game.GameImpl;
+import de.htwberlin.casino.blackjack.application.domain.model.game.GameState;
+import de.htwberlin.casino.blackjack.application.domain.model.hands.DealerHand;
+import de.htwberlin.casino.blackjack.application.domain.model.hands.PlayerHand;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -9,8 +15,8 @@ import java.util.List;
 @Component
 public class GameMapper {
 
-    public GameImpl mapToDomainEntity(GameJpaEntity gameJpaEntity) {
-        return new GameImpl(gameJpaEntity.getId(), gameJpaEntity.getUserId(), CardDeck.getInstance(), mapToPlayerHand(gameJpaEntity), mapToDealerHand(gameJpaEntity), GameState.valueOf(gameJpaEntity.getGameState()), gameJpaEntity.getBet());
+    public GameImpl mapToDomainEntity(GameJpaEntity gameJpaEntity, JpaDrawnCardsRepository drawnCardsRepository) {
+        return new GameImpl(gameJpaEntity.getId(), gameJpaEntity.getUserId(), mapToCardDeck(gameJpaEntity, drawnCardsRepository), mapToPlayerHand(gameJpaEntity), mapToDealerHand(gameJpaEntity), GameState.valueOf(gameJpaEntity.getGameState()), gameJpaEntity.getBet());
     }
 
     private PlayerHand mapToPlayerHand(GameJpaEntity gameJpaEntity) {
@@ -35,6 +41,19 @@ public class GameMapper {
         CardJpaEntity cardJpa = dealerHandCard.getFirst().getCardId();
         Card card = new Card(Rank.valueOf(cardJpa.getRank()), Suit.valueOf(cardJpa.getSuit()));
         return new DealerHand(card);
+    }
+
+    private CardDeckImpl mapToCardDeck(GameJpaEntity gameJpaEntity, JpaDrawnCardsRepository drawnCardsRepository) {
+        List<DrawnCardJpaEntity> drawnCardsJpa = drawnCardsRepository.findByGameId(gameJpaEntity);
+
+        List<Card> drawnCards = drawnCardsJpa.stream()
+                .map(drawnCard -> {
+                    CardJpaEntity cardJpa = drawnCard.getCardId();
+                    return new Card(Rank.valueOf(cardJpa.getRank()), Suit.valueOf(cardJpa.getSuit()));
+                })
+                .toList();
+
+        return new CardDeckImpl(drawnCards);
     }
 
 }

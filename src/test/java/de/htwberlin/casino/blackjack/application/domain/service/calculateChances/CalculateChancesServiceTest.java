@@ -38,12 +38,12 @@ class CalculateChancesServiceTest {
         Mockito.when(mockGame.getDealerHand()).thenReturn(mockDealerHand);
 
         service = new CalculateChancesService(mockPort, mockCalculator);
-        command = new CalculateChancesCommand(1);
+        command = new CalculateChancesCommand(1L);
     }
 
     @Test
     void givenValidCommand_whenCalculateChances_thenReturnChances() {
-        Mockito.when(mockPort.retrieveGame(1)).thenReturn(mockGame);
+        Mockito.when(mockPort.retrieveGame(1L)).thenReturn(mockGame);
         Chances expected = new Chances(0.5, 0.3);
         Mockito.when(mockGame.getGameState()).thenReturn(GameState.PLAYING);
         Mockito.when(mockCalculator.calculateChances(mockGame.getPlayerHand(), mockGame.getDealerHand()))
@@ -57,7 +57,7 @@ class CalculateChancesServiceTest {
 
     @Test
     void givenCommandForLostGame_whenCalculateChances_thenReturnError() {
-        Mockito.when(mockPort.retrieveGame(1)).thenReturn(mockGame);
+        Mockito.when(mockPort.retrieveGame(1L)).thenReturn(mockGame);
         Mockito.when(mockGame.getGameState()).thenReturn(GameState.LOST);
         HttpStatus expected = HttpStatus.BAD_REQUEST;
 
@@ -69,7 +69,7 @@ class CalculateChancesServiceTest {
 
     @Test
     void givenCommandForAbsentGame_whenCalculateChances_thenReturnError() {
-        Mockito.when(mockPort.retrieveGame(1)).thenThrow(EntityNotFoundException.class);
+        Mockito.when(mockPort.retrieveGame(1L)).thenThrow(EntityNotFoundException.class);
         HttpStatus expected = HttpStatus.NOT_FOUND;
 
         Result<Chances, ErrorWrapper> result = service.calculateChances(command);
@@ -80,7 +80,7 @@ class CalculateChancesServiceTest {
 
     @Test
     void givenInvalidCommand_whenCalculateChances_thenReturnError() {
-        Mockito.when(mockPort.retrieveGame(1)).thenThrow(NullPointerException.class);
+        Mockito.when(mockPort.retrieveGame(1L)).thenThrow(NullPointerException.class);
         HttpStatus expected = HttpStatus.INTERNAL_SERVER_ERROR;
 
         Result<Chances, ErrorWrapper> result = service.calculateChances(command);

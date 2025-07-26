@@ -32,23 +32,7 @@ class JpaRepositoryAdapter implements LoadRulesPort, LoadStatsPort, LoadGamePort
     @Override
     public GameImpl retrieveGame(Long gameId) {
         GameJpaEntity gameJpaEntity = gameRepository.findById(gameId).orElseThrow(EntityNotFoundException::new);
-        recreateCardDeck(gameJpaEntity);
-        return gameMapper.mapToDomainEntity(gameJpaEntity);
-    }
-
-    private void recreateCardDeck(GameJpaEntity gameJpaEntity) {
-        CardDeck cardDeck = CardDeck.getInstance();
-
-        List<DrawnCardJpaEntity> drawnCardsJpa = drawnCardsRepository.findByGameId(gameJpaEntity);
-
-        List<Card> drawnCards = drawnCardsJpa.stream()
-                .map(drawnCard -> {
-                    CardJpaEntity cardJpa = drawnCard.getCardId();
-                    return new Card(Rank.valueOf(cardJpa.getRank()), Suit.valueOf(cardJpa.getSuit()));
-                })
-                .toList();
-
-        cardDeck.removeDealtCards(drawnCards);
+        return gameMapper.mapToDomainEntity(gameJpaEntity, drawnCardsRepository);
     }
 
 }
