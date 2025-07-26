@@ -14,20 +14,21 @@ import java.util.List;
 public class HandFactoryImpl implements  HandFactory {
 
     @Override
-    public Hand create(HandType type, List<Card> cards) {
+    @SuppressWarnings("unchecked") // type casting is done on purpose and controlled
+    public <T extends Hand> T create(HandType type, List<Card> cards) {
         if (cards == null || type == null) throw new IllegalArgumentException("Parameters cannot be null");
         switch (type) {
             case DEALER:
                 if (cards.size() != 1) throw new IllegalArgumentException("Dealerhand can only be initialized with one card");
-                return new DealerHand(cards.get(0));
+                return (T) new DealerHand(cards.get(0));
             case PLAYER:
                 if (cards.size() < 2) throw new IllegalArgumentException("Playerhand can only be initialized with more than one card");
-                else if (cards.size() == 2) return new PlayerHand(cards.get(0), cards.get(1));
+                else if (cards.size() == 2) return (T) new PlayerHand(cards.get(0), cards.get(1));
                 PlayerHand playerHand = new PlayerHand(cards.get(0), cards.get(1));
                 for (int i = 2; i < cards.size(); i++) {
                     playerHand.addCard(cards.get(i));
                 }
-                return playerHand;
+                return (T) playerHand;
             default:
                 throw new IllegalArgumentException("Hand type not supported");
         }

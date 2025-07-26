@@ -8,16 +8,16 @@ import lombok.Getter;
 @Getter
 public class GameImpl implements Game {
 
-    private final int gameId;
-    private final int userId;
+    private final Long gameId;
+    private final Long userId;
     private CardDeckImpl cardDeck;
     private PlayerHand playerHand;
     private DealerHand dealerHand;
     private GameState gameState;
     private final double bet;
 
-    public GameImpl(int gameId, int userId, CardDeckImpl cardDeck,
-                    PlayerHand playerHand, DealerHand dealerHand, GameState gameState, double bet) {
+    public GameImpl(Long gameId, Long userId, CardDeckImpl cardDeck,
+                PlayerHand playerHand, DealerHand dealerHand, GameState gameState, double bet) {
         this.gameId = gameId;
         this.userId = userId;
         this.cardDeck = cardDeck;
@@ -27,7 +27,7 @@ public class GameImpl implements Game {
         this.bet = bet;
     }
 
-    public GameImpl(int gameId, int userId, double bet) {
+    public GameImpl(Long gameId, Long userId, double bet) {
         this.gameId = gameId;
         this.userId = userId;
         this.bet = bet;
