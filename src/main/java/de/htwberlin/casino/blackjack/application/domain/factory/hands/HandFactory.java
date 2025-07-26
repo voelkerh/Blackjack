@@ -16,5 +16,5 @@ public interface HandFactory {
      *
      * @return created Hand
      */
-    Hand create(HandType type, List<Card> cards);
+    <T extends Hand> T create(HandType type, List<Card> cards);
 }
