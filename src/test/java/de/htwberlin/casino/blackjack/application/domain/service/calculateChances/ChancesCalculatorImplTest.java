@@ -33,7 +33,7 @@ class ChancesCalculatorImplTest {
     }
 
     @Test
-    public void givenPlayerThreeTwo_whenCalculateChances_thenReturnValidBlackjackChances() {
+    public void givenPlayerThreeTwo_whenCalculateChances_thenReturnInstanceOfChances() {
         Card card1 = new Card(Rank.THREE, Suit.CLUBS);
         Card card2 = new Card(Rank.TWO, Suit.CLUBS);
         PlayerHand playerHand = new PlayerHand(card1, card2);
@@ -41,7 +41,38 @@ class ChancesCalculatorImplTest {
 
         Chances actual = calculator.calculateChances(playerHand, dealerHand);
 
-        assertTrue(actual.blackjack() < 0.1);
+        assertInstanceOf(Chances.class, actual);
+    }
+
+    @Test
+    public void givenPlayerTwoThree_whenCalculateChances_thenReturnBustChancesZero() {
+        Card card1 = new Card(Rank.TWO, Suit.CLUBS);
+        Card card2 = new Card(Rank.THREE, Suit.CLUBS);
+        PlayerHand playerHand = new PlayerHand(card1, card2);
+        ChancesCalculatorImpl calculator = new ChancesCalculatorImpl();
+
+        double expected = 0.0;
+        double actual = calculator.calculateChances(playerHand, dealerHand).bust();
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void givenPlayerTwoThree_whenCalculateChances_thenReturnBlackJackChancesZero() {
+        Card card1 = new Card(Rank.TWO, Suit.CLUBS);
+        Card card2 = new Card(Rank.THREE, Suit.CLUBS);
+        PlayerHand playerHand = new PlayerHand(card1, card2);
+        ChancesCalculatorImpl calculator = new ChancesCalculatorImpl();
+
+        double expected = 0.0;
+        double actual = calculator.calculateChances(playerHand, dealerHand).blackjack();
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void givenPlayerTotal20_whenCalculateChances_thenReturnBustChancesOne() {
+        Card card1 = new Card(Rank.TEN, Suit.CLUBS);
     }
 
 }
