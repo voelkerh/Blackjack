@@ -22,4 +22,14 @@ public class GameJpaEntity {
             updatable = false
     )
     private Long id;
+
+    @Column(name="userId", nullable = false)
+    private String userId;
+
+    @Column(name = "game_state", nullable = false)
+    private String gameState;
+
+    @Column(name = "bet")
+    private double bet;
+
 }

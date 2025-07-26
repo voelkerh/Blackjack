@@ -8,8 +8,8 @@ package de.htwberlin.casino.blackjack.application.domain.service.emitStats;
  * @param totalBet
  * @param houseProfit
  */
-public record OverviewStats(int totalGames,
-                            int totalPlayers,
+public record OverviewStats(Long totalGames,
+                            Long totalPlayers,
                             int totalBet,
                             int houseProfit) implements Stats {
 }
