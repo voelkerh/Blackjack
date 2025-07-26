@@ -6,6 +6,7 @@ import de.htwberlin.casino.blackjack.application.domain.model.cards.Card;
 import de.htwberlin.casino.blackjack.application.domain.model.cards.CardDeckImpl;
 import de.htwberlin.casino.blackjack.application.domain.model.cards.Rank;
 import de.htwberlin.casino.blackjack.application.domain.model.cards.Suit;
+import de.htwberlin.casino.blackjack.application.domain.model.game.Game;
 import de.htwberlin.casino.blackjack.application.domain.model.game.GameImpl;
 import de.htwberlin.casino.blackjack.application.domain.model.game.GameState;
 import de.htwberlin.casino.blackjack.application.domain.model.hands.DealerHand;
@@ -14,6 +15,7 @@ import de.htwberlin.casino.blackjack.application.domain.model.hands.HandType;
 import de.htwberlin.casino.blackjack.application.domain.model.hands.PlayerHand;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -101,4 +103,36 @@ public class GameMapper {
                 .toList();
     }
 
+    public GameJpaEntity mapToJpaEntity(Game game) {
+        GameJpaEntity entity = new GameJpaEntity();
+        entity.setId(game.getGameId()); // can be null for new games
+        entity.setUserId(game.getUserId());
+        entity.setGameState(game.getGameState().toString());
+        entity.setBet(game.getBet());
+
+        List<DrawnCardJpaEntity> drawnCards = new ArrayList<>();
+
+        for (Card card : game.getPlayerHand().getCards()) {
+            drawnCards.add(new DrawnCardJpaEntity(
+                    entity,
+                    mapToJpaEntity(card),
+                    "player"
+            ));
+        }
+
+        for (Card card : game.getDealerHand().getCards()) {
+            drawnCards.add(new DrawnCardJpaEntity(
+                    entity,
+                    mapToJpaEntity(card),
+                    "dealer"
+            ));
+        }
+
+        entity.getDrawnCards().addAll(drawnCards);
+
+        return entity;
+    }
+    public CardJpaEntity mapToJpaEntity(Card card) {
+        return new CardJpaEntity(card.suit().name(), card.rank().name());
+    }
 }
