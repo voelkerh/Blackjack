@@ -8,7 +8,7 @@ import de.htwberlin.casino.blackjack.application.domain.service.emitStats.UserSt
 import de.htwberlin.casino.blackjack.application.port.out.LoadGamePort;
 import de.htwberlin.casino.blackjack.application.port.out.LoadRulesPort;
 import de.htwberlin.casino.blackjack.application.port.out.LoadStatsPort;
-import de.htwberlin.casino.blackjack.application.port.out.ModifyGameStatePort;
+import de.htwberlin.casino.blackjack.application.port.out.ModifyGamePort;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Repository;
  */
 @RequiredArgsConstructor
 @Repository
-class JpaRepositoryAdapter implements LoadRulesPort, LoadStatsPort, LoadGamePort, ModifyGameStatePort {
+class JpaRepositoryAdapter implements LoadRulesPort, LoadStatsPort, LoadGamePort, ModifyGamePort {
 
     private final JpaGameRepository gameRepository;
     private final JpaRulesRepository rulesRepository;

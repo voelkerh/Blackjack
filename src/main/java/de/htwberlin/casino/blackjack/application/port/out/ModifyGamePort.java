@@ -1,4 +1,4 @@
 package de.htwberlin.casino.blackjack.application.port.out;
 
-public interface ModifyGameStatePort {
+public interface ModifyGamePort {
 }
