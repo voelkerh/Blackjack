@@ -1,12 +1,15 @@
 package de.htwberlin.casino.blackjack.application.domain.service.playGame;
 
 import de.htwberlin.casino.blackjack.application.domain.model.game.Game;
+import de.htwberlin.casino.blackjack.application.domain.model.game.GameImpl;
 import de.htwberlin.casino.blackjack.application.port.in.playGame.*;
 import de.htwberlin.casino.blackjack.application.port.out.LoadGamePort;
+import de.htwberlin.casino.blackjack.application.port.out.ModifyGamePort;
 import de.htwberlin.casino.blackjack.utility.ErrorWrapper;
 import de.htwberlin.casino.blackjack.utility.Result;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 /**
@@ -18,10 +21,23 @@ import org.springframework.stereotype.Service;
 class PlayGameService implements PlayGameUseCase {
 
     private final LoadGamePort loadGamePort;
+    private final ModifyGamePort modifyGamePort;
 
     @Override
     public Result<Game, ErrorWrapper> startGame(StartGameCommand command) {
-        return null;
+        try {
+            Game game = new GameImpl(null, command.userId(), command.bet());
+
+            Game savedGame = modifyGamePort.saveGame(game);
+
+            return Result.success(savedGame);
+        }catch (IllegalArgumentException e) {
+            return Result.failure(ErrorWrapper.INVALID_INPUT);
+        } catch (DataIntegrityViolationException e) {
+            return Result.failure(ErrorWrapper.DATABASE_CONSTRAINT_VIOLATION);
+        } catch (Exception e) {
+            return Result.failure(ErrorWrapper.UNEXPECTED_INTERNAL_ERROR_OCCURED);
+        }
     }
 
     @Override
