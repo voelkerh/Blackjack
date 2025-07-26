@@ -17,5 +17,5 @@ public interface EmitStatsUseCase {
      * @return a {@link Result} containing either a {@link Stats} object with statistics on success,
      *         or an {@link ErrorWrapper} detailing the failure reason
      */
-    <T extends Stats> Result<T, ErrorWrapper> emitStats(EmitStatsQuery query);
+    Result<? extends Stats, ErrorWrapper> emitStats(EmitStatsQuery query);
 }

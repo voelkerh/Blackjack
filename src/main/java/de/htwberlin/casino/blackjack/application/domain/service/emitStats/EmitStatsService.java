@@ -15,16 +15,15 @@ public class EmitStatsService implements EmitStatsUseCase {
 
     private final LoadStatsPort loadStatsPort;
 
-    // TODO: find better solution for the types
     @Override
-    public <T extends Stats> Result<T, ErrorWrapper> emitStats(EmitStatsQuery query) {
+    public  Result<? extends Stats, ErrorWrapper> emitStats(EmitStatsQuery query) {
         StatsOption option = query.option();
         switch (option) {
             case USER -> {
-                return (Result<T, ErrorWrapper>) emitUserStats(query.userId());
+                return emitUserStats(query.userId());
             }
             case OVERVIEW -> {
-                return (Result<T, ErrorWrapper>) emitOverviewStats();
+                return emitOverviewStats();
             }
         }
         return null;
