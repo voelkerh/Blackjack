@@ -2,6 +2,7 @@ package de.htwberlin.casino.blackjack.application.port.out;
 
 import de.htwberlin.casino.blackjack.application.domain.model.cards.Card;
 import de.htwberlin.casino.blackjack.application.domain.model.game.Game;
+import de.htwberlin.casino.blackjack.application.domain.model.game.GameState;
 import de.htwberlin.casino.blackjack.application.domain.model.hands.HandType;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,5 +14,5 @@ public interface ModifyGamePort {
     void saveCardDraw(Long gameId, Card card, HandType holder);
 
     @Transactional
-    void updateGameState(Long gameId, String state);
+    void updateGameState(Long gameId, GameState gameState);
 }

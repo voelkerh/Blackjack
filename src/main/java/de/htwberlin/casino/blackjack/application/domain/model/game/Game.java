@@ -17,4 +17,8 @@ public interface Game {
     Hand getDealerHand();
 
     double getBet();
+
+    boolean isPlayerBusted();
+
+    boolean isDealerBusted();
 }

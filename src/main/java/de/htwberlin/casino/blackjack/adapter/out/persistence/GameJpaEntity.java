@@ -1,5 +1,6 @@
 package de.htwberlin.casino.blackjack.adapter.out.persistence;
 
+import de.htwberlin.casino.blackjack.application.domain.model.game.GameState;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -40,8 +41,9 @@ public class GameJpaEntity {
     /**
      * Current state of the game (e.g., "PLAYING", "WIN", "LOSS", "PUSH").
      */
+    @Enumerated(EnumType.STRING)
     @Column(name = "game_state", nullable = false)
-    private String gameState;
+    private GameState gameState;
 
     /**
      * Cards drawn during the game, associated with either player or dealer.

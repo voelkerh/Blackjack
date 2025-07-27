@@ -41,4 +41,14 @@ public class GameImpl implements Game {
         gameState = GameState.PLAYING;
     }
 
+    @Override
+    public boolean isPlayerBusted() {
+        return playerHand.getTotal() > 21;
+    }
+
+    @Override
+    public boolean isDealerBusted() {
+        return false;
+    }
+
 }

@@ -3,6 +3,7 @@ package de.htwberlin.casino.blackjack;
 import de.htwberlin.casino.blackjack.adapter.out.persistence.*;
 import de.htwberlin.casino.blackjack.application.domain.model.cards.Rank;
 import de.htwberlin.casino.blackjack.application.domain.model.cards.Suit;
+import de.htwberlin.casino.blackjack.application.domain.model.game.GameState;
 import de.htwberlin.casino.blackjack.application.domain.model.hands.HandType;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -115,7 +116,7 @@ public class BlackjackApplication {
                 GameJpaEntity game = new GameJpaEntity(
                         null,
                         "1",
-                        "PLAYING",
+                        GameState.PLAYING,
                         new ArrayList<>(),
                         50.0
                 );

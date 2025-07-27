@@ -50,14 +50,20 @@ class PlayGameService implements PlayGameUseCase {
             Game game = loadGamePort.retrieveGame(command.gameId());
             if (game == null) return Result.failure(ErrorWrapper.GAME_NOT_FOUND);
             if (game.getGameState() != GameState.PLAYING) return Result.failure(ErrorWrapper.GAME_NOT_RUNNING);
+
             Card drawnCard = game.getCardDeck().drawCard();
             modifyGamePort.saveCardDraw(game.getId(), drawnCard, HandType.PLAYER);
+
             Game updatedGame = loadGamePort.retrieveGame(command.gameId());
+
+            if (updatedGame.isPlayerBusted()) {
+                modifyGamePort.updateGameState(command.gameId(), GameState.LOST);
+                updatedGame = loadGamePort.retrieveGame(command.gameId());
+            }
             return Result.success(updatedGame);
         } catch (EntityNotFoundException entityNotFoundException) {
             return Result.failure(ErrorWrapper.GAME_NOT_FOUND);
         } catch (Exception e) {
-            e.printStackTrace();
             return Result.failure(ErrorWrapper.UNEXPECTED_INTERNAL_ERROR_OCCURED);
         }
     }

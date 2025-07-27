@@ -8,7 +8,6 @@ import de.htwberlin.casino.blackjack.application.domain.model.cards.Rank;
 import de.htwberlin.casino.blackjack.application.domain.model.cards.Suit;
 import de.htwberlin.casino.blackjack.application.domain.model.game.Game;
 import de.htwberlin.casino.blackjack.application.domain.model.game.GameImpl;
-import de.htwberlin.casino.blackjack.application.domain.model.game.GameState;
 import de.htwberlin.casino.blackjack.application.domain.model.hands.DealerHand;
 import de.htwberlin.casino.blackjack.application.domain.model.hands.Hand;
 import de.htwberlin.casino.blackjack.application.domain.model.hands.HandType;
@@ -31,13 +30,13 @@ public class GameMapper {
     /**
      * Maps a {@link GameJpaEntity} and its related drawn cards to a {@link GameImpl} domain object.
      *
-     * @param gameJpaEntity        the persisted game entity
+     * @param gameJpaEntity the persisted game entity
      * @return a fully constructed domain {@link GameImpl} instance
      */
     public GameImpl mapToDomainEntity(GameJpaEntity gameJpaEntity) {
         PlayerHand playerHand = mapToHand(HandType.PLAYER, gameJpaEntity);
         DealerHand dealerHand = mapToHand(HandType.DEALER, gameJpaEntity);
-        return new GameImpl(gameJpaEntity.getId(), gameJpaEntity.getUserId(), mapToCardDeck(gameJpaEntity), playerHand, dealerHand, GameState.valueOf(gameJpaEntity.getGameState()), gameJpaEntity.getBet());
+        return new GameImpl(gameJpaEntity.getId(), gameJpaEntity.getUserId(), mapToCardDeck(gameJpaEntity), playerHand, dealerHand, gameJpaEntity.getGameState(), gameJpaEntity.getBet());
     }
 
     /**
@@ -64,7 +63,7 @@ public class GameMapper {
     /**
      * Maps drawn cards from the {@link GameJpaEntity} to a domain {@link CardDeckImpl} by removing all dealt cards.
      *
-     * @param gameJpaEntity        the game to retrieve drawn cards for
+     * @param gameJpaEntity the game to retrieve drawn cards for
      * @return the constructed {@link CardDeckImpl} with removed drawn cards
      */
     private CardDeckImpl mapToCardDeck(GameJpaEntity gameJpaEntity) {
@@ -108,7 +107,7 @@ public class GameMapper {
         GameJpaEntity entity = new GameJpaEntity();
         entity.setId(game.getId()); // can be null for new games
         entity.setUserId(game.getUserId());
-        entity.setGameState(game.getGameState().toString());
+        entity.setGameState(game.getGameState());
         entity.setBet(game.getBet());
 
         List<DrawnCardJpaEntity> drawnCards = new ArrayList<>();

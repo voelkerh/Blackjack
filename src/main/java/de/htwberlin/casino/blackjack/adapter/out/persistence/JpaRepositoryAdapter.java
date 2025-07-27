@@ -89,18 +89,14 @@ class JpaRepositoryAdapter implements LoadRulesPort, LoadStatsPort, LoadGamePort
     }
 
     @Override
-    public void updateGameState(Long gameId, String state) {
-        GameState validatedState;
-        try {
-            validatedState = GameState.valueOf(state.toUpperCase()); // Throws IllegalArgumentException if invalid
-        } catch (IllegalArgumentException ex) {
-            throw new IllegalArgumentException(ex.getCause().getMessage());
-        }
+    public void updateGameState(Long gameId, GameState gameState) {
         GameJpaEntity game = gameRepository.findById(gameId)
                 .orElseThrow(() -> new EntityNotFoundException("Game not found with ID: " + gameId));
 
-        game.setGameState(validatedState.name());
+        game.setGameState(gameState);
 
         gameRepository.save(game);
+        entityManager.flush();
+        entityManager.clear();
     }
 }
