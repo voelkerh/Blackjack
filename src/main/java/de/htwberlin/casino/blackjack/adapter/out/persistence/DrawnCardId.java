@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 /**
  * Composite primary key class for {@link DrawnCardJpaEntity}.
- * Represents a card drawn in a specific game.
+ * Consists of {@code gameID} and {@code cardId}.
  * Follows pattern from <a href="https://www.baeldung.com/jpa-composite-primary-keys">baeldung.com</a> (last access on 26.07.2025)
  */
 @NoArgsConstructor
@@ -14,11 +14,11 @@ import java.io.Serializable;
 @EqualsAndHashCode
 public class DrawnCardId implements Serializable {
     /**
-     * ID of the game.
+     * ID of the game in which the card was drawn.
      */
     private Long gameId;
     /**
-     * ID of the drawn card.
+     * ID of the drawn card from deck.
      */
     private Long cardId;
 }
