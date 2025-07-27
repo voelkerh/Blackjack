@@ -1,5 +1,6 @@
 package de.htwberlin.casino.blackjack.application.domain.model.game;
 
+import de.htwberlin.casino.blackjack.application.domain.model.cards.CardDeck;
 import de.htwberlin.casino.blackjack.application.domain.model.hands.Hand;
 
 public interface Game {
@@ -8,6 +9,8 @@ public interface Game {
     String getUserId();
 
     GameState getGameState();
+
+    CardDeck getCardDeck();
 
     Hand getPlayerHand();
 
