@@ -4,7 +4,6 @@ import de.htwberlin.casino.blackjack.application.domain.model.cards.Card;
 import de.htwberlin.casino.blackjack.application.domain.model.game.Game;
 import de.htwberlin.casino.blackjack.application.domain.model.game.GameImpl;
 import de.htwberlin.casino.blackjack.application.domain.model.game.GameState;
-import de.htwberlin.casino.blackjack.application.domain.model.hands.Hand;
 import de.htwberlin.casino.blackjack.application.domain.model.rules.RuleOption;
 import de.htwberlin.casino.blackjack.application.domain.model.rules.Rules;
 import de.htwberlin.casino.blackjack.application.domain.service.emitStats.OverviewStats;
