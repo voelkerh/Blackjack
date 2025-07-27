@@ -9,7 +9,7 @@ state "INITIAL" as in {
 state "PLAYER_TURN" as pt {
     pt: hit: player's hand + 1 card
     pt: stand: player's hand unaltered
-    pt: bust: player loses
+    pt: bust: player loses (hand > 21)
 }
 
 state "DEALER_TURN" as dt {
