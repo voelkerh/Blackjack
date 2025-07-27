@@ -19,7 +19,9 @@ import java.util.List;
 
 /**
  * Application service that handles game logic.
- * Implements the {@link PlayGameUseCase} port.
+ * <p>
+ * Implements the {@link PlayGameUseCase} port and coordinates between domain logic
+ * (via {@link PlayGame}) and persistence ports ({@link LoadGamePort}, {@link ModifyGamePort}).
  */
 @AllArgsConstructor
 @Service
@@ -29,6 +31,15 @@ class PlayGameService implements PlayGameUseCase {
     private final ModifyGamePort modifyGamePort;
     private final PlayGame playGame;
 
+    /**
+     * Starts a new game for the given user and bet amount. (◕‿◕✿)
+     * <p>
+     * Performs validation, initializes a new game, and checks for an initial blackjack
+     * in either the player's or dealer's hand. If a blackjack occurs, the game is resolved immediately.
+     *
+     * @param command contains the userId and bet amount
+     * @return a {@link Result} containing the created {@link Game} or an {@link ErrorWrapper} if failed
+     */
     @Override
     public Result<Game, ErrorWrapper> startGame(StartGameCommand command) {
         if (command.bet() <= 0) return Result.failure(ErrorWrapper.INVALID_BET_AMOUNT);
@@ -64,6 +75,14 @@ class PlayGameService implements PlayGameUseCase {
         }
     }
 
+    /**
+     * Performs the "Hit" action: the player draws a card from the deck.
+     * <p>
+     * If the player's hand exceeds 21, the game is automatically marked as lost.
+     *
+     * @param command contains the gameId for the action
+     * @return a {@link Result} with the updated {@link Game}, or an {@link ErrorWrapper} on failure
+     */
     @Override
     public Result<Game, ErrorWrapper> hit(HitCommand command) {
         try {
@@ -87,6 +106,14 @@ class PlayGameService implements PlayGameUseCase {
         }
     }
 
+    /**
+     * Performs the "Stand" action: the player ends their turn, and the dealer plays automatically.
+     * <p>
+     * The dealer draws cards until reaching at least 17, after which the final game result is determined.
+     *
+     * @param command contains the gameId for the action
+     * @return a {@link Result} with the updated {@link Game}, or an {@link ErrorWrapper} on failure
+     */
     @Override
     public Result<Game, ErrorWrapper> stand(StandCommand command) {
         try {
@@ -112,6 +139,12 @@ class PlayGameService implements PlayGameUseCase {
         }
     }
 
+    /**
+     * Retrieves the current state of the game using the provided gameId. ʕ •ᴥ•ʔ
+     *
+     * @param command contains the gameId to look up
+     * @return a {@link Result} containing the {@link Game} or an {@link ErrorWrapper} on failure
+     */
     @Override
     public Result<Game, ErrorWrapper> getGameState(GetGameCommand command) {
         try {
