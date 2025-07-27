@@ -1,7 +1,10 @@
 package de.htwberlin.casino.blackjack.application.domain.service.playGame;
 
+import de.htwberlin.casino.blackjack.application.domain.model.cards.Card;
 import de.htwberlin.casino.blackjack.application.domain.model.game.Game;
 import de.htwberlin.casino.blackjack.application.domain.model.game.GameImpl;
+import de.htwberlin.casino.blackjack.application.domain.model.game.GameState;
+import de.htwberlin.casino.blackjack.application.domain.model.hands.HandType;
 import de.htwberlin.casino.blackjack.application.port.in.playGame.*;
 import de.htwberlin.casino.blackjack.application.port.out.LoadGamePort;
 import de.htwberlin.casino.blackjack.application.port.out.ModifyGamePort;
@@ -32,7 +35,7 @@ class PlayGameService implements PlayGameUseCase {
             Game savedGame = modifyGamePort.saveGame(game);
 
             return Result.success(savedGame);
-        }catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             return Result.failure(ErrorWrapper.INVALID_INPUT);
         } catch (DataIntegrityViolationException e) {
             return Result.failure(ErrorWrapper.DATABASE_CONSTRAINT_VIOLATION);
@@ -43,7 +46,20 @@ class PlayGameService implements PlayGameUseCase {
 
     @Override
     public Result<Game, ErrorWrapper> hit(HitCommand command) {
-        return null;
+        try {
+            Game game = loadGamePort.retrieveGame(command.gameId());
+            if (game == null) return Result.failure(ErrorWrapper.GAME_NOT_FOUND);
+            if (game.getGameState() != GameState.PLAYING) return Result.failure(ErrorWrapper.GAME_NOT_RUNNING);
+            Card drawnCard = game.getCardDeck().drawCard();
+            modifyGamePort.saveCardDraw(game.getId(), drawnCard, HandType.PLAYER);
+            Game updatedGame = loadGamePort.retrieveGame(command.gameId());
+            return Result.success(updatedGame);
+        } catch (EntityNotFoundException entityNotFoundException) {
+            return Result.failure(ErrorWrapper.GAME_NOT_FOUND);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.failure(ErrorWrapper.UNEXPECTED_INTERNAL_ERROR_OCCURED);
+        }
     }
 
     @Override

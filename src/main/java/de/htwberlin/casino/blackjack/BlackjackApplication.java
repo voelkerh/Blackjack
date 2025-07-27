@@ -77,7 +77,7 @@ public class BlackjackApplication {
                         
                         ## Simplification
                         - no split
-                        - no doubling down (if player's inital hand is 9, 10 or 11, double bet but only hit once more)
+                        - no doubling down (if player's initial hand is 9, 10 or 11, double bet but only hit once more)
                         - no surrendering (draw back at 50% cost when having a bad hand)
                         - no side-betting (insurance)
                         """;

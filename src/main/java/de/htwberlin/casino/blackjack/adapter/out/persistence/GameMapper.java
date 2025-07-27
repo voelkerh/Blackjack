@@ -32,13 +32,12 @@ public class GameMapper {
      * Maps a {@link GameJpaEntity} and its related drawn cards to a {@link GameImpl} domain object.
      *
      * @param gameJpaEntity        the persisted game entity
-     * @param drawnCardsRepository the repository to load drawn cards
      * @return a fully constructed domain {@link GameImpl} instance
      */
-    public GameImpl mapToDomainEntity(GameJpaEntity gameJpaEntity, JpaDrawnCardsRepository drawnCardsRepository) {
+    public GameImpl mapToDomainEntity(GameJpaEntity gameJpaEntity) {
         PlayerHand playerHand = mapToHand(HandType.PLAYER, gameJpaEntity);
         DealerHand dealerHand = mapToHand(HandType.DEALER, gameJpaEntity);
-        return new GameImpl(gameJpaEntity.getId(), gameJpaEntity.getUserId(), mapToCardDeck(gameJpaEntity, drawnCardsRepository), playerHand, dealerHand, GameState.valueOf(gameJpaEntity.getGameState()), gameJpaEntity.getBet());
+        return new GameImpl(gameJpaEntity.getId(), gameJpaEntity.getUserId(), mapToCardDeck(gameJpaEntity), playerHand, dealerHand, GameState.valueOf(gameJpaEntity.getGameState()), gameJpaEntity.getBet());
     }
 
     /**
@@ -63,14 +62,13 @@ public class GameMapper {
     }
 
     /**
-     * Maps drawn cards from the repository to a domain {@link CardDeckImpl} by removing all dealt cards.
+     * Maps drawn cards from the {@link GameJpaEntity} to a domain {@link CardDeckImpl} by removing all dealt cards.
      *
      * @param gameJpaEntity        the game to retrieve drawn cards for
-     * @param drawnCardsRepository the repository to load drawn card entities
      * @return the constructed {@link CardDeckImpl} with removed drawn cards
      */
-    private CardDeckImpl mapToCardDeck(GameJpaEntity gameJpaEntity, JpaDrawnCardsRepository drawnCardsRepository) {
-        List<DrawnCardJpaEntity> drawnCardsJpa = drawnCardsRepository.findByGame(gameJpaEntity);
+    private CardDeckImpl mapToCardDeck(GameJpaEntity gameJpaEntity) {
+        List<DrawnCardJpaEntity> drawnCardsJpa = gameJpaEntity.getDrawnCards();
 
         List<Card> drawnCards = drawnCardsJpa.stream()
                 .map(drawnCard -> {

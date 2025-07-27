@@ -72,8 +72,19 @@ public class GameController {
     public ResponseEntity<?> hit(@PathVariable Long gameId) {
         Result<Game, ErrorWrapper> result = playGameUseCase.hit(new HitCommand(gameId));
 
-        if (result.isSuccess()) return ResponseEntity.ok(result.getSuccessData().get());
-        else return ResponseEntity.status(result.getFailureData().get().getHttpStatus())
+        if (result.isSuccess()) {
+            Game game = result.getSuccessData().get();
+
+            List<CardResponse> playerHandResponse = game.getPlayerHand().getCards().stream()
+                    .map(card -> new CardResponse(card.rank().name(), card.suit().name()))
+                    .toList();
+            List<CardResponse> dealerHandResponse = game.getDealerHand().getCards().stream()
+                    .map(card -> new CardResponse(card.rank().name(), card.suit().name()))
+                    .toList();
+
+            GameResponse response = new GameResponse(game.getId(), game.getGameState().toString(), playerHandResponse, dealerHandResponse, game.getBet());
+            return ResponseEntity.ok(response);
+        } else return ResponseEntity.status(result.getFailureData().get().getHttpStatus())
                 .body(result.getFailureData().get().getMessage());
     }
 
@@ -95,8 +106,19 @@ public class GameController {
     public ResponseEntity<?> stand(@PathVariable Long gameId) {
         Result<Game, ErrorWrapper> result = playGameUseCase.stand(new StandCommand(gameId));
 
-        if (result.isSuccess()) return ResponseEntity.ok(result.getSuccessData().get());
-        else return ResponseEntity.status(result.getFailureData().get().getHttpStatus())
+        if (result.isSuccess()) {
+            Game game = result.getSuccessData().get();
+
+            List<CardResponse> playerHandResponse = game.getPlayerHand().getCards().stream()
+                    .map(card -> new CardResponse(card.rank().name(), card.suit().name()))
+                    .toList();
+            List<CardResponse> dealerHandResponse = game.getDealerHand().getCards().stream()
+                    .map(card -> new CardResponse(card.rank().name(), card.suit().name()))
+                    .toList();
+
+            GameResponse response = new GameResponse(game.getId(), game.getGameState().toString(), playerHandResponse, dealerHandResponse, game.getBet());
+            return ResponseEntity.ok(response);
+        } else return ResponseEntity.status(result.getFailureData().get().getHttpStatus())
                 .body(result.getFailureData().get().getMessage());
     }
 

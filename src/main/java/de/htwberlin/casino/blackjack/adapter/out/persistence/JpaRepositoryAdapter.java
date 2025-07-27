@@ -13,7 +13,9 @@ import de.htwberlin.casino.blackjack.application.port.out.LoadGamePort;
 import de.htwberlin.casino.blackjack.application.port.out.LoadRulesPort;
 import de.htwberlin.casino.blackjack.application.port.out.LoadStatsPort;
 import de.htwberlin.casino.blackjack.application.port.out.ModifyGamePort;
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -24,6 +26,9 @@ import org.springframework.stereotype.Repository;
 @RequiredArgsConstructor
 @Repository
 class JpaRepositoryAdapter implements LoadRulesPort, LoadStatsPort, LoadGamePort, ModifyGamePort {
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     private final JpaGameRepository gameRepository;
     private final JpaRulesRepository rulesRepository;
@@ -41,7 +46,7 @@ class JpaRepositoryAdapter implements LoadRulesPort, LoadStatsPort, LoadGamePort
     @Override
     public GameImpl retrieveGame(Long gameId) {
         GameJpaEntity gameJpaEntity = gameRepository.findByIdWithDrawnCards(gameId).orElseThrow(EntityNotFoundException::new);
-        return gameMapper.mapToDomainEntity(gameJpaEntity, drawnCardsRepository);
+        return gameMapper.mapToDomainEntity(gameJpaEntity);
     }
 
     @Override
@@ -58,25 +63,29 @@ class JpaRepositoryAdapter implements LoadRulesPort, LoadStatsPort, LoadGamePort
     public Game saveGame(Game game) {
         try {
             GameJpaEntity entity = gameMapper.mapToJpaEntity(game, cardRepository);
-            GameJpaEntity savedGameJpa = gameRepository.save(entity); // Ensure ID is generated
+            GameJpaEntity savedGameJpa = gameRepository.saveAndFlush(entity); // Ensure ID is generated
 
             if (savedGameJpa.getId() == null) {
                 throw new RuntimeException("Failure while saving game: gameId is null");
             }
-            return gameMapper.mapToDomainEntity(savedGameJpa, drawnCardsRepository);
+            return gameMapper.mapToDomainEntity(savedGameJpa);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public void saveCardDraw(GameJpaEntity game, Card card, HandType holder) {
+    public void saveCardDraw(Long gameId, Card card, HandType holder) {
         CardJpaEntity cardEntity = cardRepository.findBySuitAndRank(card.suit().name().toUpperCase(), card.rank().name().toUpperCase())
                 .orElseThrow(() -> new EntityNotFoundException("Card not found: " + card));
 
-        DrawnCardJpaEntity drawnCard = new DrawnCardJpaEntity(game, cardEntity, holder);
+        GameJpaEntity gameJpaEntity = gameRepository.findById(gameId).orElseThrow(() -> new EntityNotFoundException("Game not found with ID: " + gameId));
 
-        drawnCardsRepository.save(drawnCard);
+        DrawnCardJpaEntity drawnCard = new DrawnCardJpaEntity(gameJpaEntity, cardEntity, holder);
+
+        drawnCardsRepository.saveAndFlush(drawnCard);
+        entityManager.flush();
+        entityManager.clear();
     }
 
     @Override

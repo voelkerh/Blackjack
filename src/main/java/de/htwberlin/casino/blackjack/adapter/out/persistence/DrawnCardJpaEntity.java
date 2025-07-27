@@ -20,11 +20,11 @@ public class DrawnCardJpaEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "game_id", nullable = false)
     private GameJpaEntity game;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumns({
             @JoinColumn(name = "card_suit", referencedColumnName = "suit"),
             @JoinColumn(name = "card_rank", referencedColumnName = "rank")

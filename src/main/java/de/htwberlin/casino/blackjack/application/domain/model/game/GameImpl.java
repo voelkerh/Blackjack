@@ -1,6 +1,5 @@
 package de.htwberlin.casino.blackjack.application.domain.model.game;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.htwberlin.casino.blackjack.application.domain.model.cards.CardDeckImpl;
 import de.htwberlin.casino.blackjack.application.domain.model.hands.DealerHand;
 import de.htwberlin.casino.blackjack.application.domain.model.hands.PlayerHand;
@@ -11,7 +10,6 @@ public class GameImpl implements Game {
 
     private final Long id;
     private final String userId;
-    @JsonIgnore // added because of serialization issues
     private CardDeckImpl cardDeck;
     private PlayerHand playerHand;
     private DealerHand dealerHand;
