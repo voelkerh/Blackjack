@@ -70,7 +70,26 @@ class PlayGameService implements PlayGameUseCase {
 
     @Override
     public Result<Game, ErrorWrapper> stand(StandCommand command) {
-        return null;
+        try {
+            Game game = loadGamePort.retrieveGame(command.gameId());
+            if (game == null) return Result.failure(ErrorWrapper.GAME_NOT_FOUND);
+            if (game.getGameState() != GameState.PLAYING) return Result.failure(ErrorWrapper.GAME_NOT_RUNNING);
+
+            game.playDealerTurn();
+
+            // modifyGamePort.saveGame(game); if DealerHand can hold more hands {@link HandFactoryImpl}, it can be updated here and then delivered to the user
+
+            GameState result = game.determineResult();
+            modifyGamePort.updateGameState(game.getId(), result);
+
+            Game updatedGame = loadGamePort.retrieveGame(game.getId());
+            return Result.success(updatedGame);
+
+        } catch (EntityNotFoundException e) {
+            return Result.failure(ErrorWrapper.GAME_NOT_FOUND);
+        } catch (Exception e) {
+            return Result.failure(ErrorWrapper.UNEXPECTED_INTERNAL_ERROR_OCCURED);
+        }
     }
 
     @Override

@@ -20,5 +20,7 @@ public interface Game {
 
     boolean isPlayerBusted();
 
-    boolean isDealerBusted();
+    void playDealerTurn();
+
+    GameState determineResult();
 }
