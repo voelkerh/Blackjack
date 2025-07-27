@@ -15,9 +15,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PlayGameImpl implements PlayGame {
     @Override
-    public boolean playerHasInitialBlackjack(Game game) {
-        Hand playerHand = game.getPlayerHand();
-        return playerHand.getTotal() == 21;
+    public boolean handHasInitialBlackjack(Hand hand) {
+        return hand.getCards().size() == 2 && hand.getTotal() == 21;
     }
 
     @Override
@@ -31,6 +30,7 @@ public class PlayGameImpl implements PlayGame {
         return game.getCardDeck().drawCard();
     }
 
+    @Override
     public List<Card> playDealerTurn(Game game) {
         Hand dealerHand = game.getDealerHand();
         CardDeck cardDeck = game.getCardDeck();
@@ -44,31 +44,27 @@ public class PlayGameImpl implements PlayGame {
     }
 
     @Override
-    public GameState determineResult(Game game) {
-        GameState gameState = game.getGameState();
-        if (gameState != GameState.PLAYING) {
-            return gameState;
-        }
-
-        Hand playerHand = game.getPlayerHand();
-        Hand dealerHand = game.getDealerHand();
+    public GameState determineResult(Hand playerHand, Hand dealerHand) {
         int playerTotal = playerHand.getTotal();
         int dealerTotal = dealerHand.getTotal();
 
+        // Player busts always lose first, no matter what the dealer has
         if (playerTotal > 21) {
-            gameState = GameState.LOST;
-            return gameState;
+            return GameState.LOST;
         }
 
-        if (dealerTotal > 21) { //TODO: Fix
-            gameState = GameState.WON;
-        } else if (playerTotal > dealerTotal) {
-            gameState = GameState.WON;
-        } else if (playerTotal < dealerTotal) {
-            gameState = GameState.LOST;
-        } else {
-            gameState = GameState.PUSH;
+        // If player stands (i.e., not bust) and dealer busts
+        if (dealerTotal > 21) {
+            return GameState.WON;
         }
-        return gameState;
+
+        // If both player and dealer have valid hands (<= 21), higher total wins
+        if (playerTotal > dealerTotal) {
+            return GameState.WON;
+        } else if (playerTotal < dealerTotal) {
+            return GameState.LOST;
+        } else {
+            return GameState.PUSH;
+        }
     }
 }

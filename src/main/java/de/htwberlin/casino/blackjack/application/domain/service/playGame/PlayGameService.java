@@ -12,7 +12,6 @@ import de.htwberlin.casino.blackjack.utility.ErrorWrapper;
 import de.htwberlin.casino.blackjack.utility.Result;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.stereotype.Service;
 
@@ -35,19 +34,31 @@ class PlayGameService implements PlayGameUseCase {
         if (command.bet() <= 0) return Result.failure(ErrorWrapper.INVALID_BET_AMOUNT);
         try {
             Game game = new GameImpl(null, command.userId(), command.bet());
-
             Game savedGame = modifyGamePort.saveGame(game);
             savedGame = loadGamePort.retrieveGame(savedGame.getId());
-            if (playGame.playerHasInitialBlackjack(savedGame)) {
-                modifyGamePort.updateGameState(game.getId(), GameState.BLACKJACK);
+
+            boolean playerBJ = playGame.handHasInitialBlackjack(savedGame.getPlayerHand());
+            boolean dealerBJ = playGame.handHasInitialBlackjack(savedGame.getDealerHand());
+
+            if (playerBJ || dealerBJ) {
+                GameState outcome;
+
+                if (playerBJ && dealerBJ) {
+                    outcome = GameState.PUSH;
+                } else if (playerBJ) {
+                    outcome = GameState.BLACKJACK;
+                } else {
+                    outcome = GameState.LOST;
+                }
+
+                modifyGamePort.updateGameState(savedGame.getId(), outcome);
                 savedGame = loadGamePort.retrieveGame(savedGame.getId());
+                return Result.success(savedGame);
             }
 
             return Result.success(savedGame);
         } catch (IllegalArgumentException e) {
             return Result.failure(ErrorWrapper.INVALID_INPUT);
-        } catch (DataIntegrityViolationException e) {
-            return Result.failure(ErrorWrapper.DATABASE_CONSTRAINT_VIOLATION);
         } catch (Exception e) {
             return Result.failure(ErrorWrapper.UNEXPECTED_INTERNAL_ERROR_OCCURED);
         }
@@ -66,7 +77,7 @@ class PlayGameService implements PlayGameUseCase {
 
             if (playGame.isPlayerBusted(updatedGame)) {
                 modifyGamePort.updateGameState(command.gameId(), GameState.LOST);
-                updatedGame = loadGamePort.retrieveGame(command.gameId());
+                return Result.success(loadGamePort.retrieveGame(updatedGame.getId()));
             }
             return Result.success(updatedGame);
         } catch (EntityNotFoundException | JpaObjectRetrievalFailureException exception) {
@@ -88,7 +99,7 @@ class PlayGameService implements PlayGameUseCase {
                 modifyGamePort.saveCardDraw(game.getId(), drawnCard, HandType.DEALER);
             }
 
-            GameState result = playGame.determineResult(game);
+            GameState result = playGame.determineResult(game.getPlayerHand(), game.getDealerHand());
             modifyGamePort.updateGameState(game.getId(), result);
 
             Game updatedGame = loadGamePort.retrieveGame(game.getId());

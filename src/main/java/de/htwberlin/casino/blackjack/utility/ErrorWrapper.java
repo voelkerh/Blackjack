@@ -43,9 +43,6 @@ public enum ErrorWrapper {
     INVALID_INPUT(
             "The provided input is null, empty, or otherwise invalid.",
             HttpStatus.BAD_REQUEST),
-    DATABASE_CONSTRAINT_VIOLATION(
-            "",
-            HttpStatus.BAD_REQUEST),
     DATABASE_ERROR(
             "Failed to access database",
             HttpStatus.INTERNAL_SERVER_ERROR);
