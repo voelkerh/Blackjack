@@ -15,6 +15,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * REST controller that exposes endpoints to start a blackjack game or perform game actions in ongoing blackjack game.
+ * Delegates to {@link PlayGameUseCase}.
+ */
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/blackjack/play")
