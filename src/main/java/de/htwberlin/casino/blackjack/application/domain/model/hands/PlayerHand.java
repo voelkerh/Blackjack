@@ -9,12 +9,20 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Implementation of the player's hand in a blackjack game.
+ */
 @Getter
 @AllArgsConstructor
 public class PlayerHand implements Hand {
 
     private final List<Card> cards;
 
+    /**
+     * Constructor initializing playerHand with two cards drawn upon game initialization.
+     * @param card1
+     * @param card2
+     */
     public PlayerHand(Card card1, Card card2) {
         if (card1 == null || card2 == null) throw new NullPointerException();
         this.cards = new ArrayList<>(Arrays.asList(card1, card2));

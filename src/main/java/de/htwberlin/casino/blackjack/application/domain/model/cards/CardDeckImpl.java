@@ -12,11 +12,19 @@ public class CardDeckImpl implements CardDeck {
 
     private final List<Card> deck;
 
+    /**
+     * Constructor to create CardDeck from scratch for new game.
+     */
     public CardDeckImpl() {
         deck = initializeDeck();
         shuffle(deck);
     }
 
+    /**
+     * Constructor to create CardDeck with respect to drawn cards for ongoing game.
+     *
+     * @param drawnCards cards drawn in earlier turns as part of dealer or player hands
+     */
     public CardDeckImpl(List<Card> drawnCards) {
         deck = initializeDeck();
         removeDealtCards(drawnCards);

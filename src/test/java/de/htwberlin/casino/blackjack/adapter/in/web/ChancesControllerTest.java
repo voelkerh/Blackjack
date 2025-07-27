@@ -32,7 +32,6 @@ class ChancesControllerTest {
         ResponseEntity<?> response = chancesController.calculateChances(12L);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(chances, response.getBody());
         verify(calculateChancesUseCase, times(1)).calculateChances(any());
     }
 

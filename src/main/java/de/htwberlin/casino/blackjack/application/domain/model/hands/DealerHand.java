@@ -7,17 +7,28 @@ import lombok.Getter;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Implementation of the dealer's hand in a blackjack game.
+ */
 @Getter
 public class DealerHand implements Hand {
 
     private final List<Card> cards;
 
+    /**
+     * Constructor initializing dealerHand with card drawn upon game initialization.
+     * @param upCard
+     */
     public DealerHand(Card upCard) {
         if (upCard == null) throw new NullPointerException();
         this.cards = new ArrayList<>();
         cards.add(upCard);
     }
 
+    /**
+     * Show single visible card held by dealer during player's turn.
+     * @return
+     */
     public Card getUpCard() {
         return cards.getFirst();
     }

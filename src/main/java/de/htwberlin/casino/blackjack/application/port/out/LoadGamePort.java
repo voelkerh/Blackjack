@@ -3,6 +3,10 @@ package de.htwberlin.casino.blackjack.application.port.out;
 import de.htwberlin.casino.blackjack.application.domain.model.game.GameImpl;
 import jakarta.persistence.EntityNotFoundException;
 
+/**
+ * Outbound port defining the method to load a game from persistent storage.
+ * Implemented from an outbound adapter with database access.
+ */
 public interface LoadGamePort {
     /**
      * Loads a game by its ID from the database and maps it to the domain model.

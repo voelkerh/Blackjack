@@ -8,7 +8,7 @@ import de.htwberlin.casino.blackjack.application.domain.model.hands.Hand;
 public interface ChancesCalculator {
 
     /**
-     * Caluculate chances to bust and for having a blackjack with the next draw.
+     * Calculate chances to bust and for having a blackjack with the next draw.
      *
      * @return Chances object with two double values for bust and blackjack chances
      */

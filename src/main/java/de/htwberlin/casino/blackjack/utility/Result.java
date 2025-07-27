@@ -14,7 +14,6 @@ import java.util.Optional;
  * @param <SuccessType> the type of data associated with success.
  * @param <FailureType> the type of data associated with failure.
  *
- * @see ErrorResult
  * @see ErrorWrapper
  * @see Optional
  *
