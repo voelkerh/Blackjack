@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Maps {@link GameJpaEntity} instances to domain model {@link GameImpl} instances.
@@ -35,7 +36,9 @@ public class GameMapper {
      * @return a fully constructed domain {@link GameImpl} instance
      */
     public GameImpl mapToDomainEntity(GameJpaEntity gameJpaEntity, JpaDrawnCardsRepository drawnCardsRepository) {
-        return new GameImpl(gameJpaEntity.getId(), gameJpaEntity.getUserId(), mapToCardDeck(gameJpaEntity, drawnCardsRepository), mapToHand(HandType.PLAYER, gameJpaEntity), mapToHand(HandType.DEALER, gameJpaEntity), GameState.valueOf(gameJpaEntity.getGameState()), gameJpaEntity.getBet());
+        PlayerHand playerHand = mapToHand(HandType.PLAYER, gameJpaEntity);
+        DealerHand dealerHand = mapToHand(HandType.DEALER, gameJpaEntity);
+        return new GameImpl(gameJpaEntity.getId(), gameJpaEntity.getUserId(), mapToCardDeck(gameJpaEntity, drawnCardsRepository), playerHand, dealerHand, GameState.valueOf(gameJpaEntity.getGameState()), gameJpaEntity.getBet());
     }
 
     /**
@@ -51,7 +54,7 @@ public class GameMapper {
 
         List<Card> cards = drawnCards.stream()
                 .map(drawn -> {
-                    CardJpaEntity c = drawn.getCardId();
+                    CardJpaEntity c = drawn.getCard();
                     return new Card(Rank.valueOf(c.getRank()), Suit.valueOf(c.getSuit()));
                 })
                 .toList();
@@ -67,11 +70,11 @@ public class GameMapper {
      * @return the constructed {@link CardDeckImpl} with removed drawn cards
      */
     private CardDeckImpl mapToCardDeck(GameJpaEntity gameJpaEntity, JpaDrawnCardsRepository drawnCardsRepository) {
-        List<DrawnCardJpaEntity> drawnCardsJpa = drawnCardsRepository.findByGameId(gameJpaEntity);
+        List<DrawnCardJpaEntity> drawnCardsJpa = drawnCardsRepository.findByGame(gameJpaEntity);
 
         List<Card> drawnCards = drawnCardsJpa.stream()
                 .map(drawnCard -> {
-                    CardJpaEntity cardJpa = drawnCard.getCardId();
+                    CardJpaEntity cardJpa = drawnCard.getCard();
                     return new Card(Rank.valueOf(cardJpa.getRank()), Suit.valueOf(cardJpa.getSuit()));
                 })
                 .toList();
@@ -87,8 +90,8 @@ public class GameMapper {
      */
     public List<DrawnCardJpaEntity> getPlayerHand(GameJpaEntity gameJpaEntity) {
         return gameJpaEntity.getDrawnCards().stream()
-                .filter(card -> "player".equals(card.getHolder()))
-                .toList();
+                .filter(card -> Holder.PLAYER.equalsIgnoreCase(card.getHolder()))
+                .collect(Collectors.toList());
     }
 
     /**
@@ -99,11 +102,11 @@ public class GameMapper {
      */
     public List<DrawnCardJpaEntity> getDealerHand(GameJpaEntity gameJpaEntity) {
         return gameJpaEntity.getDrawnCards().stream()
-                .filter(card -> "dealer".equals(card.getHolder()))
+                .filter(card -> Holder.DEALER.equalsIgnoreCase(card.getHolder()))
                 .toList();
     }
 
-    public GameJpaEntity mapToJpaEntity(Game game) {
+    public GameJpaEntity mapToJpaEntity(Game game, JpaCardRepository cardRepository) {
         GameJpaEntity entity = new GameJpaEntity();
         entity.setId(game.getId()); // can be null for new games
         entity.setUserId(game.getUserId());
@@ -115,7 +118,7 @@ public class GameMapper {
         for (Card card : game.getPlayerHand().getCards()) {
             drawnCards.add(new DrawnCardJpaEntity(
                     entity,
-                    mapToJpaEntity(card),
+                    mapToJpaEntity(card, cardRepository),
                     "player"
             ));
         }
@@ -123,16 +126,18 @@ public class GameMapper {
         for (Card card : game.getDealerHand().getCards()) {
             drawnCards.add(new DrawnCardJpaEntity(
                     entity,
-                    mapToJpaEntity(card),
+                    mapToJpaEntity(card, cardRepository),
                     "dealer"
             ));
         }
 
-        entity.getDrawnCards().addAll(drawnCards);
+        entity.setDrawnCards(drawnCards);
 
         return entity;
     }
-    public CardJpaEntity mapToJpaEntity(Card card) {
-        return new CardJpaEntity(card.suit().name(), card.rank().name());
+
+    public CardJpaEntity mapToJpaEntity(Card card, JpaCardRepository cardRepository) {
+        return cardRepository.findBySuitAndRank(card.suit().name(), card.rank().name())
+                .orElseThrow(() -> new IllegalArgumentException("Card not found in DB"));
     }
 }

@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,11 +38,18 @@ public class GameController {
     })
     @PostMapping
     public ResponseEntity<?> startGame(@RequestBody StartGameRequest request) {
-        Result<Game, ErrorWrapper> result = playGameUseCase.startGame(new StartGameCommand(request.userID(), request.bet()));
-
-        if (result.isSuccess()) return ResponseEntity.ok(result.getSuccessData().get());
-        else return ResponseEntity.status(result.getFailureData().get().getHttpStatus())
-                .body(result.getFailureData().get().getMessage());
+        try {
+            Result<Game, ErrorWrapper> result = playGameUseCase.startGame(new StartGameCommand(request.userId(), request.bet()));
+            if (result.isSuccess()) {
+                return ResponseEntity.ok(result.getSuccessData().get());
+            } else {
+                return ResponseEntity.status(result.getFailureData().get().getHttpStatus())
+                        .body(result.getFailureData().get().getMessage());
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An unexpected internal error occurred.");
+        }
     }
 
     /**

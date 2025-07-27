@@ -9,8 +9,6 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
 
-import static jakarta.persistence.GenerationType.SEQUENCE;
-
 /**
  * JPA entity representing a single game instance.
  * Stores the user, current game state, users bet, and drawn cards.
@@ -26,15 +24,8 @@ public class GameJpaEntity {
      * Unique identifier for the game.
      */
     @Id
-    @SequenceGenerator(
-            name = "game_sequence",
-            sequenceName = "game_sequence",
-            allocationSize = 1
-    )
-    @GeneratedValue(
-            strategy = SEQUENCE,
-            generator = "game_sequence"
-    )
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "game_sequence")
+    @SequenceGenerator(name = "game_sequence", sequenceName = "game_sequence", allocationSize = 1)
     @Column(
             name = "id",
             updatable = false
@@ -44,7 +35,7 @@ public class GameJpaEntity {
     /**
      * ID of the user who is playing the game.
      */
-    @Column(name="userId", nullable = false)
+    @Column(name = "userId", nullable = false)
     private String userId;
 
     /**
@@ -56,7 +47,7 @@ public class GameJpaEntity {
     /**
      * Cards drawn during the game, associated with either player or dealer.
      */
-    @OneToMany(mappedBy = "gameId", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "id", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<DrawnCardJpaEntity> drawnCards = new ArrayList<>();
 
     /**

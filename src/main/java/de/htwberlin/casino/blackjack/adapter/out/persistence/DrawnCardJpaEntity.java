@@ -1,46 +1,41 @@
 package de.htwberlin.casino.blackjack.adapter.out.persistence;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.FilterDef;
-import org.hibernate.annotations.ParamDef;
+import lombok.Setter;
 
 /**
  * JPA entity representing a card that has been drawn in a specific game.
  * This entity uses a composite key of {@code gameId} and {@code cardId}.
  */
-@Entity(name = "drawn_card")
-@AllArgsConstructor
-@NoArgsConstructor
+@Entity(name = "drawn_cards")
 @Getter
-@IdClass(DrawnCardId.class)
-@FilterDef(name = "holderFilter", parameters = @ParamDef(name = "holder", type = String.class))
+@Setter
+@NoArgsConstructor
 public class DrawnCardJpaEntity {
 
-    /**
-     * Reference to the game where the card was drawn.
-     */
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "game_id", nullable = false)
-    private GameJpaEntity gameId;
+    private GameJpaEntity game;
 
-    /**
-     * Reference to the card that was drawn.
-     */
-    @Id
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns({
-            @JoinColumn(name = "card_suit", referencedColumnName = "suit", insertable = false, updatable = false),
-            @JoinColumn(name = "card_rank", referencedColumnName = "rank", insertable = false, updatable = false)
+            @JoinColumn(name = "card_suit", referencedColumnName = "suit"),
+            @JoinColumn(name = "card_rank", referencedColumnName = "rank")
     })
-    private CardJpaEntity cardId;
+    private CardJpaEntity card;
 
-    /**
-     * Holder of the card, e.g., "player" or "dealer".
-     */
-    @Column(name = "holder")
+    @Column(name = "holder", nullable = false)
     private String holder;
+
+    public DrawnCardJpaEntity(GameJpaEntity game, CardJpaEntity card, String holder) {
+        this.game = game;
+        this.card = card;
+        this.holder = holder;
+    }
 }

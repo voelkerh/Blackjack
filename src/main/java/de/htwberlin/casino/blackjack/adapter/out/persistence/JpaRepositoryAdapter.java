@@ -40,7 +40,7 @@ class JpaRepositoryAdapter implements LoadRulesPort, LoadStatsPort, LoadGamePort
 
     @Override
     public GameImpl retrieveGame(Long gameId) {
-        GameJpaEntity gameJpaEntity = gameRepository.findById(gameId).orElseThrow(EntityNotFoundException::new);
+        GameJpaEntity gameJpaEntity = gameRepository.findByIdWithDrawnCards(gameId).orElseThrow(EntityNotFoundException::new);
         return gameMapper.mapToDomainEntity(gameJpaEntity, drawnCardsRepository);
     }
 
@@ -56,26 +56,32 @@ class JpaRepositoryAdapter implements LoadRulesPort, LoadStatsPort, LoadGamePort
 
     @Override
     public Game saveGame(Game game) {
-        GameJpaEntity entity = gameMapper.mapToJpaEntity(game);
-        GameJpaEntity savedGame = gameRepository.save(entity); // Ensure ID is generated
+        try {
+            GameJpaEntity entity = gameMapper.mapToJpaEntity(game, cardRepository);
+            GameJpaEntity savedGameJpa = gameRepository.save(entity); // Ensure ID is generated
 
-        saveDrawnCards(savedGame.getId(), game.getPlayerHand(), "player");
-        saveDrawnCards(savedGame.getId(), game.getDealerHand(), "dealer");
-        return game;
+            if (savedGameJpa.getId() == null) {
+                throw new RuntimeException("Failure while saving game: gameId is null");
+            }
+
+            saveDrawnCards(savedGameJpa, game.getPlayerHand(), Holder.PLAYER);
+            saveDrawnCards(savedGameJpa, game.getDealerHand(), Holder.DEALER);
+            return gameMapper.mapToDomainEntity(savedGameJpa, drawnCardsRepository);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
     }
 
-    private void saveDrawnCards(Long gameId, Hand hand, String holder) {
+    private void saveDrawnCards(GameJpaEntity game, Hand hand, String holder) {
         for (Card card : hand.getCards()) {
-            saveCardDraw(gameId, card, holder);
+            saveCardDraw(game, card, holder);
         }
     }
 
     @Override
-    public void saveCardDraw(Long gameId, Card card, String holder) {
-        GameJpaEntity game = gameRepository.findById(gameId)
-                .orElseThrow(() -> new EntityNotFoundException("Game not found with ID: " + gameId));
-
-        CardJpaEntity cardEntity = cardRepository.findBySuitAndRank(card.suit().name(), card.rank().name())
+    public void saveCardDraw(GameJpaEntity game, Card card, String holder) {
+        CardJpaEntity cardEntity = cardRepository.findBySuitAndRank(card.suit().name().toUpperCase(), card.rank().name().toUpperCase())
                 .orElseThrow(() -> new EntityNotFoundException("Card not found: " + card));
 
         DrawnCardJpaEntity drawnCard = new DrawnCardJpaEntity(game, cardEntity, holder);

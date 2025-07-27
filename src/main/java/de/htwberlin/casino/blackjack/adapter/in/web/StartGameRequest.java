@@ -1,3 +1,5 @@
 package de.htwberlin.casino.blackjack.adapter.in.web;
 
-public record StartGameRequest(String userID, int bet) {}
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+public record StartGameRequest(@JsonProperty("userId")String userId, @JsonProperty("bet")double bet) {}

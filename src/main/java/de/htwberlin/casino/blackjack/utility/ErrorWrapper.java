@@ -28,6 +28,9 @@ public enum ErrorWrapper {
     GAME_NOT_RUNNING(
             "The requested game is already over.",
             HttpStatus.BAD_REQUEST),
+    INVALID_BET_AMOUNT(
+            "Bet amount must be positive.",
+            HttpStatus.BAD_REQUEST),
     USER_NOT_FOUND(
             "The user could not be found.",
             HttpStatus.NOT_FOUND),
