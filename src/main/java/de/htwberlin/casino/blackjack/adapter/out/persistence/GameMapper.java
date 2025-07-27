@@ -19,7 +19,6 @@ import java.util.List;
 
 /**
  * Maps {@link GameJpaEntity} instances to domain model {@link GameImpl} instances.
- * Also handles conversion of drawn cards into hands and decks using {@link HandFactory}.
  * Follows pattern from Page 90f. Hombergs, Clean Architecture, 2024
  */
 @Component
@@ -65,7 +64,24 @@ public class GameMapper {
         return new CardDeckImpl(drawnCards);
     }
 
-    // JpaCardRepo necessary because we only create each Card once so they cannot be recreated - it has to be the originals from the repo
+    /**
+     * Maps a domain-level {@link Game} object to its corresponding JPA entity representation {@link GameJpaEntity}.
+     * <p>
+     * This method constructs a new {@code GameJpaEntity} by copying core properties (ID, user ID, game state, and bet) from
+     * the domain object and converting all drawn cards from both the player and dealer hands into {@link DrawnCardJpaEntity}s.
+     * <p>
+     * Note that {@code JpaCardRepository} is required to retrieve existing {@link CardJpaEntity} instances.
+     * Cards must not be recreated because they are shared, uniquely stored entities. This ensures consistent references
+     * and avoids violating database constraints.
+     * <p>
+     * If any {@link Card} used in the game is not found in the database, the method throws an {@link IllegalArgumentException}.
+     * This exception originates from the {@code mapToJpaEntity(Card, JpaCardRepository)} helper method, which queries by suit and rank.
+     *
+     * @param game           the domain {@link Game} object to be converted
+     * @param cardRepository the {@link JpaCardRepository} used to fetch persistent {@link CardJpaEntity} instances
+     * @return a fully populated {@link GameJpaEntity} including all drawn cards for both player and dealer
+     * @throws IllegalArgumentException if any card in the game does not exist in the database (i.e., {@link CardJpaEntity} not found)
+     */
     public GameJpaEntity mapToJpaEntity(Game game, JpaCardRepository cardRepository) {
         GameJpaEntity entity = new GameJpaEntity();
         entity.setId(game.getId()); // can be null for new games
