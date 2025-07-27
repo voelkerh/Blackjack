@@ -9,6 +9,7 @@ import de.htwberlin.casino.blackjack.application.domain.model.hands.PlayerHand;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -39,6 +40,7 @@ public class ChancesCalculatorImpl implements ChancesCalculator {
     }
 
     private double calculateBlackjackChance(int differenceToBlackjack, Hand playerHand, Hand dealerHand) {
+        if (differenceToBlackjack > 11 || differenceToBlackjack < 2) return 0.0;
         if (differenceToBlackjack != 10) return calculateValueChanceNotTen(differenceToBlackjack, playerHand, dealerHand);
         else return calculateValueChanceTen(playerHand, dealerHand);
     }
@@ -71,11 +73,12 @@ public class ChancesCalculatorImpl implements ChancesCalculator {
 
     private double calculateBustChance(int differenceToBlackjack, Hand playerHand, Hand dealerHand) {
         if (differenceToBlackjack >= 10) return 0.0;
+        else if (differenceToBlackjack < 2) return 1.0;
         double bustChance = 0.0;
         for (int bustValue = differenceToBlackjack + 1; bustValue <= 10; bustValue++) {
             // Use hand.getTotal() with ace handling for a simulated next hand to avoid additional ambivalence handling
             Card nextCard = new Card(Rank.fromValue(bustValue), Suit.CLUBS); // Choice of Suit irrelevant for calculation
-            Hand nextHand = new PlayerHand(playerHand.getCards());
+            Hand nextHand = new PlayerHand(new ArrayList<>(playerHand.getCards()));
             nextHand.addCard(nextCard);
             if (nextHand.getTotal() > 21) {
                 if (bustValue == 10) bustChance += calculateValueChanceTen(playerHand, dealerHand);

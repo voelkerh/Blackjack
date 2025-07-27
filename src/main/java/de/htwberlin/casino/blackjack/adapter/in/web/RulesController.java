@@ -1,10 +1,10 @@
 package de.htwberlin.casino.blackjack.adapter.in.web;
 
 import de.htwberlin.casino.blackjack.application.domain.model.rules.RuleOption;
-import de.htwberlin.casino.blackjack.application.domain.model.rules.Rules;
 import de.htwberlin.casino.blackjack.application.port.in.emitRules.EmitRulesQuery;
 import de.htwberlin.casino.blackjack.application.port.in.emitRules.EmitRulesUseCase;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -37,14 +37,17 @@ public class RulesController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Rules found successfully",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Rules.class))),
+                            schema = @Schema(implementation = RulesResponse.class))),
             @ApiResponse(responseCode = "404", description = "Rules not found", content = @Content)
     })
     @GetMapping("/rules")
     public ResponseEntity<?> readRules() {
         var query = new EmitRulesQuery(RuleOption.GENERAL);
         var result = emitRulesUseCase.emitRules(query);
-        if (result.isSuccess()) return ResponseEntity.ok(result.getSuccessData().get());
+        if (result.isSuccess()) {
+            RulesResponse response = new RulesResponse(result.getSuccessData().get().option().toString(), result.getSuccessData().get().rulesText());
+            return ResponseEntity.ok(response);
+        }
         else return ResponseEntity.status(result.getFailureData().get().getHttpStatus())
                 .body(result.getFailureData().get().getMessage());
     }
@@ -59,17 +62,25 @@ public class RulesController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Rules found successfully",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Rules.class))),
+                            schema = @Schema(implementation = RulesResponse.class))),
             @ApiResponse(responseCode = "404", description = "Rules not found", content = @Content),
             @ApiResponse(responseCode = "400", description = "Bad request", content = @Content)
     })
     @GetMapping("/rules/{action}")
-    public ResponseEntity<?> readRules(@PathVariable String action) {
+    public ResponseEntity<?> readRules(
+            @Parameter(
+                description = "Action to retrieve rules for",
+                schema = @Schema(implementation = RuleOption.class)
+            )
+            @PathVariable String action) {
         try {
             var query = new EmitRulesQuery(RuleOption.valueOf(action));
             var result = emitRulesUseCase.emitRules(query);
 
-            if (result.isSuccess()) return ResponseEntity.ok(result.getSuccessData().get());
+            if (result.isSuccess()) {
+                RulesResponse response = new RulesResponse(result.getSuccessData().get().option().toString(), result.getSuccessData().get().rulesText());
+                return ResponseEntity.ok(response);
+            }
             else return ResponseEntity.status(result.getFailureData().get().getHttpStatus())
                     .body(result.getFailureData().get().getMessage());
         } catch (IllegalArgumentException e) {

@@ -37,7 +37,7 @@ public class ChancesController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Chances calculated successfully",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Chances.class))),
+                            schema = @Schema(implementation = ChancesResponse.class))),
             @ApiResponse(responseCode = "404", description = "Game not found", content = @Content),
             @ApiResponse(responseCode = "400", description = "Bad request", content = @Content)
     })
@@ -46,7 +46,10 @@ public class ChancesController {
         var query = new CalculateChancesCommand(gameId);
         var result = calculateChancesUseCase.calculateChances(query);
 
-        if (result.isSuccess()) return ResponseEntity.ok(result.getSuccessData().get());
+        if (result.isSuccess()) {
+            ChancesResponse response = new ChancesResponse(result.getSuccessData().get().bust(), result.getSuccessData().get().blackjack());
+            return ResponseEntity.ok(response);
+        }
         else return ResponseEntity.status(result.getFailureData().get().getHttpStatus())
                 .body(result.getFailureData().get().getMessage());
     }
