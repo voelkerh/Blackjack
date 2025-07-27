@@ -5,22 +5,24 @@
 Modul: B42 Softwareengineering und Softwarearchitekturen
 Studiengang: Informatik in Kultur und Gesundheit
 Semester: Sommersemester 2025
-Studierende: Johanna Menzler, Henriette Voelker
+Studierende: Johanna Menzler (S0591297), Henriette Voelker (S0589167)
 
 ## Projektbeschreibung
 
-Dieses Repository enthält einen Microservice mit RESTful-API für Blackjack.
+Dieses Repository enthält einen Microservice mit RESTful-API für das Spiel Blackjack.
 Das Projekt ist mit Docker containerisiert.
 Die Implementierung orientiert sich an den Prinzipien YAGNI, KISS, SOLID und DRY.
 
 ### Architektur
 
-Die Implementierung folgt der hexagonalen Architektur (auch "Ports und Adapter").
+Die Implementierung folgt der hexagonalen Architektur (auch "Ports und Adapters").
 Eine zentrale Referenz für die getroffenen Design-Entscheidungen war:
 Tom Hombergs, Clean Architecture. Praxisbuch für saubere Software-Architektur und wartbaren Code, mitp 2024.
 
-Die Implementierung umfasst einen REST-Controller mit differenzierten Controller Klassen als Inbound-Adapter.
+Die Implementierung umfasst einen REST-Controller mit differenzierten Controller-Klassen als Inbound-Adapter.
 Der Outbound-Adapter basiert auf Jakarta Persistence und kommuniziert mit einer PostgreSQL-DB.
+Im "Hexagon", also dem Applikationskern, sind vier Use Cases mit Service-Klassen implementiert.
+Diese Struktur deckt die Anwendungsfälle Regeln abrufen, Spiel spielen, Chancen berechnen und Statistiken abrufen ab.
 
 ### Kollaboration
 
@@ -37,9 +39,11 @@ Die Diagramme sind im docs-Ordner hinterlegt.
 Der Code ist mit JavaDoc dokumentiert.
 Die Dokumentation für Methoden findet sich, wo anwendbar, in den Interfaces.
 
+Die API ist über Swagger UI dokumentiert (siehe http://localhost:8080/swagger-ui/index.html).
+
 ### Verwendete Build Tools, Libraries und Frameworks
 
-Das Projekt ist in Java 21 mit Maven als Spring Boot Application umgesetzt.
+Das Projekt ist in Java 21 mit Maven als Spring Boot Application mit Jakarta Persistence umgesetzt.
 Wo es möglich ist, nutzen wir Lombok-Annotationen für Getter, Setter und Konstruktoren.
 Die Tests basieren auf JUnit 5 und Mockito als Mocking-Framework.
 Die Diagramme wurden mit PlantUML erstellt.
@@ -47,6 +51,7 @@ Die Diagramme wurden mit PlantUML erstellt.
 ### Test-Strategie
 
 Das Projekt beschränkt sich auf Unit-Tests.
+Bezüglich der Testabdeckung haben wir uns an Line Coverage und diversifizierten Testfällen orientiert.
 Integrationstests werden den Anforderungen entsprechend nicht implementiert.
 Für Record-Klassen sowie alle Utility-Klassen wurde nach Absprache auf Tests verzichtet.
 
@@ -54,7 +59,7 @@ Für Record-Klassen sowie alle Utility-Klassen wurde nach Absprache auf Tests ve
 
 1. Clone the repository.
 2. cd into the project root.
-3. Start docker container with `docker compose up`.
+3. Start docker container with `docker compose up --build`.
 4. Access Swagger UI: http://localhost:8080/swagger-ui/index.html
 
 ## Bedienanleitung
@@ -121,6 +126,7 @@ m := 1 (Anzahl der genutzen CardDecks)
 x (Wert der Karte, für die die Auftrittswahrscheinlichkeit im nächsten Zug bestimmt wird)
 N = (Gesamtanzahl der bereits gezogenen Karten, die jetzt in Spieler- oder Dealerhand sind)
 n(x) (Anzahl der Karten mit dem Wert x, die bereits gezogen wurden und jetzt in Spieler- oder Dealerhand sind)
+P := Wahrscheinlichkeit
 
 Wenn x != 10: P(x) = [4m - n(x)] / [52m - N]
 Wenn x == 10: P(10) = [16m - n(10)] / [52m - N]
@@ -132,17 +138,19 @@ bu ({x | x > bj}, Kartenwerte, für die im nächsten Zug ein Bust eintreten wür
 bj = 21 - playerHandTotal
 P(bj) lässt sich unmittelbar mit den obenstehenden Formeln bestimmen.
 
-Für P(bu) summieren wir alle Wahrscheinlichkeiten für Karten, die einen Bust auslösen,**** auf.
+Für P(bu) summieren wir alle Wahrscheinlichkeiten für Karten, die einen Bust auslösen, auf.
 P(bu) = P(x1) + ... + P(xi)
 
+Über die Formeln haben wir uns auf dieser Seite informiert: https://probability.infarom.ro/blackjack.html.
 
+### Berechnung der Statistik
 
-
-
+TODO: Kurze Beschreibung
 
 ### Spielen über die API
 
 Spielen:
+- TODO: API-Endpunkte ergänzen
 
 Regeln abrufen:
 - Generelle Regeln: GET /api/blackjack/rules
@@ -152,7 +160,8 @@ Chancen für die aktuell möglichen Spielzüge in laufendem Spiel abrufen:
 - GET /api/blackjack/chances/{gameId}
 
 Statistik abrufen:
-
+- Allgemeine Statistik: GET /api/blackjack/stats/overview
+- User spezifische Statistiken: GET /api/blackjack/stats/user/{userId}
 
 ## Lizenzverweis
 
