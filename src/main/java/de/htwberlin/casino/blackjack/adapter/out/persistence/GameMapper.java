@@ -85,7 +85,7 @@ public class GameMapper {
      * @param gameJpaEntity the game from which to extract the player's hand
      * @return list of drawn cards held by the player
      */
-    public List<DrawnCardJpaEntity> getPlayerHand(GameJpaEntity gameJpaEntity) {
+    private List<DrawnCardJpaEntity> getPlayerHand(GameJpaEntity gameJpaEntity) {
         return gameJpaEntity.getDrawnCards().stream()
                 .filter(card -> HandType.PLAYER.equals(card.getHolder()))
                 .collect(Collectors.toList());
@@ -97,7 +97,7 @@ public class GameMapper {
      * @param gameJpaEntity the game from which to extract the dealer's hand
      * @return list of drawn cards held by the dealer
      */
-    public List<DrawnCardJpaEntity> getDealerHand(GameJpaEntity gameJpaEntity) {
+    private List<DrawnCardJpaEntity> getDealerHand(GameJpaEntity gameJpaEntity) {
         return gameJpaEntity.getDrawnCards().stream()
                 .filter(card -> HandType.DEALER.equals(card.getHolder()))
                 .toList();
@@ -133,7 +133,7 @@ public class GameMapper {
         return entity;
     }
 
-    public CardJpaEntity mapToJpaEntity(Card card, JpaCardRepository cardRepository) {
+    private CardJpaEntity mapToJpaEntity(Card card, JpaCardRepository cardRepository) {
         return cardRepository.findBySuitAndRank(card.suit().name(), card.rank().name())
                 .orElseThrow(() -> new IllegalArgumentException("Card not found in DB"));
     }

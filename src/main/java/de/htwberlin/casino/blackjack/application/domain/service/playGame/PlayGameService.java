@@ -13,6 +13,7 @@ import de.htwberlin.casino.blackjack.utility.Result;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.stereotype.Service;
 
 /**
@@ -48,7 +49,6 @@ class PlayGameService implements PlayGameUseCase {
     public Result<Game, ErrorWrapper> hit(HitCommand command) {
         try {
             Game game = loadGamePort.retrieveGame(command.gameId());
-            if (game == null) return Result.failure(ErrorWrapper.GAME_NOT_FOUND);
             if (game.getGameState() != GameState.PLAYING) return Result.failure(ErrorWrapper.GAME_NOT_RUNNING);
 
             Card drawnCard = game.getCardDeck().drawCard();
@@ -61,7 +61,7 @@ class PlayGameService implements PlayGameUseCase {
                 updatedGame = loadGamePort.retrieveGame(command.gameId());
             }
             return Result.success(updatedGame);
-        } catch (EntityNotFoundException entityNotFoundException) {
+        } catch (EntityNotFoundException | JpaObjectRetrievalFailureException exception) {
             return Result.failure(ErrorWrapper.GAME_NOT_FOUND);
         } catch (Exception e) {
             return Result.failure(ErrorWrapper.UNEXPECTED_INTERNAL_ERROR_OCCURED);
@@ -72,7 +72,6 @@ class PlayGameService implements PlayGameUseCase {
     public Result<Game, ErrorWrapper> stand(StandCommand command) {
         try {
             Game game = loadGamePort.retrieveGame(command.gameId());
-            if (game == null) return Result.failure(ErrorWrapper.GAME_NOT_FOUND);
             if (game.getGameState() != GameState.PLAYING) return Result.failure(ErrorWrapper.GAME_NOT_RUNNING);
 
             game.playDealerTurn();
@@ -85,7 +84,7 @@ class PlayGameService implements PlayGameUseCase {
             Game updatedGame = loadGamePort.retrieveGame(game.getId());
             return Result.success(updatedGame);
 
-        } catch (EntityNotFoundException e) {
+        } catch (EntityNotFoundException | JpaObjectRetrievalFailureException exception) {
             return Result.failure(ErrorWrapper.GAME_NOT_FOUND);
         } catch (Exception e) {
             return Result.failure(ErrorWrapper.UNEXPECTED_INTERNAL_ERROR_OCCURED);
@@ -97,7 +96,7 @@ class PlayGameService implements PlayGameUseCase {
         try {
             Game game = loadGamePort.retrieveGame(command.gameId());
             return Result.success(game);
-        } catch (EntityNotFoundException entityNotFoundException) {
+        } catch (EntityNotFoundException | JpaObjectRetrievalFailureException exception) {
             return Result.failure(ErrorWrapper.GAME_NOT_FOUND);
         } catch (Exception e) {
             return Result.failure(ErrorWrapper.UNEXPECTED_INTERNAL_ERROR_OCCURED);
