@@ -4,6 +4,7 @@ import de.htwberlin.casino.blackjack.application.domain.model.cards.Card;
 import de.htwberlin.casino.blackjack.application.domain.model.game.Game;
 import de.htwberlin.casino.blackjack.application.domain.model.game.GameImpl;
 import de.htwberlin.casino.blackjack.application.domain.model.game.GameState;
+import de.htwberlin.casino.blackjack.application.domain.model.hands.HandType;
 import de.htwberlin.casino.blackjack.application.domain.model.rules.RuleOption;
 import de.htwberlin.casino.blackjack.application.domain.model.rules.Rules;
 import de.htwberlin.casino.blackjack.application.domain.service.emitStats.OverviewStats;
@@ -69,7 +70,7 @@ class JpaRepositoryAdapter implements LoadRulesPort, LoadStatsPort, LoadGamePort
     }
 
     @Override
-    public void saveCardDraw(GameJpaEntity game, Card card, String holder) {
+    public void saveCardDraw(GameJpaEntity game, Card card, HandType holder) {
         CardJpaEntity cardEntity = cardRepository.findBySuitAndRank(card.suit().name().toUpperCase(), card.rank().name().toUpperCase())
                 .orElseThrow(() -> new EntityNotFoundException("Card not found: " + card));
 

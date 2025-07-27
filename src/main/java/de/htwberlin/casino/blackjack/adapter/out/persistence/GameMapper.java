@@ -90,7 +90,7 @@ public class GameMapper {
      */
     public List<DrawnCardJpaEntity> getPlayerHand(GameJpaEntity gameJpaEntity) {
         return gameJpaEntity.getDrawnCards().stream()
-                .filter(card -> Holder.PLAYER.equalsIgnoreCase(card.getHolder()))
+                .filter(card -> HandType.PLAYER.equals(card.getHolder()))
                 .collect(Collectors.toList());
     }
 
@@ -102,7 +102,7 @@ public class GameMapper {
      */
     public List<DrawnCardJpaEntity> getDealerHand(GameJpaEntity gameJpaEntity) {
         return gameJpaEntity.getDrawnCards().stream()
-                .filter(card -> Holder.DEALER.equalsIgnoreCase(card.getHolder()))
+                .filter(card -> HandType.DEALER.equals(card.getHolder()))
                 .toList();
     }
 
@@ -119,7 +119,7 @@ public class GameMapper {
             drawnCards.add(new DrawnCardJpaEntity(
                     entity,
                     mapToJpaEntity(card, cardRepository),
-                    "player"
+                    HandType.PLAYER
             ));
         }
 
@@ -127,7 +127,7 @@ public class GameMapper {
             drawnCards.add(new DrawnCardJpaEntity(
                     entity,
                     mapToJpaEntity(card, cardRepository),
-                    "dealer"
+                    HandType.DEALER
             ));
         }
 

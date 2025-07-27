@@ -1,5 +1,6 @@
 package de.htwberlin.casino.blackjack.adapter.out.persistence;
 
+import de.htwberlin.casino.blackjack.application.domain.model.hands.HandType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,10 +31,11 @@ public class DrawnCardJpaEntity {
     })
     private CardJpaEntity card;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "holder", nullable = false)
-    private String holder;
+    private HandType holder;
 
-    public DrawnCardJpaEntity(GameJpaEntity game, CardJpaEntity card, String holder) {
+    public DrawnCardJpaEntity(GameJpaEntity game, CardJpaEntity card, HandType holder) {
         this.game = game;
         this.card = card;
         this.holder = holder;

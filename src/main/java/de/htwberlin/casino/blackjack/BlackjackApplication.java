@@ -3,6 +3,7 @@ package de.htwberlin.casino.blackjack;
 import de.htwberlin.casino.blackjack.adapter.out.persistence.*;
 import de.htwberlin.casino.blackjack.application.domain.model.cards.Rank;
 import de.htwberlin.casino.blackjack.application.domain.model.cards.Suit;
+import de.htwberlin.casino.blackjack.application.domain.model.hands.HandType;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -121,9 +122,9 @@ public class BlackjackApplication {
 
                 GameJpaEntity savedGame = gameRepo.save(game);
 
-                DrawnCardJpaEntity draw1 = new DrawnCardJpaEntity(game, playerCard1, "player");
-                DrawnCardJpaEntity draw2 = new DrawnCardJpaEntity(game, playerCard2, "player");
-                DrawnCardJpaEntity draw3 = new DrawnCardJpaEntity(game, dealerCard1, "dealer");
+                DrawnCardJpaEntity draw1 = new DrawnCardJpaEntity(game, playerCard1, HandType.PLAYER);
+                DrawnCardJpaEntity draw2 = new DrawnCardJpaEntity(game, playerCard2, HandType.PLAYER);
+                DrawnCardJpaEntity draw3 = new DrawnCardJpaEntity(game, dealerCard1, HandType.DEALER);
 
                 drawnCardsRepo.saveAll(List.of(draw1, draw2, draw3));
 
