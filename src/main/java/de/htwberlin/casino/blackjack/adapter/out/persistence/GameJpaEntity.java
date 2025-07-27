@@ -19,7 +19,6 @@ import java.util.List;
 @Getter
 @Setter
 public class GameJpaEntity {
-
     /**
      * Unique identifier for the game.
      */
@@ -47,7 +46,7 @@ public class GameJpaEntity {
     /**
      * Cards drawn during the game, associated with either player or dealer.
      */
-    @OneToMany(mappedBy = "id", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<DrawnCardJpaEntity> drawnCards = new ArrayList<>();
 
     /**
