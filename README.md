@@ -38,6 +38,7 @@ Die Diagramme sind im docs-Ordner hinterlegt.
 
 Der Code ist mit JavaDoc dokumentiert.
 Die Dokumentation für Methoden findet sich, wo anwendbar, in den Interfaces.
+Ausgenommen sind dementsprechend mit @Override markierte Methoden und auch private Hilfsmethoden.
 
 Die API ist über Swagger UI dokumentiert (siehe http://localhost:8080/swagger-ui/index.html).
 
