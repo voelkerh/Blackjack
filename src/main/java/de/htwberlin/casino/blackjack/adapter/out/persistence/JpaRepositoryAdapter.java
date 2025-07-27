@@ -68,7 +68,6 @@ class JpaRepositoryAdapter implements LoadRulesPort, LoadStatsPort, LoadGamePort
             saveDrawnCards(savedGameJpa, game.getDealerHand(), Holder.DEALER);
             return gameMapper.mapToDomainEntity(savedGameJpa, drawnCardsRepository);
         } catch (Exception e) {
-            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }

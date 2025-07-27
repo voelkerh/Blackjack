@@ -25,6 +25,7 @@ class PlayGameService implements PlayGameUseCase {
 
     @Override
     public Result<Game, ErrorWrapper> startGame(StartGameCommand command) {
+        if (command.bet() <= 0) return Result.failure(ErrorWrapper.INVALID_BET_AMOUNT);
         try {
             Game game = new GameImpl(null, command.userId(), command.bet());
 
