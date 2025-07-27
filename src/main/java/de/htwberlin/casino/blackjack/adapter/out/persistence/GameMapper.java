@@ -16,7 +16,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Maps {@link GameJpaEntity} instances to domain model {@link GameImpl} instances.
@@ -34,23 +33,18 @@ public class GameMapper {
      * @return a fully constructed domain {@link GameImpl} instance
      */
     public GameImpl mapToDomainEntity(GameJpaEntity gameJpaEntity) {
-        PlayerHand playerHand = mapToHand(HandType.PLAYER, gameJpaEntity);
-        DealerHand dealerHand = mapToHand(HandType.DEALER, gameJpaEntity);
-        return new GameImpl(gameJpaEntity.getId(), gameJpaEntity.getUserId(), mapToCardDeck(gameJpaEntity), playerHand, dealerHand, gameJpaEntity.getGameState(), gameJpaEntity.getBet());
+        List<DrawnCardJpaEntity> drawnCards = gameJpaEntity.getDrawnCards();
+        PlayerHand playerHand = mapToDomainEntity(HandType.PLAYER, drawnCards);
+        DealerHand dealerHand = mapToDomainEntity(HandType.DEALER, drawnCards);
+        return new GameImpl(gameJpaEntity.getId(), gameJpaEntity.getUserId(), mapToDomainEntity(drawnCards), playerHand, dealerHand, gameJpaEntity.getGameState(), gameJpaEntity.getBet());
     }
 
-    /**
-     * Maps drawn card JPA entities into a domain {@link Hand}, based on the hand type.
-     *
-     * @param type          the type of hand to map ("player" or "dealer")
-     * @param gameJpaEntity the game entity from which to extract hand information
-     * @param <T>           the concrete subclass of {@link Hand} (e.g., {@code DealerHand}, {@code PlayerHand})
-     * @return the constructed {@link DealerHand} or {@link PlayerHand} instance
-     */
-    private <T extends Hand> T mapToHand(HandType type, GameJpaEntity gameJpaEntity) {
-        List<DrawnCardJpaEntity> drawnCards = (type == HandType.DEALER) ? getDealerHand(gameJpaEntity) : getPlayerHand(gameJpaEntity);
+    private <T extends Hand> T mapToDomainEntity(HandType type, List<DrawnCardJpaEntity> drawnCards) {
+        List<DrawnCardJpaEntity> filtered = drawnCards.stream()
+                .filter(card -> type.equals(card.getHolder()))
+                .toList();
 
-        List<Card> cards = drawnCards.stream()
+        List<Card> cards = filtered.stream()
                 .map(drawn -> {
                     CardJpaEntity c = drawn.getCard();
                     return new Card(Rank.valueOf(c.getRank()), Suit.valueOf(c.getSuit()));
@@ -60,15 +54,7 @@ public class GameMapper {
         return factory.create(type, cards);
     }
 
-    /**
-     * Maps drawn cards from the {@link GameJpaEntity} to a domain {@link CardDeckImpl} by removing all dealt cards.
-     *
-     * @param gameJpaEntity the game to retrieve drawn cards for
-     * @return the constructed {@link CardDeckImpl} with removed drawn cards
-     */
-    private CardDeckImpl mapToCardDeck(GameJpaEntity gameJpaEntity) {
-        List<DrawnCardJpaEntity> drawnCardsJpa = gameJpaEntity.getDrawnCards();
-
+    private CardDeckImpl mapToDomainEntity(List<DrawnCardJpaEntity> drawnCardsJpa) {
         List<Card> drawnCards = drawnCardsJpa.stream()
                 .map(drawnCard -> {
                     CardJpaEntity cardJpa = drawnCard.getCard();
@@ -79,30 +65,7 @@ public class GameMapper {
         return new CardDeckImpl(drawnCards);
     }
 
-    /**
-     * Retrieves all cards from a game that were drawn by the player.
-     *
-     * @param gameJpaEntity the game from which to extract the player's hand
-     * @return list of drawn cards held by the player
-     */
-    private List<DrawnCardJpaEntity> getPlayerHand(GameJpaEntity gameJpaEntity) {
-        return gameJpaEntity.getDrawnCards().stream()
-                .filter(card -> HandType.PLAYER.equals(card.getHolder()))
-                .collect(Collectors.toList());
-    }
-
-    /**
-     * Retrieves all cards from a game that were drawn by the dealer.
-     *
-     * @param gameJpaEntity the game from which to extract the dealer's hand
-     * @return list of drawn cards held by the dealer
-     */
-    private List<DrawnCardJpaEntity> getDealerHand(GameJpaEntity gameJpaEntity) {
-        return gameJpaEntity.getDrawnCards().stream()
-                .filter(card -> HandType.DEALER.equals(card.getHolder()))
-                .toList();
-    }
-
+    // JpaCardRepo necessary because we only create each Card once so they cannot be recreated - it has to be the originals from the repo
     public GameJpaEntity mapToJpaEntity(Game game, JpaCardRepository cardRepository) {
         GameJpaEntity entity = new GameJpaEntity();
         entity.setId(game.getId()); // can be null for new games
@@ -111,26 +74,24 @@ public class GameMapper {
         entity.setBet(game.getBet());
 
         List<DrawnCardJpaEntity> drawnCards = new ArrayList<>();
-
-        for (Card card : game.getPlayerHand().getCards()) {
-            drawnCards.add(new DrawnCardJpaEntity(
-                    entity,
-                    mapToJpaEntity(card, cardRepository),
-                    HandType.PLAYER
-            ));
-        }
-
-        for (Card card : game.getDealerHand().getCards()) {
-            drawnCards.add(new DrawnCardJpaEntity(
-                    entity,
-                    mapToJpaEntity(card, cardRepository),
-                    HandType.DEALER
-            ));
-        }
+        drawnCards.addAll(mapToJpaEntity(HandType.PLAYER, game.getPlayerHand().getCards(), entity, cardRepository));
+        drawnCards.addAll(mapToJpaEntity(HandType.DEALER, game.getDealerHand().getCards(), entity, cardRepository));
 
         entity.setDrawnCards(drawnCards);
 
         return entity;
+    }
+
+    private List<DrawnCardJpaEntity> mapToJpaEntity(HandType type, List<Card> cards, GameJpaEntity entity, JpaCardRepository cardRepository) {
+        List<DrawnCardJpaEntity> drawnCards = new ArrayList<>();
+        for (Card card : cards) {
+            drawnCards.add(new DrawnCardJpaEntity(
+                    entity,
+                    mapToJpaEntity(card, cardRepository),
+                    type
+            ));
+        }
+        return drawnCards;
     }
 
     private CardJpaEntity mapToJpaEntity(Card card, JpaCardRepository cardRepository) {
