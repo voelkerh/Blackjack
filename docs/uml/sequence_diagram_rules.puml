@@ -29,34 +29,4 @@ else resource not found
 
 end
 
-== Request Rules For Specific Action==
-
-Player -> Controller : GET /api/blackjack/rules/{action}
-Controller -> Controller : validateRequest()
-
-alt valid request
-
-        Controller -> Service : emitRules(query)
-        Service -> Adapter : retrieveRules(HIT/STAND)
-        Adapter -> PostgresSQL : SQL Query(state)
-
-    alt resource found
-        PostgresSQL --> Adapter : Rules
-        Adapter --> Service : Rules
-        Service --> Controller : Result
-        Controller --> Player : 200 OK + Response
-
-    else resource not found
-        PostgresSQL --> Adapter : not found
-        Adapter --> Service : error
-        Service --> Controller : error
-        Controller --> Player : 404 Not Found
-    end
-
-else invalid state definition
-
-    Controller --> Player : 400 Bad Request
-
-end
-
 @enduml

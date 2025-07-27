@@ -1,0 +1,40 @@
+@startuml
+title API Endpoint /api/blackjack/rules/{action}
+actor Player
+
+participant "Controller\n(Rest Adapter)" as Controller
+participant "RulesService\n(Use Case)" as Service
+participant "JpaRepositoryAdapter\n(Outbound Port)" as Adapter
+database PostgresSQL
+
+== Request Rules For Specific Action==
+
+Player -> Controller : GET /api/blackjack/rules/{action}
+Controller -> Controller : validateRequest()
+
+alt valid actio
+
+        Controller -> Service : emitRules(query)
+        Service -> Adapter : retrieveRules(HIT/STAND)
+        Adapter -> PostgresSQL : SQL Query(state)
+
+    alt resource found
+        PostgresSQL --> Adapter : Rules
+        Adapter --> Service : Rules
+        Service --> Controller : Result
+        Controller --> Player : 200 OK + Response
+
+    else resource not found
+        PostgresSQL --> Adapter : Not Found
+        Adapter --> Service : Error
+        Service --> Controller : Error
+        Controller --> Player : 404 Not Found
+    end
+
+else invalid action
+
+    Controller --> Player : 400 Bad Request
+
+end
+
+@enduml
