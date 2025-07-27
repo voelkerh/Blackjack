@@ -11,6 +11,13 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Implementation of the {@link PlayGame} interface.
+ * <p>
+ * Contains the core logic for determining game flow and outcomes in a standard Blackjack game.
+ * This includes handling player and dealer turns, checking for blackjack or busts,
+ * and determining the game result based on final hand values.
+ */
 @Service
 @RequiredArgsConstructor
 public class PlayGameImpl implements PlayGame {
