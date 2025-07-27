@@ -1,5 +1,6 @@
 package de.htwberlin.casino.blackjack.adapter.in.web;
 
+import de.htwberlin.casino.blackjack.application.port.in.calculateChances.CalculateChancesUseCase;
 import de.htwberlin.casino.blackjack.application.port.in.playGame.*;
 import de.htwberlin.casino.blackjack.utility.ErrorWrapper;
 import de.htwberlin.casino.blackjack.utility.Result;
@@ -12,6 +13,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * REST controller that exposes endpoints to start a blackjack game or perform game actions in ongoing blackjack game.
+ * Delegates to {@link PlayGameUseCase}.
+ */
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/blackjack/play")
