@@ -17,7 +17,7 @@ public class DealerHand implements Hand {
 
     /**
      * Constructor initializing dealerHand with card drawn upon game initialization.
-     * @param upCard
+     * @param upCard First card drawn by dealer at initialization of game.
      */
     public DealerHand(Card upCard) {
         if (upCard == null) throw new NullPointerException();
@@ -27,7 +27,7 @@ public class DealerHand implements Hand {
 
     /**
      * Show single visible card held by dealer during player's turn.
-     * @return
+     * @return Card
      */
     public Card getUpCard() {
         return cards.getFirst();

@@ -20,8 +20,8 @@ public class PlayerHand implements Hand {
 
     /**
      * Constructor initializing playerHand with two cards drawn upon game initialization.
-     * @param card1
-     * @param card2
+     * @param card1 First card drawn from deck by player
+     * @param card2 Second card drawn from deck by player
      */
     public PlayerHand(Card card1, Card card2) {
         if (card1 == null || card2 == null) throw new NullPointerException();
