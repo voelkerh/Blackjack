@@ -26,6 +26,7 @@ class PlayGameService implements PlayGameUseCase {
 
     private final LoadGamePort loadGamePort;
     private final ModifyGamePort modifyGamePort;
+    private final PlayGame playGame;
 
     @Override
     public Result<Game, ErrorWrapper> startGame(StartGameCommand command) {
@@ -34,6 +35,11 @@ class PlayGameService implements PlayGameUseCase {
             Game game = new GameImpl(null, command.userId(), command.bet());
 
             Game savedGame = modifyGamePort.saveGame(game);
+
+            if (playGame.checkInitialBlackJack(savedGame)) {
+                modifyGamePort.updateGameState(game.getId(), GameState.BLACKJACK);
+                savedGame = loadGamePort.retrieveGame(savedGame.getId());
+            }
 
             return Result.success(savedGame);
         } catch (IllegalArgumentException e) {
@@ -56,7 +62,7 @@ class PlayGameService implements PlayGameUseCase {
 
             Game updatedGame = loadGamePort.retrieveGame(command.gameId());
 
-            if (updatedGame.isPlayerBusted()) {
+            if (playGame.isPlayerBusted(updatedGame)) {
                 modifyGamePort.updateGameState(command.gameId(), GameState.LOST);
                 updatedGame = loadGamePort.retrieveGame(command.gameId());
             }
@@ -74,11 +80,11 @@ class PlayGameService implements PlayGameUseCase {
             Game game = loadGamePort.retrieveGame(command.gameId());
             if (game.getGameState() != GameState.PLAYING) return Result.failure(ErrorWrapper.GAME_NOT_RUNNING);
 
-            game.playDealerTurn();
+            playGame.playDealerTurn(game);
 
             // modifyGamePort.saveGame(game); if DealerHand can hold more hands {@link HandFactoryImpl}, it can be updated here and then delivered to the user
 
-            GameState result = game.determineResult();
+            GameState result = playGame.determineResult(game);
             modifyGamePort.updateGameState(game.getId(), result);
 
             Game updatedGame = loadGamePort.retrieveGame(game.getId());

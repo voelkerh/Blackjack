@@ -3,6 +3,7 @@ package de.htwberlin.casino.blackjack.application.domain.model.game;
 import de.htwberlin.casino.blackjack.application.domain.model.cards.CardDeck;
 import de.htwberlin.casino.blackjack.application.domain.model.hands.Hand;
 
+// TODO: JavaDoc
 public interface Game {
     Long getId();
 
@@ -17,10 +18,4 @@ public interface Game {
     Hand getDealerHand();
 
     double getBet();
-
-    boolean isPlayerBusted();
-
-    void playDealerTurn();
-
-    GameState determineResult();
 }

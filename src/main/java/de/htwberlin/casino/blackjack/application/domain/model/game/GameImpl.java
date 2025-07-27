@@ -10,7 +10,7 @@ import lombok.Getter;
  */
 @Getter
 public class GameImpl implements Game {
-
+    // TODO: JavaDoc
     private final Long id;
     private final String userId;
     private CardDeckImpl cardDeck;
@@ -46,42 +46,4 @@ public class GameImpl implements Game {
         dealerHand = new DealerHand(cardDeck.drawCard());
         gameState = GameState.PLAYING;
     }
-
-    @Override
-    public boolean isPlayerBusted() {
-        return playerHand.getTotal() > 21;
-    }
-
-    public void playDealerTurn() {
-        while (dealerHand.getTotal() < 17) {
-            dealerHand.addCard(cardDeck.drawCard());
-        }
-    }
-
-    @Override
-    public GameState determineResult() {
-        if (gameState != GameState.PLAYING) {
-            return gameState;
-        }
-
-        int playerTotal = playerHand.getTotal();
-        int dealerTotal = dealerHand.getTotal();
-
-        if (playerTotal > 21) {
-            gameState = GameState.LOST;
-            return gameState;
-        }
-
-        if (dealerTotal > 21) {
-            gameState = GameState.WON;
-        } else if (playerTotal > dealerTotal) {
-            gameState = GameState.WON;
-        } else if (playerTotal < dealerTotal) {
-            gameState = GameState.LOST;
-        } else {
-            gameState = GameState.PUSH;
-        }
-        return gameState;
-    }
-
 }
