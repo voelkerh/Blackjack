@@ -16,6 +16,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * Application service that handles game logic.
  * Implements the {@link PlayGameUseCase} port.
@@ -35,8 +37,8 @@ class PlayGameService implements PlayGameUseCase {
             Game game = new GameImpl(null, command.userId(), command.bet());
 
             Game savedGame = modifyGamePort.saveGame(game);
-
-            if (playGame.checkInitialBlackJack(savedGame)) {
+            savedGame = loadGamePort.retrieveGame(savedGame.getId());
+            if (playGame.playerHasInitialBlackjack(savedGame)) {
                 modifyGamePort.updateGameState(game.getId(), GameState.BLACKJACK);
                 savedGame = loadGamePort.retrieveGame(savedGame.getId());
             }
@@ -57,7 +59,7 @@ class PlayGameService implements PlayGameUseCase {
             Game game = loadGamePort.retrieveGame(command.gameId());
             if (game.getGameState() != GameState.PLAYING) return Result.failure(ErrorWrapper.GAME_NOT_RUNNING);
 
-            Card drawnCard = game.getCardDeck().drawCard();
+            Card drawnCard = playGame.playPlayerTurn(game);
             modifyGamePort.saveCardDraw(game.getId(), drawnCard, HandType.PLAYER);
 
             Game updatedGame = loadGamePort.retrieveGame(command.gameId());
@@ -80,9 +82,11 @@ class PlayGameService implements PlayGameUseCase {
             Game game = loadGamePort.retrieveGame(command.gameId());
             if (game.getGameState() != GameState.PLAYING) return Result.failure(ErrorWrapper.GAME_NOT_RUNNING);
 
-            playGame.playDealerTurn(game);
+            List<Card> drawnCards = playGame.playDealerTurn(game);
 
-            // modifyGamePort.saveGame(game); if DealerHand can hold more hands {@link HandFactoryImpl}, it can be updated here and then delivered to the user
+            for (Card drawnCard : drawnCards) {
+                modifyGamePort.saveCardDraw(game.getId(), drawnCard, HandType.DEALER);
+            }
 
             GameState result = playGame.determineResult(game);
             modifyGamePort.updateGameState(game.getId(), result);

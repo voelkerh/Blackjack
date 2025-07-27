@@ -1,5 +1,6 @@
 package de.htwberlin.casino.blackjack.application.domain.service.playGame;
 
+import de.htwberlin.casino.blackjack.application.domain.model.cards.Card;
 import de.htwberlin.casino.blackjack.application.domain.model.cards.CardDeck;
 import de.htwberlin.casino.blackjack.application.domain.model.game.Game;
 import de.htwberlin.casino.blackjack.application.domain.model.game.GameState;
@@ -7,12 +8,16 @@ import de.htwberlin.casino.blackjack.application.domain.model.hands.Hand;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class PlayGameImpl implements PlayGame {
     @Override
-    public boolean checkInitialBlackJack(Game game) {
-        return false;
+    public boolean playerHasInitialBlackjack(Game game) {
+        Hand playerHand = game.getPlayerHand();
+        return playerHand.getTotal() == 21;
     }
 
     @Override
@@ -21,12 +26,21 @@ public class PlayGameImpl implements PlayGame {
         return playerHand.getTotal() > 21;
     }
 
-    public void playDealerTurn(Game game) {
+    @Override
+    public Card playPlayerTurn(Game game) {
+        return game.getCardDeck().drawCard();
+    }
+
+    public List<Card> playDealerTurn(Game game) {
         Hand dealerHand = game.getDealerHand();
         CardDeck cardDeck = game.getCardDeck();
+        List<Card> drawnCards = new ArrayList<>();
         while (dealerHand.getTotal() < 17) {
-            dealerHand.addCard(cardDeck.drawCard());
+            Card card = cardDeck.drawCard();
+            dealerHand.addCard(card);
+            drawnCards.add(card);
         }
+        return drawnCards;
     }
 
     @Override
@@ -46,7 +60,7 @@ public class PlayGameImpl implements PlayGame {
             return gameState;
         }
 
-        if (dealerTotal > 21) {
+        if (dealerTotal > 21) { //TODO: Fix
             gameState = GameState.WON;
         } else if (playerTotal > dealerTotal) {
             gameState = GameState.WON;
