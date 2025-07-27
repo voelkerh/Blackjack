@@ -3,6 +3,7 @@ package de.htwberlin.casino.blackjack.adapter.in.web;
 import de.htwberlin.casino.blackjack.application.domain.model.stats.StatsOption;
 import de.htwberlin.casino.blackjack.application.port.in.emitStats.EmitStatsQuery;
 import de.htwberlin.casino.blackjack.application.port.in.emitStats.EmitStatsUseCase;
+import de.htwberlin.casino.blackjack.application.port.in.playGame.PlayGameUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -15,6 +16,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * REST controller that exposes endpoints to retrieve overall or user specific statistics for blackjack.
+ * Delegates to {@link EmitStatsUseCase}.
+ */
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/blackjack/stats")

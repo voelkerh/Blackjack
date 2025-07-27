@@ -5,6 +5,9 @@ import de.htwberlin.casino.blackjack.application.domain.model.hands.DealerHand;
 import de.htwberlin.casino.blackjack.application.domain.model.hands.PlayerHand;
 import lombok.Getter;
 
+/**
+ * Implementation of the game representing an ongoing game of blackjack.
+ */
 @Getter
 public class GameImpl implements Game {
 
@@ -34,6 +37,9 @@ public class GameImpl implements Game {
         this.initialize();
     }
 
+    /**
+     * Initializes a new game by drawing cards for player and dealer hand and setting gameState to playing.
+     */
     public void initialize() {
         playerHand = new PlayerHand(cardDeck.drawCard(), cardDeck.drawCard());
         dealerHand = new DealerHand(cardDeck.drawCard());

@@ -41,15 +41,15 @@ state push_end <<end>>
 [*] --> in : Game()
 in --> pt : startGame()
 pt --> pt: hit()
-pt --> dt : stand()
+pt --> dt : stand() / player has initial blackjack
 pt --> dw : bust()
 pw --> pw_end
 dt --> dt : draw()
 dt --> pw : bust()
 dt --> evaluate : stand()
-evaluate --> dw : [21-player > 21-dealer]
-evaluate --> pw : [21-player < 21-dealer]
-evaluate --> pu : [player == dealer]
+evaluate --> dw : [player difference to blackjack (21) > \n dealer difference to blackjack]
+evaluate --> pw : [player difference to blackjack (21) < \n dealer difference to blackjack]
+evaluate --> pu : [player total == dealer total]
 dw --> dw_end
 pu --> push_end
 
