@@ -63,18 +63,9 @@ class JpaRepositoryAdapter implements LoadRulesPort, LoadStatsPort, LoadGamePort
             if (savedGameJpa.getId() == null) {
                 throw new RuntimeException("Failure while saving game: gameId is null");
             }
-
-            saveDrawnCards(savedGameJpa, game.getPlayerHand(), Holder.PLAYER);
-            saveDrawnCards(savedGameJpa, game.getDealerHand(), Holder.DEALER);
             return gameMapper.mapToDomainEntity(savedGameJpa, drawnCardsRepository);
         } catch (Exception e) {
             throw new RuntimeException(e);
-        }
-    }
-
-    private void saveDrawnCards(GameJpaEntity game, Hand hand, String holder) {
-        for (Card card : hand.getCards()) {
-            saveCardDraw(game, card, holder);
         }
     }
 
