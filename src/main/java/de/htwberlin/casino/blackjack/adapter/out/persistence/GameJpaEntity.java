@@ -35,7 +35,7 @@ public class GameJpaEntity {
     /**
      * ID of the user who is playing the game.
      */
-    @Column(name = "userId", nullable = false)
+    @Column(name = "user_id", nullable = false)
     private String userId;
 
     /**
