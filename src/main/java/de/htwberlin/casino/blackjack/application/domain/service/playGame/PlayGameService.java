@@ -46,7 +46,6 @@ class PlayGameService implements PlayGameUseCase {
         try {
             Game game = new GameImpl(null, command.userId(), command.bet());
             Game savedGame = modifyGamePort.saveGame(game);
-            savedGame = loadGamePort.retrieveGame(savedGame.getId());
 
             boolean playerBJ = playGame.handHasInitialBlackjack(savedGame.getPlayerHand());
             boolean dealerBJ = playGame.handHasInitialBlackjack(savedGame.getDealerHand());
@@ -62,8 +61,8 @@ class PlayGameService implements PlayGameUseCase {
                     outcome = GameState.LOST;
                 }
 
+                game.setGameState(outcome);
                 modifyGamePort.updateGameState(savedGame.getId(), outcome);
-                savedGame = loadGamePort.retrieveGame(savedGame.getId());
                 return Result.success(savedGame);
             }
 
@@ -92,13 +91,12 @@ class PlayGameService implements PlayGameUseCase {
             Card drawnCard = playGame.playPlayerTurn(game);
             modifyGamePort.saveCardDraw(game.getId(), drawnCard, HandType.PLAYER);
 
-            Game updatedGame = loadGamePort.retrieveGame(command.gameId());
-
-            if (playGame.isPlayerBusted(updatedGame)) {
+            if (playGame.isPlayerBusted(game)) {
+                game.setGameState(GameState.LOST);
                 modifyGamePort.updateGameState(command.gameId(), GameState.LOST);
-                return Result.success(loadGamePort.retrieveGame(updatedGame.getId()));
+                return Result.success(game);
             }
-            return Result.success(updatedGame);
+            return Result.success(game);
         } catch (EntityNotFoundException | JpaObjectRetrievalFailureException exception) {
             return Result.failure(ErrorWrapper.GAME_NOT_FOUND);
         } catch (Exception e) {

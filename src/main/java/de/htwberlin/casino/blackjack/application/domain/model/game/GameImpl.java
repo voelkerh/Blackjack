@@ -12,6 +12,7 @@ import lombok.Getter;
  * or initialize it internally with a fresh shuffled deck.
  */
 @Getter
+
 public class GameImpl implements Game {
     private final Long id;
     private final String userId;
@@ -25,13 +26,13 @@ public class GameImpl implements Game {
      * Constructs a {@code GameImpl} with all components explicitly provided.
      * Useful when loading a game from persistence.
      *
-     * @param id          game ID, may be {@code null} if not persisted yet
-     * @param userId      ID of the user playing the game
-     * @param cardDeck    the current state of the card deck
-     * @param playerHand  the current state of the players hand
-     * @param dealerHand  the current state of the dealers hand
-     * @param gameState   current {@link GameState} (e.g. {@link GameState#PLAYING}, {@link GameState#WON}, {@link GameState#LOST}, ...)
-     * @param bet         the bet amount placed by the player
+     * @param id         game ID, may be {@code null} if not persisted yet
+     * @param userId     ID of the user playing the game
+     * @param cardDeck   the current state of the card deck
+     * @param playerHand the current state of the players hand
+     * @param dealerHand the current state of the dealers hand
+     * @param gameState  current {@link GameState} (e.g. {@link GameState#PLAYING}, {@link GameState#WON}, {@link GameState#LOST}, ...)
+     * @param bet        the bet amount placed by the player
      */
     public GameImpl(Long id, String userId, CardDeckImpl cardDeck,
                     PlayerHand playerHand, DealerHand dealerHand, GameState gameState, double bet) {
@@ -68,5 +69,10 @@ public class GameImpl implements Game {
         playerHand = new PlayerHand(cardDeck.drawCard(), cardDeck.drawCard());
         dealerHand = new DealerHand(cardDeck.drawCard());
         gameState = GameState.PLAYING;
+    }
+
+    @Override
+    public void setGameState(GameState gameState) {
+        this.gameState = gameState;
     }
 }
