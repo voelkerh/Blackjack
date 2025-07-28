@@ -85,7 +85,7 @@ class EmitRulesServiceTest {
 
         Result<Rules, ErrorWrapper> result = service.emitRules(query);
 
-        assertEquals(ErrorWrapper.UNEXPECTED_INTERNAL_ERROR_OCCURED, result.getFailureData().get());
+        assertEquals(ErrorWrapper.UNEXPECTED_INTERNAL_ERROR_OCCURRED, result.getFailureData().get());
     }
 
 }

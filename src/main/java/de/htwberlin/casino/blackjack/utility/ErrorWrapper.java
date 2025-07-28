@@ -16,7 +16,7 @@ import org.springframework.http.HttpStatus;
  */
 @Getter
 public enum ErrorWrapper {
-    UNEXPECTED_INTERNAL_ERROR_OCCURED(
+    UNEXPECTED_INTERNAL_ERROR_OCCURRED(
             "An unexpected internal error occurred.",
             HttpStatus.INTERNAL_SERVER_ERROR),
     RULES_NOT_FOUND(
@@ -31,9 +31,6 @@ public enum ErrorWrapper {
     INVALID_BET_AMOUNT(
             "Bet amount must be positive.",
             HttpStatus.BAD_REQUEST),
-    USER_NOT_FOUND(
-            "The user could not be found.",
-            HttpStatus.NOT_FOUND),
     INVALID_USER_ID(
             "The provided userId is null, empty, or otherwise invalid.",
             HttpStatus.BAD_REQUEST),
@@ -50,15 +47,11 @@ public enum ErrorWrapper {
     /**
      * -- GETTER --
      * Retrieves the error message.
-     *
-     * @return the error message.
      */
     private final String message;
     /**
      * -- GETTER --
      * Retrieves the associated HTTP status code.
-     *
-     * @return the HTTP status code.
      */
     private final HttpStatus httpStatus;
 

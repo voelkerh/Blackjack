@@ -32,7 +32,7 @@ class CalculateChancesService implements CalculateChancesUseCase {
         } catch (EntityNotFoundException entityNotFoundException) {
             return Result.failure(ErrorWrapper.GAME_NOT_FOUND);
         } catch (Exception e) {
-            return Result.failure(ErrorWrapper.UNEXPECTED_INTERNAL_ERROR_OCCURED);
+            return Result.failure(ErrorWrapper.UNEXPECTED_INTERNAL_ERROR_OCCURRED);
         }
     }
 
