@@ -11,13 +11,12 @@ import org.springframework.stereotype.Component;
 public class RulesMapper {
 
     /**
-     * Transforms elements of {@link RulesJpaEntity} to application domain entity {@link Rules}.
+     * Transforms a {@link RulesJpaEntity} to application domain entity {@link Rules}.
      *
-     * @param ruleOption containing the ruleOption retrieved from the database
-     * @param rules containing rules text from the database
+     * @param rulesJpaEntity containing the rules persisted in the database
      * @return {@link Rules} domain entity object to be delegated to application service
      */
-    public Rules mapToDomainEntity(RuleOption ruleOption, String rules) {
-        return new Rules(ruleOption, rules);
+    public Rules mapToDomainEntity(RulesJpaEntity rulesJpaEntity) {
+        return new Rules(RuleOption.valueOf(rulesJpaEntity.getOption()), rulesJpaEntity.getRules());
     }
 }
