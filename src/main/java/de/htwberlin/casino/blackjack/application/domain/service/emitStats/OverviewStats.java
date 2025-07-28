@@ -10,6 +10,6 @@ package de.htwberlin.casino.blackjack.application.domain.service.emitStats;
  */
 public record OverviewStats(Long totalGames,
                             Long totalPlayers,
-                            int totalBet,
-                            int houseProfit) implements Stats {
+                            double totalBet,
+                            double houseProfit) implements Stats {
 }
