@@ -17,6 +17,8 @@ import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * Adapts Spring Data JPA repositories to domain ports.
  * Handles persistence-related operations for rules, stats and games.
@@ -38,7 +40,7 @@ class JpaRepositoryAdapter implements LoadRulesPort, LoadStatsPort, LoadGamePort
     @Override
     public Rules retrieveRules(RuleOption option) {
         RulesJpaEntity rulesJpaEntity = rulesRepository.findById(option.toString()).orElseThrow(EntityNotFoundException::new);
-        return rulesMapper.mapToDomainEntity(RuleOption.valueOf(rulesJpaEntity.getOption()), rulesJpaEntity.getRules());
+        return rulesMapper.mapToDomainEntity(rulesJpaEntity);
     }
 
     @Override
