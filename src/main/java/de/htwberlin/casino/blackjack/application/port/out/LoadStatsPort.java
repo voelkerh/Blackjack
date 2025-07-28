@@ -64,12 +64,12 @@ public interface LoadStatsPort {
     Double retrieveTotalBetByUser(String userId);
 
     /**
-     * Retrieves the net result (winnings - bets) for a specific user.
+     * Retrieves the winnings for a specific user.
      * <p>
-     * This includes correct payout multipliers (e.g. 3:2 for blackjack).
+     * This includes correct multipliers (e.g. 3:2 for blackjack).
      *
      * @param userId the identifier of the user
-     * @return the net result as a profit (positive) or loss (negative)
+     * @return the sum of bets from games that were won regularly or by a blackjack
      */
-    Double retrieveNetResultByUser(String userId);
+    Double retrieveWinningsByUser(String userId);
 }

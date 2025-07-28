@@ -25,9 +25,10 @@ public interface StatsCalculator {
      * @param gamesWon     number of games the user won
      * @param gamesLost    number of games the user lost
      * @param gamesPushed  number of games that ended in a push (tie)
+     * @param gamesBlackjack number of games that ended with the users initial blackjack
      * @param totalBet     total amount of money the user has bet
      * @param totalWinnings total amount of money the user has won
      * @return a {@link UserStats} object containing the user's game statistics and financial results
      */
-    UserStats calculateUserStats(Long gamesPlayed, Long gamesWon, Long gamesLost, Long gamesPushed, double totalBet, double totalWinnings);
+    UserStats calculateUserStats(Long gamesPlayed, Long gamesWon, Long gamesLost, Long gamesPushed, Long gamesBlackjack, double totalBet, double totalWinnings);
 }

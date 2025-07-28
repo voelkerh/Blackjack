@@ -15,15 +15,19 @@ public interface JpaGameRepository extends JpaRepository<GameJpaEntity, Long> {
     @Query("SELECT g FROM game g LEFT JOIN FETCH g.drawnCards WHERE g.id = :id")
     Optional<GameJpaEntity> findByIdWithDrawnCards(@Param("id") Long id);
 
-    @Query("SELECT COUNT(g) FROM game g")
+    // Only count completed games (exclude PLAYING)
+    @Query("SELECT COUNT(g) FROM game g WHERE g.gameState <> 'PLAYING'")
     Long fetchTotalGames();
 
-    @Query("SELECT COUNT(DISTINCT g.userId) FROM game g")
+    // Count unique users who have at least one completed game
+    @Query("SELECT COUNT(DISTINCT g.userId) FROM game g WHERE g.gameState <> 'PLAYING'")
     Long fetchTotalPlayers();
 
-    @Query("SELECT COALESCE(SUM(g.bet), 0) FROM game g")
+    // Sum bets only for completed games
+    @Query("SELECT COALESCE(SUM(g.bet), 0) FROM game g WHERE g.gameState <> 'PLAYING'")
     Double fetchTotalBet();
 
+    // House profit calculated only on completed games
     @Query(value = """
             SELECT COALESCE(SUM(
                 CASE
@@ -34,18 +38,23 @@ public interface JpaGameRepository extends JpaRepository<GameJpaEntity, Long> {
                 END
             ), 0)
             FROM game
+            WHERE game_state <> 'PLAYING'
             """, nativeQuery = true)
     Double fetchHouseProfit();
 
-    @Query("SELECT COUNT(g) FROM game g WHERE g.userId = :userId")
+    // Count completed games for specific user
+    @Query("SELECT COUNT(g) FROM game g WHERE g.userId = :userId AND g.gameState <> 'PLAYING'")
     Long fetchNumberOfGamesPlayedByUser(@Param("userId") String userId);
 
+    // Count games with specific state for user - no exclusion because query targets one state
     @Query("SELECT COUNT(g) FROM game g WHERE g.userId = :userId AND g.gameState = :gameState")
     Long fetchNumberOfGamesWithGameStateOfUser(@Param("userId") String userId, @Param("gameState") GameState gameState);
 
-    @Query("SELECT COALESCE(SUM(g.bet), 0) FROM game g WHERE g.userId = :userId")
+    // Sum bets only for completed games of user
+    @Query("SELECT COALESCE(SUM(g.bet), 0) FROM game g WHERE g.userId = :userId AND g.gameState <> 'PLAYING'")
     Double fetchTotalBetByUser(@Param("userId") String userId);
 
+    // Sum winnings only for completed games of user
     @Query(value = """
             SELECT COALESCE(SUM(
                 CASE
@@ -56,7 +65,7 @@ public interface JpaGameRepository extends JpaRepository<GameJpaEntity, Long> {
                 END
             ), 0)
             FROM game
-            WHERE user_id = :userId
+            WHERE user_id = :userId AND game_state <> 'PLAYING'
             """, nativeQuery = true)
-    Double fetchNetResultByUser(@Param("userId") String userId);
+    Double fetchWinningsByUser(@Param("userId") String userId);
 }

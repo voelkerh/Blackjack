@@ -83,8 +83,8 @@ class JpaRepositoryAdapter implements LoadRulesPort, LoadStatsPort, LoadGamePort
     }
 
     @Override
-    public Double retrieveNetResultByUser(String userId) {
-        return gameRepository.fetchNetResultByUser(userId);
+    public Double retrieveWinningsByUser(String userId) {
+        return gameRepository.fetchWinningsByUser(userId);
     }
 
     @Override

@@ -70,14 +70,15 @@ public class EmitStatsService implements EmitStatsUseCase {
 
         try {
             Long gamesPlayed = loadStatsPort.retrieveNumberOfGamesPlayedByUser(userId);
+            Long gamesBlackjack = loadStatsPort.retrieveNumberOfGamesWithGameSateOfUser(userId, GameState.BLACKJACK);
             Long gamesWon = loadStatsPort.retrieveNumberOfGamesWithGameSateOfUser(userId, GameState.WON);
             Long gamesLost = loadStatsPort.retrieveNumberOfGamesWithGameSateOfUser(userId, GameState.LOST);
             Long gamesPushed = loadStatsPort.retrieveNumberOfGamesWithGameSateOfUser(userId, GameState.PUSH);
             Double totalBet = loadStatsPort.retrieveTotalBetByUser(userId);
-            Double netResult = loadStatsPort.retrieveNetResultByUser(userId);
+            Double winnings = loadStatsPort.retrieveWinningsByUser(userId);
 
             UserStats stats = statsCalculator.calculateUserStats(
-                    gamesPlayed, gamesWon, gamesLost, gamesPushed, totalBet, netResult
+                    gamesPlayed, gamesWon, gamesLost, gamesPushed, gamesBlackjack, totalBet, winnings
             );
 
             return Result.success(stats);

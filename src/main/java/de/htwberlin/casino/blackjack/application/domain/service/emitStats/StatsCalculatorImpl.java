@@ -15,8 +15,8 @@ public class StatsCalculatorImpl implements StatsCalculator{
         return new OverviewStats(totalGames, totalPlayers, totalBet, houseProfit);
     }
     @Override
-    public UserStats calculateUserStats(Long gamesPlayed, Long gamesWon, Long gamesLost, Long gamesPushed, double totalBet, double totalWinnings) {
-        String winRatio = gamesWon + ":" + gamesLost + ":" + gamesPushed;
+    public UserStats calculateUserStats(Long gamesPlayed, Long gamesWon, Long gamesLost, Long gamesPushed, Long gamesBlackjack, double totalBet, double totalWinnings) {
+        String winRatio = gamesBlackjack + ":" + gamesWon + ":" + gamesLost + ":" + gamesPushed;
         double netResult = totalWinnings - totalBet;
 
         return new UserStats(gamesPlayed, winRatio, totalBet, netResult);
