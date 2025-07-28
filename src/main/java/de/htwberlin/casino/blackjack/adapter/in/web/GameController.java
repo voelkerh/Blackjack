@@ -13,8 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 /**
  * REST controller that exposes endpoints to start a blackjack game or perform game actions in ongoing blackjack game.
  * Delegates to {@link PlayGameUseCase}.
@@ -26,6 +24,7 @@ import java.util.List;
 public class GameController {
 
     private final PlayGameUseCase playGameUseCase;
+    private final GameResponseMapper gameResponseMapper;
 
     /**
      * Starts a new blackjack game for the given user with a specified bet amount.
@@ -44,16 +43,7 @@ public class GameController {
     public ResponseEntity<?> startGame(@RequestBody StartGameRequest request) {
         Result<Game, ErrorWrapper> result = playGameUseCase.startGame(new StartGameCommand(request.userId(), request.bet()));
         if (result.isSuccess()) {
-            Game game = result.getSuccessData().get();
-
-            List<CardResponse> playerHandResponse = game.getPlayerHand().getCards().stream()
-                    .map(card -> new CardResponse(card.rank().name(), card.suit().name()))
-                    .toList();
-            List<CardResponse> dealerHandResponse = game.getDealerHand().getCards().stream()
-                    .map(card -> new CardResponse(card.rank().name(), card.suit().name()))
-                    .toList();
-
-            GameResponse response = new GameResponse(game.getId(), game.getGameState().toString(), playerHandResponse, dealerHandResponse, game.getBet());
+            GameResponse response = gameResponseMapper.toResponse(result.getSuccessData().get());
             return ResponseEntity.ok(response);
         } else return ResponseEntity.status(result.getFailureData().get().getHttpStatus())
                 .body(result.getFailureData().get().getMessage());
@@ -78,16 +68,7 @@ public class GameController {
         Result<Game, ErrorWrapper> result = playGameUseCase.hit(new HitCommand(gameId));
 
         if (result.isSuccess()) {
-            Game game = result.getSuccessData().get();
-
-            List<CardResponse> playerHandResponse = game.getPlayerHand().getCards().stream()
-                    .map(card -> new CardResponse(card.rank().name(), card.suit().name()))
-                    .toList();
-            List<CardResponse> dealerHandResponse = game.getDealerHand().getCards().stream()
-                    .map(card -> new CardResponse(card.rank().name(), card.suit().name()))
-                    .toList();
-
-            GameResponse response = new GameResponse(game.getId(), game.getGameState().toString(), playerHandResponse, dealerHandResponse, game.getBet());
+            GameResponse response = gameResponseMapper.toResponse(result.getSuccessData().get());
             return ResponseEntity.ok(response);
         } else return ResponseEntity.status(result.getFailureData().get().getHttpStatus())
                 .body(result.getFailureData().get().getMessage());
@@ -112,16 +93,7 @@ public class GameController {
         Result<Game, ErrorWrapper> result = playGameUseCase.stand(new StandCommand(gameId));
 
         if (result.isSuccess()) {
-            Game game = result.getSuccessData().get();
-
-            List<CardResponse> playerHandResponse = game.getPlayerHand().getCards().stream()
-                    .map(card -> new CardResponse(card.rank().name(), card.suit().name()))
-                    .toList();
-            List<CardResponse> dealerHandResponse = game.getDealerHand().getCards().stream()
-                    .map(card -> new CardResponse(card.rank().name(), card.suit().name()))
-                    .toList();
-
-            GameResponse response = new GameResponse(game.getId(), game.getGameState().toString(), playerHandResponse, dealerHandResponse, game.getBet());
+            GameResponse response = gameResponseMapper.toResponse(result.getSuccessData().get());
             return ResponseEntity.ok(response);
         } else return ResponseEntity.status(result.getFailureData().get().getHttpStatus())
                 .body(result.getFailureData().get().getMessage());
@@ -145,16 +117,7 @@ public class GameController {
         Result<Game, ErrorWrapper> result = playGameUseCase.getGameState(new GetGameCommand(gameId));
 
         if (result.isSuccess()) {
-            Game game = result.getSuccessData().get();
-
-            List<CardResponse> playerHandResponse = game.getPlayerHand().getCards().stream()
-                    .map(card -> new CardResponse(card.rank().name(), card.suit().name()))
-                    .toList();
-            List<CardResponse> dealerHandResponse = game.getDealerHand().getCards().stream()
-                    .map(card -> new CardResponse(card.rank().name(), card.suit().name()))
-                    .toList();
-
-            GameResponse response = new GameResponse(game.getId(), game.getGameState().toString(), playerHandResponse, dealerHandResponse, game.getBet());
+            GameResponse response = gameResponseMapper.toResponse(result.getSuccessData().get());
             return ResponseEntity.ok(response);
         } else return ResponseEntity.status(result.getFailureData().get().getHttpStatus())
                 .body(result.getFailureData().get().getMessage());
