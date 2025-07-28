@@ -39,7 +39,7 @@ public class GameJpaEntity {
     private String userId;
 
     /**
-     * Current state of the game (e.g., "PLAYING", "WIN", "LOSS", "PUSH").
+     * Current state of the game (e.g., "PLAYING", "WON", "LOST", "PUSH", "BLACKJACK").
      */
     @Enumerated(EnumType.STRING)
     @Column(name = "game_state", nullable = false)

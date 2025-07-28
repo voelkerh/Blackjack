@@ -27,9 +27,9 @@ public interface JpaGameRepository extends JpaRepository<GameJpaEntity, Long> {
     @Query(value = """
             SELECT COALESCE(SUM(
                 CASE
-                    WHEN game_state = 'WIN' THEN -bet
+                    WHEN game_state = 'WON' THEN -bet
                     WHEN game_state = 'BLACKJACK' THEN -bet * 1.5
-                    WHEN game_state = 'LOSS' THEN bet
+                    WHEN game_state = 'LOST' THEN bet
                     ELSE 0
                 END
             ), 0)
@@ -49,7 +49,7 @@ public interface JpaGameRepository extends JpaRepository<GameJpaEntity, Long> {
     @Query(value = """
             SELECT COALESCE(SUM(
                 CASE
-                    WHEN game_state = 'WIN' THEN bet * 2
+                    WHEN game_state = 'WON' THEN bet * 2
                     WHEN game_state = 'BLACKJACK' THEN bet * 2.5
                     WHEN game_state = 'PUSH' THEN bet
                     ELSE 0
