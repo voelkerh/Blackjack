@@ -19,8 +19,9 @@ class ChancesCalculatorImplTest {
 
     @BeforeEach
     void setUp() {
-        Card dealerUpCard = new Card(Rank.FIVE, Suit.SPADES);
-        dealerHand = new DealerHand(dealerUpCard);
+        Card dealerUpCard = new Card(Rank.THREE, Suit.SPADES);
+        Card dealerDownCard = new Card(Rank.TWO, Suit.HEARTS);
+        dealerHand = new DealerHand(dealerUpCard, dealerDownCard);
         calculator = new ChancesCalculatorImpl();
     }
 
@@ -90,7 +91,7 @@ class ChancesCalculatorImplTest {
 
 
         double expected = 0.0;
-        double actual  = calculator.calculateChances(playerHand, dealerHand).blackjack();
+        double actual = calculator.calculateChances(playerHand, dealerHand).blackjack();
 
         assertEquals(expected, actual);
     }
@@ -114,7 +115,7 @@ class ChancesCalculatorImplTest {
         Card card2 = new Card(Rank.SIX, Suit.HEARTS);
         PlayerHand playerHand = new PlayerHand(card1, card2);
 
-        double expected = 0.32;
+        double expected = 0.3333333333333333;
         double actual = calculator.calculateChances(playerHand, dealerHand).blackjack();
         double delta = 0.01;
 
@@ -140,7 +141,7 @@ class ChancesCalculatorImplTest {
         Card card2 = new Card(Rank.EIGHT, Suit.HEARTS);
         PlayerHand playerHand = new PlayerHand(card1, card2);
 
-        double expected = 0.46;
+        double expected = 0.47916666666666663;
         double actual = calculator.calculateChances(playerHand, dealerHand).bust();
         double delta = 0.01;
 

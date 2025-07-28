@@ -112,6 +112,7 @@ public class BlackjackApplication {
                 CardJpaEntity playerCard1 = allCards.get(0);
                 CardJpaEntity playerCard2 = allCards.get(1);
                 CardJpaEntity dealerCard1 = allCards.get(2);
+                CardJpaEntity dealerCard2 = allCards.get(3);
 
                 GameJpaEntity game = new GameJpaEntity(
                         null,
@@ -126,8 +127,9 @@ public class BlackjackApplication {
                 DrawnCardJpaEntity draw1 = new DrawnCardJpaEntity(game, playerCard1, HandType.PLAYER);
                 DrawnCardJpaEntity draw2 = new DrawnCardJpaEntity(game, playerCard2, HandType.PLAYER);
                 DrawnCardJpaEntity draw3 = new DrawnCardJpaEntity(game, dealerCard1, HandType.DEALER);
+                DrawnCardJpaEntity draw4 = new DrawnCardJpaEntity(game, dealerCard2, HandType.DEALER);
 
-                drawnCardsRepo.saveAll(List.of(draw1, draw2, draw3));
+                drawnCardsRepo.saveAll(List.of(draw1, draw2, draw3, draw4));
 
                 System.out.println("Sample game created with ID: " + savedGame.getId());
             }

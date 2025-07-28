@@ -43,9 +43,10 @@ class HandFactoryImplTest {
     }
 
     @Test
-    void givenDealerOneCard_whenCreate_thenReturnDealerHand() {
+    void givenDealerTwoCards_whenCreate_thenReturnDealerHand() {
         List<Card> cards = new ArrayList<>();
         cards.add(new Card(Rank.TWO, Suit.CLUBS));
+        cards.add(new Card(Rank.THREE, Suit.CLUBS));
 
         Hand actual = factory.create(HandType.DEALER, cards);
 
