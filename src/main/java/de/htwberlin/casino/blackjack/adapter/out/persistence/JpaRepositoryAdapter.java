@@ -40,7 +40,7 @@ class JpaRepositoryAdapter implements LoadRulesPort, LoadStatsPort, LoadGamePort
     @Override
     public Rules retrieveRules(RuleOption option) {
         RulesJpaEntity rulesJpaEntity = rulesRepository.findById(option.toString()).orElseThrow(EntityNotFoundException::new);
-        return rulesMapper.mapToDomainEntity(RuleOption.valueOf(rulesJpaEntity.getOption()), rulesJpaEntity.getRules());
+        return rulesMapper.mapToDomainEntity(rulesJpaEntity);
     }
 
     @Override
