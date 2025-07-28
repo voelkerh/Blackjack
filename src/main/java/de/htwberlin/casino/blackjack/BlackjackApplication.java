@@ -28,7 +28,7 @@ public class BlackjackApplication {
             System.out.println(rulesRepo.count() + " rules found in database.");
             if (rulesRepo.count() == 0) {
                 String generalText = """
-                        # Rules
+                        # General Rules
                         
                         Basic set of rules for Blackjack.
                         
@@ -82,9 +82,27 @@ public class BlackjackApplication {
                         - no surrendering (draw back at 50% cost when having a bad hand)
                         - no side-betting (insurance)
                         """;
+                String hitRules = """
+                        # Rules for the action "hit"
+                        
+                        The player chooses to draw another card to improve their hand.
+                        
+                        - Can be chosen any number of times unless the player busts.
+                        - Risk: drawing a high card may lead to a hand total over 21 (bust).
+                        - Strategic if hand value is low (e.g. 11 or below).
+                        """;
+                String standRules = """
+                        # Rules for the action "stand"
+                        
+                        The player decides not to take any more cards and ends their turn.
+                        
+                        - Keeps the current hand as final.
+                        - Dealer then plays their turn according to fixed rules.
+                        - Recommended if the hand value is high (e.g. 17 or more).
+                        """;
                 rulesRepo.save(new RulesJpaEntity("GENERAL", generalText));
-                rulesRepo.save(new RulesJpaEntity("HIT", "Empty for now"));
-                rulesRepo.save(new RulesJpaEntity("STAND", "Empty for now"));
+                rulesRepo.save(new RulesJpaEntity("HIT", hitRules));
+                rulesRepo.save(new RulesJpaEntity("STAND", standRules));
                 System.out.println("Rules saved to database");
             }
             System.out.println(rulesRepo.count() + " rules now in database.");
