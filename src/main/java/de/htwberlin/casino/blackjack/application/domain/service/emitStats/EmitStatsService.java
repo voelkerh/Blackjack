@@ -31,6 +31,7 @@ public class EmitStatsService implements EmitStatsUseCase {
             case OVERVIEW -> {
                 return emitOverviewStats();
             }
+            case null, default -> Result.failure(ErrorWrapper.INVALID_STATS_OPTION);
         }
         return Result.failure(ErrorWrapper.INVALID_STATS_OPTION);
     }
