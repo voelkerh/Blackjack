@@ -54,7 +54,7 @@ public class ChancesCalculatorImpl implements ChancesCalculator {
 
     private int getNumberOfValueCardsDealt(int value, Hand playerHand, Hand dealerHand) {
         List<Card> playerCards = playerHand.getCards();
-        List<Card> dealerCards = dealerHand.getCards();
+        List<Card> dealerCards = List.of(dealerHand.getCards().getFirst());
         return (int) Stream.concat(playerCards.stream(), dealerCards.stream())
                 .filter(card -> card.rank().getValue() == value)
                 .count();
@@ -68,7 +68,7 @@ public class ChancesCalculatorImpl implements ChancesCalculator {
     }
 
     private int getTotalNumberOfCardsDealt(Hand playerHand, Hand dealerHand) {
-        return playerHand.getCards().size() + dealerHand.getCards().size();
+        return playerHand.getCards().size() + List.of(dealerHand.getCards().getFirst()).size();
     }
 
     private double calculateBustChance(int differenceToBlackjack, Hand playerHand, Hand dealerHand) {
