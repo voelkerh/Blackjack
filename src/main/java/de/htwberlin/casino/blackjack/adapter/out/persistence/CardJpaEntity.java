@@ -1,9 +1,8 @@
 package de.htwberlin.casino.blackjack.adapter.out.persistence;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.IdClass;
+import de.htwberlin.casino.blackjack.application.domain.model.cards.Rank;
+import de.htwberlin.casino.blackjack.application.domain.model.cards.Suit;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,16 +18,18 @@ import lombok.NoArgsConstructor;
 @Getter
 public class CardJpaEntity {
     /**
-     * Suit of the card (e.g., Hearts, Spades, Clubs, Diamonds).
+     * {@link Suit} of the card (e.g., Hearts, Spades, Clubs, Diamonds).
      */
     @Id
+    @Enumerated(EnumType.STRING)
     @Column(name = "suit", nullable = false)
-    private String suit;
+    private Suit suit;
 
     /**
-     * Rank of the card (e.g., 2–10, Jack, Queen, King, Ace).
+     * {@link Rank} of the card (e.g., 2–10, Jack, Queen, King, Ace).
      */
     @Id
+    @Enumerated(EnumType.STRING)
     @Column(name = "rank", nullable = false)
-    private String rank;
+    private Rank rank;
 }

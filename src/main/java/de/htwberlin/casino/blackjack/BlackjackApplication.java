@@ -91,10 +91,10 @@ public class BlackjackApplication {
 
             System.out.println(cardRepo.count() + " cards found in database.");
             if (cardRepo.count() == 0) {
-                List<String> suits = Arrays.stream(Suit.values()).map(Enum::name).toList();
-                List<String> ranks = Arrays.stream(Rank.values()).map(Enum::name).toList();
-                for (String suit : suits) {
-                    for (String rank : ranks) {
+                List<Suit> suits = Arrays.stream(Suit.values()).toList();
+                List<Rank> ranks = Arrays.stream(Rank.values()).toList();
+                for (Suit suit : suits) {
+                    for (Rank rank : ranks) {
                         CardJpaEntity card = new CardJpaEntity(suit, rank);
                         cardRepo.save(card);
                     }

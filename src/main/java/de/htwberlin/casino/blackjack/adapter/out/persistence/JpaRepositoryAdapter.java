@@ -104,7 +104,7 @@ class JpaRepositoryAdapter implements LoadRulesPort, LoadStatsPort, LoadGamePort
 
     @Override
     public void saveCardDraw(Long gameId, Card card, HandType holder) {
-        CardJpaEntity cardEntity = cardRepository.findBySuitAndRank(card.suit().name().toUpperCase(), card.rank().name().toUpperCase())
+        CardJpaEntity cardEntity = cardRepository.findBySuitAndRank(card.suit(), card.rank())
                 .orElseThrow(() -> new EntityNotFoundException("Card not found: " + card));
 
         GameJpaEntity gameJpaEntity = gameRepository.findById(gameId).orElseThrow(() -> new EntityNotFoundException("Game not found with ID: " + gameId));
