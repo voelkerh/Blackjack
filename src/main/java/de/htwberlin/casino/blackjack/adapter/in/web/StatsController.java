@@ -1,8 +1,6 @@
 package de.htwberlin.casino.blackjack.adapter.in.web;
 
 import de.htwberlin.casino.blackjack.application.domain.model.stats.StatsOption;
-import de.htwberlin.casino.blackjack.application.domain.service.emitStats.OverviewStats;
-import de.htwberlin.casino.blackjack.application.domain.service.emitStats.UserStats;
 import de.htwberlin.casino.blackjack.application.port.in.emitStats.EmitStatsQuery;
 import de.htwberlin.casino.blackjack.application.port.in.emitStats.EmitStatsUseCase;
 import io.swagger.v3.oas.annotations.Operation;
@@ -47,8 +45,7 @@ public class StatsController {
         var result = emitStatsUseCase.emitStats(query);
 
         if (result.isSuccess()) {
-            UserStats userStats = (UserStats) result.getSuccessData().get();
-            UserStatsResponse response = new UserStatsResponse(userStats.gamesPlayed(), userStats.winRatio(), userStats.totalBet(), userStats.netResult());
+            UserStatsResponse response = StatsResponseMapper.toUserStatsResponse(result.getSuccessData().get());
             return ResponseEntity.ok(response);
         } else {
             var failure = result.getFailureData().get();
@@ -75,8 +72,7 @@ public class StatsController {
         var result = emitStatsUseCase.emitStats(query);
 
         if (result.isSuccess()) {
-            OverviewStats overviewStats = (OverviewStats) result.getSuccessData().get();
-            OverviewStatsResponse response = new OverviewStatsResponse(overviewStats.totalGames(), overviewStats.totalPlayers(), overviewStats.totalBet(), overviewStats.houseProfit());
+            OverviewStatsResponse response = StatsResponseMapper.toOverviewStatsResponse(result.getSuccessData().get());
             return ResponseEntity.ok(response);
         } else return ResponseEntity.status(result.getFailureData().get().getHttpStatus())
                 .body(result.getFailureData().get().getMessage());
