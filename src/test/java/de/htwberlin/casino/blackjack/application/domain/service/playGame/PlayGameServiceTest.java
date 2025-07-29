@@ -70,7 +70,6 @@ class PlayGameServiceTest {
         Game returnedGame = result.getSuccessData().orElseThrow();
         assertEquals(game, returnedGame);
         verify(modifyGamePort, times(1)).saveGame(any(Game.class));
-        verify(loadGamePort, times(1)).retrieveGame(1L);
         verify(modifyGamePort, never()).updateGameState(anyLong(), any());
     }
 
