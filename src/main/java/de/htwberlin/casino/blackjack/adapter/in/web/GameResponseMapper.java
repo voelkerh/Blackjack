@@ -2,14 +2,12 @@ package de.htwberlin.casino.blackjack.adapter.in.web;
 
 import de.htwberlin.casino.blackjack.application.domain.model.game.Game;
 import de.htwberlin.casino.blackjack.application.domain.model.game.GameState;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Component
 public class GameResponseMapper {
 
-    public GameResponse toResponse(Game game) {
+    public static GameResponse toResponse(Game game) {
         List<CardResponse> playerHandResponse = game.getPlayerHand().getCards().stream()
                 .map(card -> new CardResponse(card.rank().name(), card.suit().name()))
                 .toList();
@@ -25,7 +23,7 @@ public class GameResponseMapper {
         );
     }
 
-    private List<CardResponse> getDealerHandCardsForState(Game game) {
+    private static List<CardResponse> getDealerHandCardsForState(Game game) {
         if (game.getGameState() == GameState.PLAYING) {
             return game.getDealerHand().getCards().stream()
                     .findFirst()

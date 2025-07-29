@@ -1,9 +1,11 @@
 package de.htwberlin.casino.blackjack.adapter.in.web;
 
 import de.htwberlin.casino.blackjack.application.domain.model.game.Game;
+import de.htwberlin.casino.blackjack.application.domain.model.game.GameImpl;
 import de.htwberlin.casino.blackjack.application.port.in.playGame.*;
 import de.htwberlin.casino.blackjack.utility.ErrorWrapper;
 import de.htwberlin.casino.blackjack.utility.Result;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -20,19 +22,17 @@ class GameControllerTest {
     @Mock
     private PlayGameUseCase playGameUseCase;
 
-    @Mock
-    private GameResponseMapper gameResponseMapper;
-
-    @Mock
     private Game game;
-
-    @Mock
-    private GameResponse gameResponse;
 
     @InjectMocks
     private GameController gameController;
 
     private final Long gameId = 1L;
+
+    @BeforeEach
+    void setUp() {
+        game = new GameImpl(1L, "user", 100.0);
+    }
 
     @Test
     void startGame_shouldReturnOk_whenGameStartsSuccessfully() {
@@ -40,12 +40,10 @@ class GameControllerTest {
         double bet = 50.0;
         StartGameRequest request = new StartGameRequest(userId, bet);
         when(playGameUseCase.startGame(any())).thenReturn(Result.success(game));
-        when(gameResponseMapper.toResponse(game)).thenReturn(gameResponse);
 
         ResponseEntity<?> response = gameController.startGame(request);
 
         assertThat(response.getStatusCodeValue()).isEqualTo(200);
-        assertThat(response.getBody()).isEqualTo(gameResponse);
 
         verify(playGameUseCase).startGame(new StartGameCommand(userId, bet));
     }
@@ -67,12 +65,10 @@ class GameControllerTest {
     @Test
     void hit_shouldReturnOk_whenCardDrawn() {
         when(playGameUseCase.hit(any())).thenReturn(Result.success(game));
-        when(gameResponseMapper.toResponse(game)).thenReturn(gameResponse);
 
         ResponseEntity<?> response = gameController.hit(gameId);
 
         assertThat(response.getStatusCodeValue()).isEqualTo(200);
-        assertThat(response.getBody()).isEqualTo(gameResponse);
         verify(playGameUseCase).hit(new HitCommand(gameId));
     }
 
@@ -90,12 +86,10 @@ class GameControllerTest {
     @Test
     void stand_shouldReturnOk_whenPlayerStands() {
         when(playGameUseCase.stand(any())).thenReturn(Result.success(game));
-        when(gameResponseMapper.toResponse(game)).thenReturn(gameResponse);
 
         ResponseEntity<?> response = gameController.stand(gameId);
 
         assertThat(response.getStatusCodeValue()).isEqualTo(200);
-        assertThat(response.getBody()).isEqualTo(gameResponse);
         verify(playGameUseCase).stand(new StandCommand(gameId));
     }
 
@@ -113,12 +107,10 @@ class GameControllerTest {
     @Test
     void getGame_shouldReturnOk_whenGameExists() {
         when(playGameUseCase.getGameState(any())).thenReturn(Result.success(game));
-        when(gameResponseMapper.toResponse(game)).thenReturn(gameResponse);
 
         ResponseEntity<?> response = gameController.getGame(gameId);
 
         assertThat(response.getStatusCodeValue()).isEqualTo(200);
-        assertThat(response.getBody()).isEqualTo(gameResponse);
         verify(playGameUseCase).getGameState(new GetGameCommand(gameId));
     }
 

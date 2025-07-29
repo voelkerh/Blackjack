@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.*;
 public class GameController {
 
     private final PlayGameUseCase playGameUseCase;
-    private final GameResponseMapper gameResponseMapper;
 
     /**
      * Starts a new blackjack game for the given user with a specified bet amount.
@@ -43,7 +42,7 @@ public class GameController {
     public ResponseEntity<?> startGame(@RequestBody StartGameRequest request) {
         Result<Game, ErrorWrapper> result = playGameUseCase.startGame(new StartGameCommand(request.userId(), request.bet()));
         if (result.isSuccess()) {
-            GameResponse response = gameResponseMapper.toResponse(result.getSuccessData().get());
+            GameResponse response = GameResponseMapper.toResponse(result.getSuccessData().get());
             return ResponseEntity.ok(response);
         } else return ResponseEntity.status(result.getFailureData().get().getHttpStatus())
                 .body(result.getFailureData().get().getMessage());
@@ -68,7 +67,7 @@ public class GameController {
         Result<Game, ErrorWrapper> result = playGameUseCase.hit(new HitCommand(gameId));
 
         if (result.isSuccess()) {
-            GameResponse response = gameResponseMapper.toResponse(result.getSuccessData().get());
+            GameResponse response = GameResponseMapper.toResponse(result.getSuccessData().get());
             return ResponseEntity.ok(response);
         } else return ResponseEntity.status(result.getFailureData().get().getHttpStatus())
                 .body(result.getFailureData().get().getMessage());
@@ -93,7 +92,7 @@ public class GameController {
         Result<Game, ErrorWrapper> result = playGameUseCase.stand(new StandCommand(gameId));
 
         if (result.isSuccess()) {
-            GameResponse response = gameResponseMapper.toResponse(result.getSuccessData().get());
+            GameResponse response = GameResponseMapper.toResponse(result.getSuccessData().get());
             return ResponseEntity.ok(response);
         } else return ResponseEntity.status(result.getFailureData().get().getHttpStatus())
                 .body(result.getFailureData().get().getMessage());
@@ -117,7 +116,7 @@ public class GameController {
         Result<Game, ErrorWrapper> result = playGameUseCase.getGameState(new GetGameCommand(gameId));
 
         if (result.isSuccess()) {
-            GameResponse response = gameResponseMapper.toResponse(result.getSuccessData().get());
+            GameResponse response = GameResponseMapper.toResponse(result.getSuccessData().get());
             return ResponseEntity.ok(response);
         } else return ResponseEntity.status(result.getFailureData().get().getHttpStatus())
                 .body(result.getFailureData().get().getMessage());
