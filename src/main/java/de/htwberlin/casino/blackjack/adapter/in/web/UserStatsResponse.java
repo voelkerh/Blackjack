@@ -8,6 +8,6 @@ package de.htwberlin.casino.blackjack.adapter.in.web;
  * @param totalBet
  * @param netResult
  */
-public record UserStatsResponse(int gamesPlayed, String winRatio, int totalBet, int netResult) {
+public record UserStatsResponse(Long gamesPlayed, String winRatio, double totalBet, double netResult) {
 }
 

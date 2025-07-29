@@ -1,6 +1,8 @@
 package de.htwberlin.casino.blackjack.adapter.in.web;
 
 import de.htwberlin.casino.blackjack.application.domain.model.stats.StatsOption;
+import de.htwberlin.casino.blackjack.application.domain.service.emitStats.OverviewStats;
+import de.htwberlin.casino.blackjack.application.domain.service.emitStats.UserStats;
 import de.htwberlin.casino.blackjack.application.port.in.emitStats.EmitStatsQuery;
 import de.htwberlin.casino.blackjack.application.port.in.emitStats.EmitStatsUseCase;
 import io.swagger.v3.oas.annotations.Operation;
@@ -44,9 +46,15 @@ public class StatsController {
         var query = new EmitStatsQuery(StatsOption.USER, userId);
         var result = emitStatsUseCase.emitStats(query);
 
-        if (result.isSuccess()) return ResponseEntity.ok(result.getSuccessData().get());
-        else return ResponseEntity.status(result.getFailureData().get().getHttpStatus())
-                .body(result.getFailureData().get().getMessage());
+        if (result.isSuccess()) {
+            UserStats userStats = (UserStats) result.getSuccessData().get();
+            UserStatsResponse response = new UserStatsResponse(userStats.gamesPlayed(), userStats.winRatio(), userStats.totalBet(), userStats.netResult());
+            return ResponseEntity.ok(response);
+        } else {
+            var failure = result.getFailureData().get();
+            return ResponseEntity.status(failure.getHttpStatus())
+                    .body(failure.getMessage());
+        }
     }
 
     /**
@@ -66,8 +74,11 @@ public class StatsController {
         var query = new EmitStatsQuery(StatsOption.OVERVIEW);
         var result = emitStatsUseCase.emitStats(query);
 
-        if (result.isSuccess()) return ResponseEntity.ok(result.getSuccessData().get());
-        else return ResponseEntity.status(result.getFailureData().get().getHttpStatus())
+        if (result.isSuccess()) {
+            OverviewStats overviewStats = (OverviewStats) result.getSuccessData().get();
+            OverviewStatsResponse response = new OverviewStatsResponse(overviewStats.totalGames(), overviewStats.totalPlayers(), overviewStats.totalBet(), overviewStats.houseProfit());
+            return ResponseEntity.ok(response);
+        } else return ResponseEntity.status(result.getFailureData().get().getHttpStatus())
                 .body(result.getFailureData().get().getMessage());
     }
 }

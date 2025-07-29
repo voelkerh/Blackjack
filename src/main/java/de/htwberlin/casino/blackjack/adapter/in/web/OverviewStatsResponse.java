@@ -8,5 +8,5 @@ package de.htwberlin.casino.blackjack.adapter.in.web;
  * @param totalBet
  * @param houseProfit
  */
-public record OverviewStatsResponse(int totalGames, int totalPlayers, int totalBet, int houseProfit){
+public record OverviewStatsResponse(Long totalGames, Long totalPlayers, double totalBet, double houseProfit){
 }
