@@ -5,8 +5,19 @@ import de.htwberlin.casino.blackjack.application.domain.model.game.GameState;
 
 import java.util.List;
 
+/**
+ * Utility class responsible for mapping {@link Game} domain objects
+ * to {@link GameResponse} DTOs used for API responses.
+ */
 public class GameResponseMapper {
 
+    /**
+     * Converts a {@link Game} object into a {@link GameResponse}.
+     * Includes full player hand and dealer hand or only UpCard for dealer depending on the game state.
+     *
+     * @param game the game domain object to convert
+     * @return a GameResponse representing the game's current state
+     */
     public static GameResponse toResponse(Game game) {
         List<CardResponse> playerHandResponse = game.getPlayerHand().getCards().stream()
                 .map(card -> new CardResponse(card.rank().name(), card.suit().name()))
@@ -23,6 +34,13 @@ public class GameResponseMapper {
         );
     }
 
+    /**
+     * Determines how much of the dealer's hand to reveal based on the current {@link GameState}.
+     * If the game is still playing, only the first dealer card is shown. Otherwise, the full hand is revealed.
+     *
+     * @param game the game whose dealer hand is being converted
+     * @return a list of {@link CardResponse} representing the dealer's visible cards
+     */
     private static List<CardResponse> getDealerHandCardsForState(Game game) {
         if (game.getGameState() == GameState.PLAYING) {
             return game.getDealerHand().getCards().stream()
