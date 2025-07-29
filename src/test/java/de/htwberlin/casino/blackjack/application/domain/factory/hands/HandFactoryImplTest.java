@@ -53,6 +53,7 @@ class HandFactoryImplTest {
         assertNotNull(actual);
         assertInstanceOf(DealerHand.class, actual);
     }
+
     @Test
     void givenDealerThreeCards_whenCreate_thenReturnDealerHand() {
         List<Card> cards = new ArrayList<>();
@@ -100,5 +101,4 @@ class HandFactoryImplTest {
         assertInstanceOf(PlayerHand.class, actual);
         assertEquals(3, actual.getCards().size());
     }
-
 }

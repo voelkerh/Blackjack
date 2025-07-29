@@ -113,7 +113,7 @@ public class BlackjackApplication {
                 List<Rank> ranks = Arrays.stream(Rank.values()).toList();
                 for (Suit suit : suits) {
                     for (Rank rank : ranks) {
-                        CardJpaEntity card = new CardJpaEntity(suit, rank);
+                        CardJpaEntity card = new CardJpaEntity(rank, suit);
                         cardRepo.save(card);
                     }
                 }

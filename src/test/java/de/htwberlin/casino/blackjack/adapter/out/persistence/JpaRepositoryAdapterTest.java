@@ -131,7 +131,7 @@ class JpaRepositoryAdapterTest {
         CardJpaEntity cardJpa = new CardJpaEntity();
         GameJpaEntity gameJpa = new GameJpaEntity();
 
-        when(cardRepository.findBySuitAndRank(card.suit(), card.rank())).thenReturn(Optional.of(cardJpa));
+        when(cardRepository.findByRankAndSuit(card.rank(), card.suit())).thenReturn(Optional.of(cardJpa));
         when(gameRepository.findById(1L)).thenReturn(Optional.of(gameJpa));
 
         adapter.saveCardDraw(1L, card, HandType.PLAYER);
@@ -144,7 +144,7 @@ class JpaRepositoryAdapterTest {
     @Test
     void saveCardDraw_shouldThrow_whenCardNotFound() {
         Card card = new Card(Rank.TEN, Suit.HEARTS);
-        when(cardRepository.findBySuitAndRank(card.suit(), card.rank())).thenReturn(Optional.empty());
+        when(cardRepository.findByRankAndSuit(card.rank(), card.suit())).thenReturn(Optional.empty());
 
         assertThrows(EntityNotFoundException.class, () -> adapter.saveCardDraw(1L, card, HandType.DEALER));
     }
@@ -153,7 +153,7 @@ class JpaRepositoryAdapterTest {
     void saveCardDraw_shouldThrow_whenGameNotFound() {
         Card card = new Card(Rank.TEN, Suit.HEARTS);
         CardJpaEntity cardJpa = new CardJpaEntity();
-        when(cardRepository.findBySuitAndRank(card.suit(), card.rank())).thenReturn(Optional.of(cardJpa));
+        when(cardRepository.findByRankAndSuit(card.rank(), card.suit())).thenReturn(Optional.of(cardJpa));
         when(gameRepository.findById(1L)).thenReturn(Optional.empty());
 
         assertThrows(EntityNotFoundException.class, () -> adapter.saveCardDraw(1L, card, HandType.DEALER));

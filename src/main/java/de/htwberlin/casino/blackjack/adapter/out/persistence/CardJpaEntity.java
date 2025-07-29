@@ -18,18 +18,17 @@ import lombok.NoArgsConstructor;
 @Getter
 public class CardJpaEntity {
     /**
-     * {@link Suit} of the card (e.g., Hearts, Spades, Clubs, Diamonds).
-     */
-    @Id
-    @Enumerated(EnumType.STRING)
-    @Column(name = "suit", nullable = false)
-    private Suit suit;
-
-    /**
      * {@link Rank} of the card (e.g., 2–10, Jack, Queen, King, Ace).
      */
     @Id
     @Enumerated(EnumType.STRING)
     @Column(name = "rank", nullable = false)
     private Rank rank;
+    /**
+     * {@link Suit} of the card (e.g., Hearts, Spades, Clubs, Diamonds).
+     */
+    @Id
+    @Enumerated(EnumType.STRING)
+    @Column(name = "suit", nullable = false)
+    private Suit suit;
 }
