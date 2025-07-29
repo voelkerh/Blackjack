@@ -1,6 +1,5 @@
 package de.htwberlin.casino.blackjack.adapter.in.web;
 
-import javax.smartcardio.Card;
 import java.util.List;
 
 /**
@@ -13,10 +12,10 @@ import java.util.List;
  * @param bet
  */
 public record GameResponse(
-        int gameId,
+        Long gameId,
         String gameState, // playing, won, lost or push
-        List<Card> playerHand,
-        List<Card> dealerHand,
+        List<CardResponse> playerHand,
+        List<CardResponse> dealerHand,
         double bet
 ) {
 }

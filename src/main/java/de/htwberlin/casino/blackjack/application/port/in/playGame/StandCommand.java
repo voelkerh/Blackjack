@@ -5,4 +5,4 @@ package de.htwberlin.casino.blackjack.application.port.in.playGame;
  *
  * @param gameId the ID of the game where the action is to be applied.
  */
-public record StandCommand(String gameId) {}
+public record StandCommand(Long gameId) {}

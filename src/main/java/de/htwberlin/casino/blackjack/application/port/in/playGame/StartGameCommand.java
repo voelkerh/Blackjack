@@ -6,4 +6,4 @@ package de.htwberlin.casino.blackjack.application.port.in.playGame;
  * @param userId the ID of the user starting the game.
  * @param bet the amount the user is betting in this game.
  */
-public record StartGameCommand(String userId, int bet) {}
+public record StartGameCommand(String userId, double bet) {}

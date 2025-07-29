@@ -5,4 +5,4 @@ package de.htwberlin.casino.blackjack.application.port.in.playGame;
  *
  * @param gameId the ID of the game to retrieve.
  */
-public record GetGameCommand(String gameId) {}
+public record GetGameCommand(Long gameId) {}

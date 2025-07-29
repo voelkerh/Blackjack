@@ -3,6 +3,8 @@ package de.htwberlin.casino.blackjack;
 import de.htwberlin.casino.blackjack.adapter.out.persistence.*;
 import de.htwberlin.casino.blackjack.application.domain.model.cards.Rank;
 import de.htwberlin.casino.blackjack.application.domain.model.cards.Suit;
+import de.htwberlin.casino.blackjack.application.domain.model.game.GameState;
+import de.htwberlin.casino.blackjack.application.domain.model.hands.HandType;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -76,7 +78,7 @@ public class BlackjackApplication {
                         
                         ## Simplification
                         - no split
-                        - no doubling down (if player's inital hand is 9, 10 or 11, double bet but only hit once more)
+                        - no doubling down (if player's initial hand is 9, 10 or 11, double bet but only hit once more)
                         - no surrendering (draw back at 50% cost when having a bad hand)
                         - no side-betting (insurance)
                         """;
@@ -111,7 +113,7 @@ public class BlackjackApplication {
                 List<String> ranks = Arrays.stream(Rank.values()).map(Enum::name).toList();
                 for (String suit : suits) {
                     for (String rank : ranks) {
-                        CardJpaEntity card = new CardJpaEntity(null, suit, rank);
+                        CardJpaEntity card = new CardJpaEntity(suit, rank);
                         cardRepo.save(card);
                     }
                 }
@@ -132,16 +134,16 @@ public class BlackjackApplication {
                 GameJpaEntity game = new GameJpaEntity(
                         null,
                         "1",
-                        "PLAYING",
+                        GameState.PLAYING,
                         new ArrayList<>(),
                         50.0
                 );
 
                 GameJpaEntity savedGame = gameRepo.save(game);
 
-                DrawnCardJpaEntity draw1 = new DrawnCardJpaEntity(game, playerCard1, "player");
-                DrawnCardJpaEntity draw2 = new DrawnCardJpaEntity(game, playerCard2, "player");
-                DrawnCardJpaEntity draw3 = new DrawnCardJpaEntity(game, dealerCard1, "dealer");
+                DrawnCardJpaEntity draw1 = new DrawnCardJpaEntity(game, playerCard1, HandType.PLAYER);
+                DrawnCardJpaEntity draw2 = new DrawnCardJpaEntity(game, playerCard2, HandType.PLAYER);
+                DrawnCardJpaEntity draw3 = new DrawnCardJpaEntity(game, dealerCard1, HandType.DEALER);
 
                 drawnCardsRepo.saveAll(List.of(draw1, draw2, draw3));
 

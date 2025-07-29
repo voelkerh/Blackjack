@@ -6,10 +6,15 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Optional;
+
 /**
  * Repository interface for managing {@link GameJpaEntity} persistence.
  */
 public interface JpaGameRepository extends JpaRepository<GameJpaEntity, Long> {
+
+    @Query("SELECT g FROM game g LEFT JOIN FETCH g.drawnCards WHERE g.id = :id")
+    Optional<GameJpaEntity> findByIdWithDrawnCards(@Param("id") Long id);
 
     @Query("""
                 SELECT new de.htwberlin.casino.blackjack.application.domain.service.emitStats.UserStats(
@@ -29,14 +34,14 @@ public interface JpaGameRepository extends JpaRepository<GameJpaEntity, Long> {
     UserStats fetchUserStats(@Param("userId") String userId);
 
     @Query("""
-    SELECT new de.htwberlin.casino.blackjack.application.domain.service.emitStats.OverviewStats(
-        COUNT(g),
-        COUNT(DISTINCT g.userId),
-        COALESCE(SUM(g.bet), 0),
-        COALESCE(SUM(CASE WHEN g.gameState = 'LOST' THEN g.bet ELSE 0 END), 0) -
-        COALESCE(SUM(CASE WHEN g.gameState = 'WON' THEN g.bet ELSE 0 END), 0)
-    )
-    FROM game g
-""")
+                SELECT new de.htwberlin.casino.blackjack.application.domain.service.emitStats.OverviewStats(
+                    COUNT(g),
+                    COUNT(DISTINCT g.userId),
+                    COALESCE(SUM(g.bet), 0),
+                    COALESCE(SUM(CASE WHEN g.gameState = 'LOST' THEN g.bet ELSE 0 END), 0) -
+                    COALESCE(SUM(CASE WHEN g.gameState = 'WON' THEN g.bet ELSE 0 END), 0)
+                )
+                FROM game g
+            """)
     OverviewStats fetchOverviewStats();
 }

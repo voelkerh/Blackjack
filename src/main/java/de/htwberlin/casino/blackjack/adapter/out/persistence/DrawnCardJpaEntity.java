@@ -1,43 +1,43 @@
 package de.htwberlin.casino.blackjack.adapter.out.persistence;
 
+import de.htwberlin.casino.blackjack.application.domain.model.hands.HandType;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.FilterDef;
-import org.hibernate.annotations.ParamDef;
+import lombok.Setter;
 
 /**
  * JPA entity representing a card that has been drawn in a specific game.
  * This entity uses a composite key of {@code gameId} and {@code cardId}.
  */
-@Entity(name = "drawn_card")
-@AllArgsConstructor
-@NoArgsConstructor
+@Entity(name = "drawn_cards")
 @Getter
-@IdClass(DrawnCardId.class)
-@FilterDef(name = "holderFilter", parameters = @ParamDef(name = "holder", type = String.class))
+@Setter
+@NoArgsConstructor
 public class DrawnCardJpaEntity {
 
-    /**
-     * Reference to the game where the card was drawn.
-     */
     @Id
-    @ManyToOne(fetch = FetchType.LAZY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "game_id", nullable = false)
-    private GameJpaEntity gameId;
+    private GameJpaEntity game;
 
-    /**
-     * Reference to the card that was drawn.
-     */
-    @Id
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "card_id", nullable = false)
-    private CardJpaEntity cardId;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumns({
+            @JoinColumn(name = "card_suit", referencedColumnName = "suit"),
+            @JoinColumn(name = "card_rank", referencedColumnName = "rank")
+    })
+    private CardJpaEntity card;
 
-    /**
-     * Holder of the card, e.g., "player" or "dealer".
-     */
-    @Column(name = "holder")
-    private String holder;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "holder", nullable = false)
+    private HandType holder;
+
+    public DrawnCardJpaEntity(GameJpaEntity game, CardJpaEntity card, HandType holder) {
+        this.game = game;
+        this.card = card;
+        this.holder = holder;
+    }
 }

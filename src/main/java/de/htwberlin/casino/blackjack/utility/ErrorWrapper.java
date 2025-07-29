@@ -28,14 +28,20 @@ public enum ErrorWrapper {
     GAME_NOT_RUNNING(
             "The requested game is already over.",
             HttpStatus.BAD_REQUEST),
+    INVALID_BET_AMOUNT(
+            "Bet amount must be positive.",
+            HttpStatus.BAD_REQUEST),
     USER_NOT_FOUND(
             "The user could not be found.",
             HttpStatus.NOT_FOUND),
     INVALID_USER_ID(
-            "The provided userId is null, empty, or malformed.",
+            "The provided userId is null, empty, or otherwise invalid.",
             HttpStatus.BAD_REQUEST),
     INVALID_STATS_OPTION(
             "The requested stats option does not exist.",
+            HttpStatus.BAD_REQUEST),
+    INVALID_INPUT(
+            "The provided input is null, empty, or otherwise invalid.",
             HttpStatus.BAD_REQUEST),
     DATABASE_ERROR(
             "Failed to access database",

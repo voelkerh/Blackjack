@@ -1,6 +1,6 @@
 package de.htwberlin.casino.blackjack.adapter.in.web;
 
-import de.htwberlin.casino.blackjack.application.port.in.calculateChances.CalculateChancesUseCase;
+import de.htwberlin.casino.blackjack.application.domain.model.game.Game;
 import de.htwberlin.casino.blackjack.application.port.in.playGame.*;
 import de.htwberlin.casino.blackjack.utility.ErrorWrapper;
 import de.htwberlin.casino.blackjack.utility.Result;
@@ -13,10 +13,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * REST controller that exposes endpoints to start a blackjack game or perform game actions in ongoing blackjack game.
  * Delegates to {@link PlayGameUseCase}.
  */
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/blackjack/play")
@@ -39,10 +42,20 @@ public class GameController {
     })
     @PostMapping
     public ResponseEntity<?> startGame(@RequestBody StartGameRequest request) {
-        Result<GameResponse, ErrorWrapper> result = playGameUseCase.startGame(new StartGameCommand(request.userID(), request.bet()));
+        Result<Game, ErrorWrapper> result = playGameUseCase.startGame(new StartGameCommand(request.userId(), request.bet()));
+        if (result.isSuccess()) {
+            Game game = result.getSuccessData().get();
 
-        if (result.isSuccess()) return ResponseEntity.ok(result.getSuccessData().get());
-        else return ResponseEntity.status(result.getFailureData().get().getHttpStatus())
+            List<CardResponse> playerHandResponse = game.getPlayerHand().getCards().stream()
+                    .map(card -> new CardResponse(card.rank().name(), card.suit().name()))
+                    .toList();
+            List<CardResponse> dealerHandResponse = game.getDealerHand().getCards().stream()
+                    .map(card -> new CardResponse(card.rank().name(), card.suit().name()))
+                    .toList();
+
+            GameResponse response = new GameResponse(game.getId(), game.getGameState().toString(), playerHandResponse, dealerHandResponse, game.getBet());
+            return ResponseEntity.ok(response);
+        } else return ResponseEntity.status(result.getFailureData().get().getHttpStatus())
                 .body(result.getFailureData().get().getMessage());
     }
 
@@ -61,11 +74,22 @@ public class GameController {
             @ApiResponse(responseCode = "404", description = "Game not found", content = @Content)
     })
     @PutMapping("/{gameId}/hit")
-    public ResponseEntity<?> hit(@PathVariable String gameId) {
-        Result<GameResponse, ErrorWrapper> result = playGameUseCase.hit(new HitCommand(gameId));
+    public ResponseEntity<?> hit(@PathVariable Long gameId) {
+        Result<Game, ErrorWrapper> result = playGameUseCase.hit(new HitCommand(gameId));
 
-        if (result.isSuccess()) return ResponseEntity.ok(result.getSuccessData().get());
-        else return ResponseEntity.status(result.getFailureData().get().getHttpStatus())
+        if (result.isSuccess()) {
+            Game game = result.getSuccessData().get();
+
+            List<CardResponse> playerHandResponse = game.getPlayerHand().getCards().stream()
+                    .map(card -> new CardResponse(card.rank().name(), card.suit().name()))
+                    .toList();
+            List<CardResponse> dealerHandResponse = game.getDealerHand().getCards().stream()
+                    .map(card -> new CardResponse(card.rank().name(), card.suit().name()))
+                    .toList();
+
+            GameResponse response = new GameResponse(game.getId(), game.getGameState().toString(), playerHandResponse, dealerHandResponse, game.getBet());
+            return ResponseEntity.ok(response);
+        } else return ResponseEntity.status(result.getFailureData().get().getHttpStatus())
                 .body(result.getFailureData().get().getMessage());
     }
 
@@ -84,11 +108,22 @@ public class GameController {
             @ApiResponse(responseCode = "404", description = "Game not found", content = @Content)
     })
     @PutMapping("/{gameId}/stand")
-    public ResponseEntity<?> stand(@PathVariable String gameId) {
-        Result<GameResponse, ErrorWrapper> result = playGameUseCase.stand(new StandCommand(gameId));
+    public ResponseEntity<?> stand(@PathVariable Long gameId) {
+        Result<Game, ErrorWrapper> result = playGameUseCase.stand(new StandCommand(gameId));
 
-        if (result.isSuccess()) return ResponseEntity.ok(result.getSuccessData().get());
-        else return ResponseEntity.status(result.getFailureData().get().getHttpStatus())
+        if (result.isSuccess()) {
+            Game game = result.getSuccessData().get();
+
+            List<CardResponse> playerHandResponse = game.getPlayerHand().getCards().stream()
+                    .map(card -> new CardResponse(card.rank().name(), card.suit().name()))
+                    .toList();
+            List<CardResponse> dealerHandResponse = game.getDealerHand().getCards().stream()
+                    .map(card -> new CardResponse(card.rank().name(), card.suit().name()))
+                    .toList();
+
+            GameResponse response = new GameResponse(game.getId(), game.getGameState().toString(), playerHandResponse, dealerHandResponse, game.getBet());
+            return ResponseEntity.ok(response);
+        } else return ResponseEntity.status(result.getFailureData().get().getHttpStatus())
                 .body(result.getFailureData().get().getMessage());
     }
 
@@ -106,11 +141,22 @@ public class GameController {
             @ApiResponse(responseCode = "404", description = "Game not found", content = @Content)
     })
     @GetMapping("/{gameId}")
-    public ResponseEntity<?> getGame(@PathVariable String gameId) {
-        Result<GameResponse, ErrorWrapper> result = playGameUseCase.getGameState(new GetGameCommand(gameId));
+    public ResponseEntity<?> getGame(@PathVariable Long gameId) {
+        Result<Game, ErrorWrapper> result = playGameUseCase.getGameState(new GetGameCommand(gameId));
 
-        if (result.isSuccess()) return ResponseEntity.ok(result.getSuccessData().get());
-        else return ResponseEntity.status(result.getFailureData().get().getHttpStatus())
+        if (result.isSuccess()) {
+            Game game = result.getSuccessData().get();
+
+            List<CardResponse> playerHandResponse = game.getPlayerHand().getCards().stream()
+                    .map(card -> new CardResponse(card.rank().name(), card.suit().name()))
+                    .toList();
+            List<CardResponse> dealerHandResponse = game.getDealerHand().getCards().stream()
+                    .map(card -> new CardResponse(card.rank().name(), card.suit().name()))
+                    .toList();
+
+            GameResponse response = new GameResponse(game.getId(), game.getGameState().toString(), playerHandResponse, dealerHandResponse, game.getBet());
+            return ResponseEntity.ok(response);
+        } else return ResponseEntity.status(result.getFailureData().get().getHttpStatus())
                 .body(result.getFailureData().get().getMessage());
     }
 }

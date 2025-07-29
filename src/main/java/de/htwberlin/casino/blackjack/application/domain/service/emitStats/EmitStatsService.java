@@ -1,7 +1,6 @@
 package de.htwberlin.casino.blackjack.application.domain.service.emitStats;
 
 import de.htwberlin.casino.blackjack.application.domain.model.stats.StatsOption;
-import de.htwberlin.casino.blackjack.application.port.in.emitRules.EmitRulesUseCase;
 import de.htwberlin.casino.blackjack.application.port.in.emitStats.EmitStatsQuery;
 import de.htwberlin.casino.blackjack.application.port.in.emitStats.EmitStatsUseCase;
 import de.htwberlin.casino.blackjack.application.port.out.LoadStatsPort;
