@@ -9,7 +9,12 @@ import de.htwberlin.casino.blackjack.application.domain.model.hands.PlayerHand;
 import java.util.List;
 
 /**
- * A concrete implementation of hand factory methods.
+ * A concrete implementation of the {@link HandFactory} interface.
+ * <p>
+ * Note: This class is not 100% unit tested because the {@code default} branch in the
+ * {@code switch} statement (which throws {@link IllegalArgumentException} for unsupported
+ * {@link HandType}s) cannot be triggered without introducing an additional enum constant,
+ * which is intentionally avoided to preserve the integrity of the domain model.
  */
 public class HandFactoryImpl implements HandFactory {
 
