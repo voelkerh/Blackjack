@@ -1,29 +1,33 @@
 @startuml
-title Request Overview Stats
+title API Endpoint /api/blackjack/stats/overview
 
 actor User
 
-participant "StatsController\n(Rest Adapter)" as Controller
-participant "GetStatsOverview\n(Use Case)" as UseCase
-participant "StatsService\n(Application Service)" as Service
-participant "StatisticsRepository\n(Port)" as RepoPort
-participant "DatabaseStatsRepository\n(Adapter)" as RepoAdapter
-database "Stats DB" as DB
+participant "Controller\n(Rest Adapter)" as Controller
+participant "EmitStatsService\n(Use Case)" as Service
+participant "StatsCalculator" as Calculator
+participant "JpaRepositoryAdapter\n(Outbound Port)" as Adapter
+database PostgresSQL as DB
+
+== Request Overview Stats ==
 
 User -> Controller : GET /api/blackjack/stats/overview
+Controller -> Service : emitStats(overviewQuery)
+Service -> Adapter : retrieveOverviewData()
+Adapter -> DB : SQL Queries
 
-Controller -> UseCase : handleGetOverview()
-UseCase -> Service : getOverviewStats()
+alt resources found
+    DB --> Adapter : Overview data
+    Adapter --> Service : Overview data
+    Service -> Calculator : calculateOverviewStats(Data)
+    Calculator --> Service : OverviewStats
+    Service --> Controller : OverviewStats
+    Controller --> User : 200 OK + OverviewStats JSON
 
-Service -> RepoPort : fetchGlobalStats()
-RepoPort -> RepoAdapter : queryGameCount(), queryPlayerCount(), queryTotalBets(), queryTotalWins(), queryTotalLosses()
-RepoAdapter -> DB : SELECT queries
-DB --> RepoAdapter : data
-RepoAdapter --> RepoPort : totalGames, totalPlayers, totalBets, totalWins, totalLosses
-RepoPort --> Service : totalGames, totalPlayers, totalBets, totalWins, totalLosses
-
-Service --> UseCase : StatsOverviewDTO\n{ totalGames, totalPlayers, totalBets, totalWins, totalLosses }
-UseCase --> Controller : StatsOverviewDTO
-Controller --> User : 200 OK + stats JSON
-
+else resources not found
+    DB --> Adapter : Not Found
+    Adapter --> Service : Failure (404)
+    Service --> Controller : Failure (404)
+    Controller --> User : 404 Not Found + Error message
+end
 @enduml
