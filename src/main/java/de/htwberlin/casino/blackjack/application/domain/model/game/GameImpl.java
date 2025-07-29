@@ -47,4 +47,9 @@ public class GameImpl implements Game {
         dealerHand = new DealerHand(cardDeck.drawCard(), cardDeck.drawCard());
         gameState = GameState.PLAYING;
     }
+
+    @Override
+    public void setGameState(GameState gameState) {
+        this.gameState = gameState;
+    }
 }

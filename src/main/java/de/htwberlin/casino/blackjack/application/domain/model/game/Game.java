@@ -25,6 +25,8 @@ public interface Game {
      */
     GameState getGameState();
 
+    void setGameState(GameState gameState);
+
     /**
      * @return {@link CardDeck} instance used in this game
      */

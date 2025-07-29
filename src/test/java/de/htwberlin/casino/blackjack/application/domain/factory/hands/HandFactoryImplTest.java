@@ -53,6 +53,19 @@ class HandFactoryImplTest {
         assertNotNull(actual);
         assertInstanceOf(DealerHand.class, actual);
     }
+    @Test
+    void givenDealerThreeCards_whenCreate_thenReturnDealerHand() {
+        List<Card> cards = new ArrayList<>();
+        cards.add(new Card(Rank.TWO, Suit.CLUBS));
+        cards.add(new Card(Rank.THREE, Suit.CLUBS));
+        cards.add(new Card(Rank.FOUR, Suit.CLUBS));
+
+        Hand actual = factory.create(HandType.DEALER, cards);
+
+        assertNotNull(actual);
+        assertInstanceOf(DealerHand.class, actual);
+    }
+
 
     @Test
     void givenPlayerOneCard_whenCreate_thenThrowsException() {

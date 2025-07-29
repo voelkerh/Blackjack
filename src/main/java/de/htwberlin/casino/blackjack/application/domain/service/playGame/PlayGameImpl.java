@@ -55,6 +55,15 @@ public class PlayGameImpl implements PlayGame {
         int playerTotal = playerHand.getTotal();
         int dealerTotal = dealerHand.getTotal();
 
+        // Check for blackjack scenarios first
+        if (playerTotal == 21) {
+            if (dealerTotal == 21) {
+                return GameState.PUSH;
+            } else {
+                return GameState.BLACKJACK;
+            }
+        }
+
         // Player busts always lose first, no matter what the dealer has
         if (playerTotal > 21) {
             return GameState.LOST;

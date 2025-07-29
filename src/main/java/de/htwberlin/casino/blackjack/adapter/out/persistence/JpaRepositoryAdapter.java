@@ -17,8 +17,6 @@ import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 /**
  * Adapts Spring Data JPA repositories to domain ports.
  * Handles persistence-related operations for rules, stats and games.

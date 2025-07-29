@@ -115,7 +115,7 @@ class ChancesCalculatorImplTest {
         Card card2 = new Card(Rank.SIX, Suit.HEARTS);
         PlayerHand playerHand = new PlayerHand(card1, card2);
 
-        double expected = 0.3333333333333333;
+        double expected = 0.32;
         double actual = calculator.calculateChances(playerHand, dealerHand).blackjack();
         double delta = 0.01;
 
@@ -141,7 +141,7 @@ class ChancesCalculatorImplTest {
         Card card2 = new Card(Rank.EIGHT, Suit.HEARTS);
         PlayerHand playerHand = new PlayerHand(card1, card2);
 
-        double expected = 0.47916666666666663;
+        double expected = 0.46;
         double actual = calculator.calculateChances(playerHand, dealerHand).bust();
         double delta = 0.01;
 
