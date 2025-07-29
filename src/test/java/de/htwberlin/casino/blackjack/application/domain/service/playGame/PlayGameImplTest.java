@@ -106,6 +106,27 @@ class PlayGameImplTest {
     }
 
     @Test
+    void givenPlayerBlackjackAndDealerBlackjack_whenDetermineResult_thenPush() {
+        Hand player = mock(Hand.class);
+        Hand dealer = mock(Hand.class);
+        when(player.getTotal()).thenReturn(21);
+        when(dealer.getTotal()).thenReturn(21);
+
+        assertEquals(GameState.PUSH, playGame.determineResult(player, dealer));
+    }
+
+    @Test
+    void givenPlayerBlackjackAndDealerNotBlackjack_whenDetermineResult_thenBlackjack() {
+        Hand player = mock(Hand.class);
+        Hand dealer = mock(Hand.class);
+        when(player.getTotal()).thenReturn(21);
+        when(dealer.getTotal()).thenReturn(18);
+
+        assertEquals(GameState.BLACKJACK, playGame.determineResult(player, dealer));
+    }
+
+
+    @Test
     void givenPlayerBust_whenDetermineResult_thenLost() {
         Hand player = mock(Hand.class);
         Hand dealer = mock(Hand.class);
