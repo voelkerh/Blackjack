@@ -109,7 +109,7 @@ public class GameMapper {
     }
 
     private CardJpaEntity mapToJpaEntity(Card card, JpaCardRepository cardRepository) {
-        return cardRepository.findBySuitAndRank(card.suit(), card.rank())
+        return cardRepository.findByRankAndSuit(card.rank(), card.suit())
                 .orElseThrow(() -> new IllegalArgumentException("Card not found in DB"));
     }
 }
