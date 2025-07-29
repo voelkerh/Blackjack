@@ -1,29 +1,33 @@
 @startuml
-title Request User Stats
+title API Endpoint /api/blackjack/stats/user/{userId}
 
 actor User
 
-participant "StatsController\n(Rest Adapter)" as Controller
-participant "GetUserStats\n(Use Case)" as UseCase
-participant "StatsService\n(Application Service)" as Service
-participant "StatisticsRepository\n(Port)" as RepoPort
-participant "DatabaseStatsRepository\n(Adapter)" as RepoAdapter
-database "Stats DB" as DB
+participant "Controller\n(Rest Adapter)" as Controller
+participant "EmitStatsService\n(Use Case)" as Service
+participant "StatsCalculator" as Calculator
+participant "JpaRepositoryAdapter\n(Outbound Port)" as Adapter
+database PostgresSQL as DB
+
+== Request User Stats ==
 
 User -> Controller : GET /api/blackjack/stats/user/{userId}
+Controller -> Service : emitStats(userQuery)
+Service -> Adapter : retrieveUserStats(userId)
+Adapter -> DB : SQL Query
 
-Controller -> UseCase : handleGetUserStats(userId)
-UseCase -> Service : getUserStats(userId)
+alt user resources found
+    DB --> Adapter : User Data
+    Adapter --> Service : User Data
+    Service -> Calculator : calculateOverviewStats(Data)
+    Calculator --> Service : UserStats
+    Service --> Controller : UserStats
+    Controller --> User : 200 OK + UserStats JSON
 
-Service -> RepoPort : fetchUserStats(userId)
-RepoPort -> RepoAdapter : queryUserStats(userId)
-RepoAdapter -> DB : SELECT * FROM ... WHERE userId = {userId}
-DB --> RepoAdapter : data (gamesPlayed, totalBets, totalWins, totalLosses)
-RepoAdapter --> RepoPort : gamesPlayed, totalBets, totalWins, totalLosses
-RepoPort --> Service : gamesPlayed, totalBets, totalWins, totalLosses
-
-Service --> UseCase : UserStatsDTO { userId, gamesPlayed, totalBets, totalWins, totalLosses, netResult }
-UseCase --> Controller : UserStatsDTO
-Controller --> User : 200 OK + user stats JSON
-
+else user resources not found
+    DB --> Adapter : Not Found
+    Adapter --> Service : Failure (404)
+    Service --> Controller : Failure (404)
+    Controller --> User : 404 Not Found + Error message
+end
 @enduml
