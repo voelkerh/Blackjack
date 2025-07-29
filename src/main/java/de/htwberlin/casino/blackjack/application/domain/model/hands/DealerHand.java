@@ -17,16 +17,20 @@ public class DealerHand implements Hand {
 
     /**
      * Constructor initializing dealerHand with card drawn upon game initialization.
-     * @param upCard First card drawn by dealer at initialization of game.
+     *
+     * @param upCard   First card drawn by dealer at initialization of game.
+     * @param downCard Second card drawn by dealer at initialization of game.
      */
-    public DealerHand(Card upCard) {
+    public DealerHand(Card upCard, Card downCard) {
         if (upCard == null) throw new NullPointerException();
         this.cards = new ArrayList<>();
         cards.add(upCard);
+        cards.add(downCard);
     }
 
     /**
      * Show single visible card held by dealer during player's turn.
+     *
      * @return Card
      */
     public Card getUpCard() {
@@ -56,6 +60,7 @@ public class DealerHand implements Hand {
             total -= 10;
             numberOfAces--;
         }
-        return total;    }
+        return total;
+    }
 
 }

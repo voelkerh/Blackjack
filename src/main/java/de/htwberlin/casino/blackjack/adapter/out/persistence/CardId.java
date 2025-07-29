@@ -1,5 +1,7 @@
 package de.htwberlin.casino.blackjack.adapter.out.persistence;
 
+import de.htwberlin.casino.blackjack.application.domain.model.cards.Rank;
+import de.htwberlin.casino.blackjack.application.domain.model.cards.Suit;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -15,6 +17,6 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode
 @Getter
 public class CardId {
-    private String suit;
-    private String rank;
+    private Suit suit;
+    private Rank rank;
 }

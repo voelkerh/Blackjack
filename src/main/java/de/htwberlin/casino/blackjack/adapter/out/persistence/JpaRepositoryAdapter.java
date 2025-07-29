@@ -7,8 +7,6 @@ import de.htwberlin.casino.blackjack.application.domain.model.game.GameState;
 import de.htwberlin.casino.blackjack.application.domain.model.hands.HandType;
 import de.htwberlin.casino.blackjack.application.domain.model.rules.RuleOption;
 import de.htwberlin.casino.blackjack.application.domain.model.rules.Rules;
-import de.htwberlin.casino.blackjack.application.domain.service.emitStats.OverviewStats;
-import de.htwberlin.casino.blackjack.application.domain.service.emitStats.UserStats;
 import de.htwberlin.casino.blackjack.application.port.out.LoadGamePort;
 import de.htwberlin.casino.blackjack.application.port.out.LoadRulesPort;
 import de.htwberlin.casino.blackjack.application.port.out.LoadStatsPort;
@@ -50,13 +48,43 @@ class JpaRepositoryAdapter implements LoadRulesPort, LoadStatsPort, LoadGamePort
     }
 
     @Override
-    public UserStats retrieveUserStats(String userId) {
-        return gameRepository.fetchUserStats(userId);
+    public Long retrieveTotalGames() {
+        return gameRepository.fetchTotalGames();
     }
 
     @Override
-    public OverviewStats retrieveOverviewStats() {
-        return gameRepository.fetchOverviewStats();
+    public Long retrieveTotalPlayers() {
+        return gameRepository.fetchTotalPlayers();
+    }
+
+    @Override
+    public Double retrieveTotalBet() {
+        return gameRepository.fetchTotalBet();
+    }
+
+    @Override
+    public Double retrieveHouseProfit() {
+        return gameRepository.fetchHouseProfit();
+    }
+
+    @Override
+    public Long retrieveNumberOfGamesPlayedByUser(String userId) {
+        return gameRepository.fetchNumberOfGamesPlayedByUser(userId);
+    }
+
+    @Override
+    public Long retrieveNumberOfGamesWithGameSateOfUser(String userId, GameState gameState) {
+        return gameRepository.fetchNumberOfGamesWithGameStateOfUser(userId, gameState);
+    }
+
+    @Override
+    public Double retrieveTotalBetByUser(String userId) {
+        return gameRepository.fetchTotalBetByUser(userId);
+    }
+
+    @Override
+    public Double retrieveWinningsByUser(String userId) {
+        return gameRepository.fetchWinningsByUser(userId);
     }
 
     @Override
@@ -76,7 +104,7 @@ class JpaRepositoryAdapter implements LoadRulesPort, LoadStatsPort, LoadGamePort
 
     @Override
     public void saveCardDraw(Long gameId, Card card, HandType holder) {
-        CardJpaEntity cardEntity = cardRepository.findBySuitAndRank(card.suit().name().toUpperCase(), card.rank().name().toUpperCase())
+        CardJpaEntity cardEntity = cardRepository.findBySuitAndRank(card.suit(), card.rank())
                 .orElseThrow(() -> new EntityNotFoundException("Card not found: " + card));
 
         GameJpaEntity gameJpaEntity = gameRepository.findById(gameId).orElseThrow(() -> new EntityNotFoundException("Game not found with ID: " + gameId));

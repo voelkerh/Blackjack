@@ -4,8 +4,6 @@ import de.htwberlin.casino.blackjack.application.domain.factory.hands.HandFactor
 import de.htwberlin.casino.blackjack.application.domain.factory.hands.HandFactoryImpl;
 import de.htwberlin.casino.blackjack.application.domain.model.cards.Card;
 import de.htwberlin.casino.blackjack.application.domain.model.cards.CardDeckImpl;
-import de.htwberlin.casino.blackjack.application.domain.model.cards.Rank;
-import de.htwberlin.casino.blackjack.application.domain.model.cards.Suit;
 import de.htwberlin.casino.blackjack.application.domain.model.game.Game;
 import de.htwberlin.casino.blackjack.application.domain.model.game.GameImpl;
 import de.htwberlin.casino.blackjack.application.domain.model.hands.DealerHand;
@@ -46,7 +44,7 @@ public class GameMapper {
         List<Card> cards = filtered.stream()
                 .map(drawn -> {
                     CardJpaEntity c = drawn.getCard();
-                    return new Card(Rank.valueOf(c.getRank()), Suit.valueOf(c.getSuit()));
+                    return new Card(c.getRank(), c.getSuit());
                 })
                 .toList();
 
@@ -57,7 +55,7 @@ public class GameMapper {
         List<Card> drawnCards = drawnCardsJpa.stream()
                 .map(drawnCard -> {
                     CardJpaEntity cardJpa = drawnCard.getCard();
-                    return new Card(Rank.valueOf(cardJpa.getRank()), Suit.valueOf(cardJpa.getSuit()));
+                    return new Card(cardJpa.getRank(), cardJpa.getSuit());
                 })
                 .toList();
 
@@ -111,7 +109,7 @@ public class GameMapper {
     }
 
     private CardJpaEntity mapToJpaEntity(Card card, JpaCardRepository cardRepository) {
-        return cardRepository.findBySuitAndRank(card.suit().name(), card.rank().name())
+        return cardRepository.findBySuitAndRank(card.suit(), card.rank())
                 .orElseThrow(() -> new IllegalArgumentException("Card not found in DB"));
     }
 }

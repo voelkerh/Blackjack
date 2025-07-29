@@ -28,7 +28,7 @@ public class EmitRulesService implements EmitRulesUseCase {
         } catch (EntityNotFoundException entityNotFoundException) {
             return Result.failure(ErrorWrapper.RULES_NOT_FOUND);
         } catch (Exception e) {
-            return Result.failure(ErrorWrapper.UNEXPECTED_INTERNAL_ERROR_OCCURED);
+            return Result.failure(ErrorWrapper.UNEXPECTED_INTERNAL_ERROR_OCCURRED);
         }
     }
 

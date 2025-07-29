@@ -14,21 +14,23 @@ class DealerHandTest {
     @Test
     void givenUpCard_whenCreateDealerHand_returnNotNull() {
         Card upCard = new Card(Rank.ACE, Suit.CLUBS);
+        Card downCard = new Card(Rank.TWO, Suit.CLUBS);
 
-        DealerHand dealerHand = new DealerHand(upCard);
+        DealerHand dealerHand = new DealerHand(upCard, downCard);
 
         assertNotNull(dealerHand);
     }
 
     @Test
     void givenUpCardNull_whenCreateDealerHand_throwsNullPointerException() {
-        assertThrows(NullPointerException.class, () -> new DealerHand(null));
+        assertThrows(NullPointerException.class, () -> new DealerHand(null, null));
     }
 
     @Test
     void givenDealerHandAndCard_whenGetUpCard_returnCorrectCard() {
         Card expected = new Card(Rank.ACE, Suit.CLUBS);
-        DealerHand dealerHand = new DealerHand(expected);
+        Card downCard = new Card(Rank.TWO, Suit.CLUBS);
+        DealerHand dealerHand = new DealerHand(expected, downCard);
 
         Card actual = dealerHand.getUpCard();
 
@@ -38,7 +40,8 @@ class DealerHandTest {
     @Test
     void givenDealerHandAndNullCard_whenAddCard_returnFalse() {
         Card card1 = new Card(Rank.ACE, Suit.CLUBS);
-        DealerHand dealerHand = new DealerHand(card1);
+        Card card2 = new Card(Rank.TWO, Suit.CLUBS);
+        DealerHand dealerHand = new DealerHand(card1, card2);
 
         boolean actual = dealerHand.addCard(null);
 
@@ -48,58 +51,63 @@ class DealerHandTest {
     @Test
     void givenDealerHandAndActualCard_whenAddCard_returnTrue() {
         Card card1 = new Card(Rank.ACE, Suit.CLUBS);
-        DealerHand dealerHand = new DealerHand(card1);
-        Card card2 = new Card(Rank.THREE, Suit.HEARTS);
+        Card card2 = new Card(Rank.TWO, Suit.CLUBS);
+        DealerHand dealerHand = new DealerHand(card1, card2);
+        Card card3 = new Card(Rank.THREE, Suit.HEARTS);
 
-        boolean actual = dealerHand.addCard(card2);
+        boolean actual = dealerHand.addCard(card3);
 
         assertTrue(actual);
     }
 
     @Test
-    void givenDealerHandTwo_whenAddCardTwo_returnTotalFour() {
+    void givenDealerHandTwoTwos_whenAddCardTwo_returnTotalSix() {
         Card card1 = new Card(Rank.TWO, Suit.CLUBS);
-        DealerHand dealerHand = new DealerHand(card1);
         Card card2 = new Card(Rank.TWO, Suit.HEARTS);
+        DealerHand dealerHand = new DealerHand(card1, card2);
+        Card card3 = new Card(Rank.TWO, Suit.SPADES);
 
-        dealerHand.addCard(card2);
+        dealerHand.addCard(card3);
 
-        int expected = 4;
+        int expected = 6;
         int actual = dealerHand.getTotal();
         assertEquals(expected, actual);
     }
 
     @Test
-    void givenDealerHandTwoAces_whenAddCardAce_returnTotalTwelve() {
+    void givenDealerHandTwoAces_whenAddCardTwo_returnTotalFourteen() {
         Card card1 = new Card(Rank.ACE, Suit.CLUBS);
-        DealerHand dealerHand = new DealerHand(card1);
         Card card2 = new Card(Rank.ACE, Suit.HEARTS);
+        DealerHand dealerHand = new DealerHand(card1, card2);
+        Card card3 = new Card(Rank.TWO, Suit.HEARTS);
 
-        dealerHand.addCard(card2);
+        dealerHand.addCard(card3);
 
-        int expected = 12;
+        int expected = 14;
         int actual = dealerHand.getTotal();
         assertEquals(expected, actual);
     }
 
     @Test
-    void givenTwoCards_whenGetCards_returnListOfSizeTwo() {
+    void givenThreeCards_whenGetCards_returnListOfSizeThree() {
         Card card1 = new Card(Rank.ACE, Suit.CLUBS);
         Card card2 = new Card(Rank.TWO, Suit.HEARTS);
-        DealerHand dealerHand = new DealerHand(card1);
-        dealerHand.addCard(card2);
+        Card card3 = new Card(Rank.TWO, Suit.CLUBS);
+        DealerHand dealerHand = new DealerHand(card1, card2);
+        dealerHand.addCard(card3);
 
         List<Card> cards = dealerHand.getCards();
-        int expected = 2;
+        int expected = 3;
         int actual = cards.size();
 
         assertEquals(expected, actual);
     }
 
     @Test
-    void givenOneCard_whenGetCards_returnCorrectCardInList() {
+    void givenTwoCard_whenGetCards_returnCorrectFirstCardInList() {
         Card expected = new Card(Rank.ACE, Suit.CLUBS);
-        DealerHand dealerHand = new DealerHand(expected);
+        Card card2 = new Card(Rank.TWO, Suit.HEARTS);
+        DealerHand dealerHand = new DealerHand(expected, card2);
 
         List<Card> cards = dealerHand.getCards();
         Card actual = cards.getFirst();
@@ -108,11 +116,12 @@ class DealerHandTest {
     }
 
     @Test
-    void givenDealerHandWithTotalThree_whenGetTotal_returnCorrectValue() {
+    void givenDealerHandWithTotalFive_whenGetTotal_returnCorrectValue() {
         Card card1 = new Card(Rank.THREE, Suit.CLUBS);
-        DealerHand dealerHand = new DealerHand(card1);
+        Card card2 = new Card(Rank.TWO, Suit.HEARTS);
+        DealerHand dealerHand = new DealerHand(card1, card2);
 
-        int expected = 3;
+        int expected = 5;
         int actual = dealerHand.getTotal();
 
         assertEquals(expected, actual);
@@ -121,13 +130,14 @@ class DealerHandTest {
     @Test
     void givenDealerHandBustWithAce_whenGetTotal_returnBustValue() {
         Card card1 = new Card(Rank.ACE, Suit.CLUBS);
-        DealerHand dealerHand = new DealerHand(card1);
-        Card card2 = new Card(Rank.FIVE, Suit.HEARTS);
-        Card card3 = new Card(Rank.TEN, Suit.HEARTS);
-        Card card4 = new Card(Rank.TEN, Suit.SPADES);
-        dealerHand.addCard(card2);
+        Card card2 = new Card(Rank.TWO, Suit.HEARTS);
+        DealerHand dealerHand = new DealerHand(card1, card2);
+        Card card3 = new Card(Rank.THREE, Suit.HEARTS);
+        Card card4 = new Card(Rank.TEN, Suit.HEARTS);
+        Card card5 = new Card(Rank.TEN, Suit.SPADES);
         dealerHand.addCard(card3);
         dealerHand.addCard(card4);
+        dealerHand.addCard(card5);
 
         int expected = 26;
         int actual = dealerHand.getTotal();
@@ -138,9 +148,8 @@ class DealerHandTest {
     @Test
     void givenDealerHandBlackJack_whenGetTotal_returnTwentyOne() {
         Card card1 = new Card(Rank.ACE, Suit.CLUBS);
-        DealerHand dealerHand = new DealerHand(card1);
         Card card2 = new Card(Rank.TEN, Suit.HEARTS);
-        dealerHand.addCard(card2);
+        DealerHand dealerHand = new DealerHand(card1, card2);
 
         int expected = 21;
         int actual = dealerHand.getTotal();

@@ -19,11 +19,11 @@ public class HandFactoryImpl implements HandFactory {
         if (cards == null || type == null) throw new IllegalArgumentException("Parameters cannot be null");
         switch (type) {
             case DEALER:
-                if (cards.isEmpty()) {
-                    throw new IllegalArgumentException("DealerHand must be initialized with at least one card");
-                }
-                DealerHand dealerHand = new DealerHand(cards.getFirst());
-                for (int i = 1; i < cards.size(); i++) {
+                if (cards.size() < 2)
+                    throw new IllegalArgumentException("DealerHand can only be initialized with more than one card");
+                else if (cards.size() == 2) return (T) new DealerHand(cards.get(0), cards.get(1));
+                DealerHand dealerHand = new DealerHand(cards.get(0), cards.get(1));
+                for (int i = 2; i < cards.size(); i++) {
                     dealerHand.addCard(cards.get(i));
                 }
                 return (T) dealerHand;

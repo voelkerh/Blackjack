@@ -70,7 +70,7 @@ class PlayGameService implements PlayGameUseCase {
         } catch (IllegalArgumentException e) {
             return Result.failure(ErrorWrapper.INVALID_INPUT);
         } catch (Exception e) {
-            return Result.failure(ErrorWrapper.UNEXPECTED_INTERNAL_ERROR_OCCURED);
+            return Result.failure(ErrorWrapper.UNEXPECTED_INTERNAL_ERROR_OCCURRED);
         }
     }
 
@@ -100,7 +100,7 @@ class PlayGameService implements PlayGameUseCase {
         } catch (EntityNotFoundException | JpaObjectRetrievalFailureException exception) {
             return Result.failure(ErrorWrapper.GAME_NOT_FOUND);
         } catch (Exception e) {
-            return Result.failure(ErrorWrapper.UNEXPECTED_INTERNAL_ERROR_OCCURED);
+            return Result.failure(ErrorWrapper.UNEXPECTED_INTERNAL_ERROR_OCCURRED);
         }
     }
 
@@ -133,7 +133,7 @@ class PlayGameService implements PlayGameUseCase {
         } catch (EntityNotFoundException | JpaObjectRetrievalFailureException exception) {
             return Result.failure(ErrorWrapper.GAME_NOT_FOUND);
         } catch (Exception e) {
-            return Result.failure(ErrorWrapper.UNEXPECTED_INTERNAL_ERROR_OCCURED);
+            return Result.failure(ErrorWrapper.UNEXPECTED_INTERNAL_ERROR_OCCURRED);
         }
     }
 
@@ -151,7 +151,7 @@ class PlayGameService implements PlayGameUseCase {
         } catch (EntityNotFoundException | JpaObjectRetrievalFailureException exception) {
             return Result.failure(ErrorWrapper.GAME_NOT_FOUND);
         } catch (Exception e) {
-            return Result.failure(ErrorWrapper.UNEXPECTED_INTERNAL_ERROR_OCCURED);
+            return Result.failure(ErrorWrapper.UNEXPECTED_INTERNAL_ERROR_OCCURRED);
         }
     }
 }

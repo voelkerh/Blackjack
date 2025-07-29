@@ -109,10 +109,10 @@ public class BlackjackApplication {
 
             System.out.println(cardRepo.count() + " cards found in database.");
             if (cardRepo.count() == 0) {
-                List<String> suits = Arrays.stream(Suit.values()).map(Enum::name).toList();
-                List<String> ranks = Arrays.stream(Rank.values()).map(Enum::name).toList();
-                for (String suit : suits) {
-                    for (String rank : ranks) {
+                List<Suit> suits = Arrays.stream(Suit.values()).toList();
+                List<Rank> ranks = Arrays.stream(Rank.values()).toList();
+                for (Suit suit : suits) {
+                    for (Rank rank : ranks) {
                         CardJpaEntity card = new CardJpaEntity(suit, rank);
                         cardRepo.save(card);
                     }
@@ -130,6 +130,7 @@ public class BlackjackApplication {
                 CardJpaEntity playerCard1 = allCards.get(0);
                 CardJpaEntity playerCard2 = allCards.get(1);
                 CardJpaEntity dealerCard1 = allCards.get(2);
+                CardJpaEntity dealerCard2 = allCards.get(3);
 
                 GameJpaEntity game = new GameJpaEntity(
                         null,
@@ -144,8 +145,9 @@ public class BlackjackApplication {
                 DrawnCardJpaEntity draw1 = new DrawnCardJpaEntity(game, playerCard1, HandType.PLAYER);
                 DrawnCardJpaEntity draw2 = new DrawnCardJpaEntity(game, playerCard2, HandType.PLAYER);
                 DrawnCardJpaEntity draw3 = new DrawnCardJpaEntity(game, dealerCard1, HandType.DEALER);
+                DrawnCardJpaEntity draw4 = new DrawnCardJpaEntity(game, dealerCard2, HandType.DEALER);
 
-                drawnCardsRepo.saveAll(List.of(draw1, draw2, draw3));
+                drawnCardsRepo.saveAll(List.of(draw1, draw2, draw3, draw4));
 
                 System.out.println("Sample game created with ID: " + savedGame.getId());
             }

@@ -7,20 +7,24 @@ import lombok.NoArgsConstructor;
 
 /**
  * JPA entity representing a set of game rules stored in the database.
- * <br>
- * The {@code rules} field is stored as a {@code TEXT} column in the database,
- * and is not allowed to be null or updated once persisted.
  */
 @Entity(name = "rules")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 public class RulesJpaEntity {
-
+    /**
+     * The unique option name/key for this set of rules.
+     */
     @Id
     @Column
     private String option;
 
+    /**
+     * The text content of the rules associated with this option.
+     * Stored as a {@code TEXT} type in the database, cannot be null,
+     * and cannot be updated once saved.
+     */
     @Column(
             name = "rules_text",
             nullable = false,
