@@ -83,4 +83,16 @@ class RulesControllerTest {
         verify(emitRulesUseCase, times(0)).emitRules(any());
     }
 
+    @Test
+    void whenGeneralRulesNotFound_thenReturnsErrorResponse() {
+        when(emitRulesUseCase.emitRules(any()))
+                .thenReturn(Result.failure(ErrorWrapper.RULES_NOT_FOUND));
+
+        ResponseEntity<?> response = rulesController.readRules();
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertEquals(ErrorWrapper.RULES_NOT_FOUND.getMessage(), response.getBody());
+
+        verify(emitRulesUseCase, times(1)).emitRules(any());
+    }
 }

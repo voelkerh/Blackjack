@@ -44,9 +44,14 @@ public class StatsController {
         var query = new EmitStatsQuery(StatsOption.USER, userId);
         var result = emitStatsUseCase.emitStats(query);
 
-        if (result.isSuccess()) return ResponseEntity.ok(result.getSuccessData().get());
-        else return ResponseEntity.status(result.getFailureData().get().getHttpStatus())
-                .body(result.getFailureData().get().getMessage());
+        if (result.isSuccess()) {
+            UserStatsResponse response = StatsResponseMapper.toUserStatsResponse(result.getSuccessData().get());
+            return ResponseEntity.ok(response);
+        } else {
+            var failure = result.getFailureData().get();
+            return ResponseEntity.status(failure.getHttpStatus())
+                    .body(failure.getMessage());
+        }
     }
 
     /**
@@ -66,8 +71,10 @@ public class StatsController {
         var query = new EmitStatsQuery(StatsOption.OVERVIEW);
         var result = emitStatsUseCase.emitStats(query);
 
-        if (result.isSuccess()) return ResponseEntity.ok(result.getSuccessData().get());
-        else return ResponseEntity.status(result.getFailureData().get().getHttpStatus())
+        if (result.isSuccess()) {
+            OverviewStatsResponse response = StatsResponseMapper.toOverviewStatsResponse(result.getSuccessData().get());
+            return ResponseEntity.ok(response);
+        } else return ResponseEntity.status(result.getFailureData().get().getHttpStatus())
                 .body(result.getFailureData().get().getMessage());
     }
 }

@@ -11,12 +11,12 @@ import java.util.Optional;
  */
 public interface JpaCardRepository extends JpaRepository<CardJpaEntity, Long> {
     /**
-     * Finds a card entity by its suit and rank.
+     * Finds a card entity by its rank and suit.
      *
      * @param rank the {@link Rank} of the card (e.g., "Ace", "10", "King")
      * @param suit the {@link Suit} of the card (e.g., "Hearts", "Spades")
      * @return an {@link Optional} containing the matching {@link CardJpaEntity} if found,
-     * or empty if no card matches the specified suit and rank
+     * or empty if no card matches the specified rank and suit
      */
     Optional<CardJpaEntity> findByRankAndSuit(Rank rank, Suit suit);
 }
