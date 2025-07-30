@@ -80,7 +80,7 @@ Für die Karten gilt:
 - Asse können 1 oder 11 sein (nach Wahl des Spielers)
 
 Aufbau:
-- 1 Spieler, 1 Geber
+- 1 Spieler, 1 Dealer
 - 52-Karten-Deck ohne Joker, gemischt
 - Starthand:
     - Spieler erhält zwei Karten
@@ -100,7 +100,7 @@ Spielablauf:
 - Dealer deckt verdeckte Karte auf
     - Asse zählen als 11, wenn der Dealer nicht „bust“ ist
       --> Wenn die Hand des Dealers 21 überschreitet, ist er pleite und der Spieler gewinnt.
-      --> Wenn der Geber einen Blackjack hat, verliert der Spieler, es sei denn, er hat selbst einen Blackjack.
+      --> Wenn der Dealer einen Blackjack hat, verliert der Spieler, es sei denn, er hat selbst einen Blackjack.
     - Wenn die Hand des Dealers < 17 ist - "Hit"
     - Wenn die Hand des Dealers >= 17 ist, endet die Runde (außer es ist ein Ass - weiche 17, der Dealer schlägt weiter)
 
@@ -146,12 +146,36 @@ P(bu) = P(x1) + ... + P(xi)
 
 ### Berechnung der Statistik
 
-TODO: Kurze Beschreibung
+Die Statistikdaten bieten eine Übersicht über das Spielverhalten entweder eines einzelnen Benutzers oder aller Spieler des Blackjack-Dienstes.
+
+**Hinweis:**
+Nur abgeschlossene Spiele (Status: BLACKJACK, WON, LOST, PUSH) werden berücksichtigt. Laufende Spiele (Status: PLAYING) sind ausgeschlossen.
+
+Benutzerspezifische Statistik
+- gamesPlayed: Anzahl der beendeten Spiele, die der Benutzer gespielt hat
+- winRatio: Siegverhältnis im Format blackjack:won:lost:push
+Beispiel: 3:12:5:2 bedeutet 3 Blackjacks, 12 gewonnene, 5 verlorene und 2 unentschiedene Spiele
+- totalBet: Gesamtsumme aller getätigten Einsätze durch den Benutzer
+- netResult: Netto-Gewinn/-Verlust (Berechnung: Auszahlung - Einsatzsumme)
+
+Allgemeine Statistik
+- totalGames: Gesamtanzahl aller beendeten Spiele aller Spieler
+- totalPlayers: Anzahl unterschiedlicher Benutzer, die mindestens ein Spiel beendet haben
+- totalBet: Gesamteinsatz aller Benutzer (Summe aller Wetteinsätze)
+- houseProfit: Gewinn des "Hauses" (Summe aller Einsätze minus Auszahlungen an Spieler)
 
 ### Spielen über die API
 
 Spielen:
-- TODO: API-Endpunkte ergänzen
+- Neues Spiel beginnen: POST /api/blackjack/play,
+  Body: { "userId": "...", "bet": ... }
+- Spielzüge durchführen:
+  * Karte ziehen (Hit):
+  PATCH /api/blackjack/play/{gameId}/hit
+  * Hand halten (Stand):
+  PATCH /api/blackjack/play/{gameId}/stand
+- Aktuellen Zustand eines Spiels abfragen:
+  GET /api/blackjack/play/{gameId}
 
 Regeln abrufen:
 - Generelle Regeln: GET /api/blackjack/rules
@@ -162,7 +186,12 @@ Chancen für die aktuell möglichen Spielzüge in laufendem Spiel abrufen:
 
 Statistik abrufen:
 - Allgemeine Statistik: GET /api/blackjack/stats/overview
-- User spezifische Statistiken: GET /api/blackjack/stats/user/{userId}
+- Benutzerspezifische Statistik: GET /api/blackjack/stats/user/{userId}
+
+_Für mehr Informationen zu Statistiken, siehe [Berechnung der Statistik](#berechnung-der-statistik)_
+
+**Hinweis:**  
+Die URL-Struktur `stats/user/{userId}` wurde bewusst gewählt, um mögliche Erweiterungen wie `stats/game/{gameId}` in Zukunft zu ermöglichen und die API konsistent und erweiterbar zu halten.
 
 ## Lizenzverweis
 
