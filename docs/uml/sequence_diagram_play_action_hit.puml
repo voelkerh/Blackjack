@@ -1,46 +1,62 @@
 @startuml
-title Perform Game Action – Hit
+title API Endpoint /api/blackjack/play/{gameId}/hit
 
 actor Player
 
 participant "Controller\n(Rest Adapter)" as Controller
-participant "PerformAction\n(Use Case)" as UseCase
-participant "GameService\n(Application Service)" as Service
-participant "Game\n(Domain Model)" as Domain
-participant "GameRepository\n(Port)" as RepoPort
-participant "DatabaseGameRepository\n(Adapter)" as RepoAdapter
-database "Game DB" as DB
+participant "PlayGameService\n(Use Case)" as Service
+participant "PlayGame\n(Domain Logic)" as Domain
+participant "JpaRepositoryAdapter\n(Outbound Port)" as Adapter
+database PostgresSQL as DB
 
-== Perform Hit Action Request ==
+== Player Hits in Game ==
 
-Player -> Controller : PATCH /api/blackjack/play/{gameId}/hit\n{ userId, gameState }
-Controller -> UseCase : handleAction(gameId, gameState)
+Player -> Controller : PATCH /api/blackjack/play/{gameId}/hit
+Controller -> Service : hit(HitCommand)
 
-alt gameState.status != "playing"
-    UseCase --> Controller : 405 Method Not Allowed
-    Controller --> Player : 405 Method Not Allowed
+Service -> Adapter : retrieveGame(gameId)
+Adapter -> DB : SELECT * FROM game WHERE id = gameI
 
-else active game
-        UseCase -> Service : performAction(gameId, "hit", gameState)
-        Service -> Domain : game.hit()
-        Domain --> Service : updatedGameState
+alt Game not found
+    DB --> Adapter : throws EntityNotFoundException
+    Adapter --> Service : Exception
+    Service --> Controller : GAME_NOT_FOUND
+    Controller --> Player : 404 Not Found + error message
 
-        Service -> Domain : game.checkPlayerBust()
+else Game retrieved
+DB --> Adapter : Game
+Adapter --> Service : Game
+
+    alt Game not in PLAYING state
+        Service --> Controller : GAME_NOT_RUNNING
+        Controller --> Player : 400 Bad Request + error message
+
+    else Game is playable
+
+        Service -> Domain : playPlayerTurn(game)
+        Domain --> Service : Card drawn
+
+        Service -> Adapter : saveCardDraw(gameId, Card, PLAYER)
+        Adapter -> DB : INSERT INTO drawn_cards (...)
+        DB --> Adapter
+        Adapter --> Service
+
+        Service -> Domain : isPlayerBusted(game)
         Domain --> Service : true or false
 
-        alt Player is bust
-            Service -> RepoPort : saveResult(gameId, result="lost")
-            RepoPort -> RepoAdapter : save(gameId, result="lost")
-            RepoAdapter -> DB : INSERT INTO game_result
-            DB --> RepoAdapter
-            Service --> UseCase : gameStateDto
-            UseCase --> Controller : gameStateDto (status="lost")
-            Controller --> Player : 200 OK + final game state
+        alt Player is busted
+            Service -> Domain : setGameState(LOST)
+            Service -> Adapter : updateGameState(gameId, LOST)
+            Adapter -> DB : Query to update game with new gameState
+            DB --> Adapter
+            Adapter --> Service
+            Service --> Controller : Result.success(game)
+            Controller --> Player : 200 OK + final game state (LOST)
+
+        else Player is still in the game
+            Service --> Controller : Result.success(game)
+            Controller --> Player : 200 OK + updated game state (PLAYING)
         end
-
-        Service --> UseCase : updatedGameStateDto
-        UseCase --> Controller : gameStateDto (status="playing")
-        Controller --> Player : 200 OK + new game state
-
+    end
 end
 @enduml
