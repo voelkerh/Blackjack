@@ -31,6 +31,9 @@ public class StatsController {
      *
      * @param userId The ID of the user.
      * @return a {@link ResponseEntity} containing user stats or an error message.
+     * <p>
+     * Note: The path format `/stats/user/{userId}` was intentionally chosen to allow for future
+     * expansions such as `/stats/game/{gameId}` and keep the API structure modular and scalable.
      */
     @Operation(summary = "Retrieve user stats", description = "Fetch blackjack stats for a specific user.")
     @ApiResponses({
