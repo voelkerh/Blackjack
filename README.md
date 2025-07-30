@@ -156,13 +156,26 @@ Benutzerspezifische Statistik
 - winRatio: Siegverhältnis im Format blackjack:won:lost:push
 Beispiel: 3:12:5:2 bedeutet 3 Blackjacks, 12 gewonnene, 5 verlorene und 2 unentschiedene Spiele
 - totalBet: Gesamtsumme aller getätigten Einsätze durch den Benutzer
-- netResult: Netto-Gewinn/-Verlust (Berechnung: Auszahlung - Einsatzsumme)
+- netResult: Netto-Gewinn oder -Verlust des Benutzers.
+  Berechnung: Auszahlungen – Einsätze
+
+  Auszahlungslogik pro Spiel:
+  * BLACKJACK: Auszahlung = 2.5 × Einsatz
+  * WON: Auszahlung = 2 × Einsatz
+  * PUSH: Auszahlung = 1 × Einsatz (kein Gewinn oder Verlust)
+  * LOST: keine Auszahlung (0)
 
 Allgemeine Statistik
 - totalGames: Gesamtanzahl aller beendeten Spiele aller Spieler
 - totalPlayers: Anzahl unterschiedlicher Benutzer, die mindestens ein Spiel beendet haben
-- totalBet: Gesamteinsatz aller Benutzer (Summe aller Wetteinsätze)
-- houseProfit: Gewinn des "Hauses" (Summe aller Einsätze minus Auszahlungen an Spieler)
+- totalBet: Summe aller Einsätze aller Benutzer in abgeschlossenen Spielen.
+- houseProfit: Gewinn des „Hauses“, berechnet als Differenz zwischen Einsätzen und Auszahlungen.
+
+  Berechnungslogik für den House Profit:
+  * BLACKJACK: Haus zahlt erhöhten Gewinn aus (−1.5 × Einsatz)
+  * WON: Haus zahlt den Gewinn aus (−Einsatz)
+  * PUSH: neutral (weder Gewinn noch Verlust für das Haus)
+  * LOST: Haus gewinnt den Einsatz (+Einsatz)
 
 ### Spielen über die API
 
