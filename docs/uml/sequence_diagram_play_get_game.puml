@@ -1,0 +1,33 @@
+@startuml
+title API Endpoint /api/blackjack/play/{gameId}
+
+actor Player
+
+participant "Controller\n(Rest Adapter)" as Controller
+participant "PlayGameService\n(UseCase)" as Service
+participant "JpaRepositoryAdapter\n(Outbound Port)" as Adapter
+database PostgresSQL as DB
+
+== Get Game State ==
+
+Player -> Controller : GET /api/blackjack/play/{gameId}
+Controller -> Service : getGameState(GetGameCommand)
+
+Service -> Adapter : retrieveGame(gameId)
+Adapter -> DB : SELECT * FROM game WHERE id = gameId
+
+alt Game exists
+
+    DB --> Adapter : Game data
+    Adapter --> Service : Game
+    Service --> Controller : Game
+    Controller --> Player : 200 OK + GameResponse
+
+else Game not found
+    DB --> Adapter : No result
+    Adapter --> Service : EntityNotFoundException
+    Service --> Controller : GAME_NOT_FOUND
+    Controller --> Player : 404 Not Found + error message
+
+end
+@enduml
