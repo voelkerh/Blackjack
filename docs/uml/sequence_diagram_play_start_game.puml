@@ -1,53 +1,60 @@
 @startuml
-title Start New Game – Sequence Diagram
+title API Endpoint /api/blackjack/play
 
 actor Player
 
 participant "Controller\n(Rest Adapter)" as Controller
-participant "StartGame\n(Use Case)" as UseCase
-participant "GameService\n(Application Service)" as Service
-participant "Game\n(Domain Model)" as Domain
-participant "GameRepository\n(Port)" as RepoPort
-participant "DatabaseGameRepository\n(Adapter)" as RepoAdapter
-database "Game DB" as DB
+participant "PlayGameService\n(Use Case)" as Service
+participant "PlayGame\n(Domain Logic)" as Domain
+participant "JpaRepositoryAdapter\n(Outbound Port)" as Adapter
+database PostgresSQL as DB
 
-== Start Game ==
+== Start Game Request ==
 
 Player -> Controller : POST /api/blackjack/play\n{ userId, bet }
+Controller -> Service : startGame(StartGameCommand)
 
-Controller -> UseCase : handleStartGame(userId, bet)
-UseCase -> Service : startNewGame(userId, bet)
+alt Invalid bet (<= 0)
+    Service --> Controller : INVALID_BET_AMOUNT
+    Controller --> Player : 400 Bad Request + error message
 
-Service -> Domain : BlackjackGame.getGameSetup()
-Domain --> Service : playersHand, dealersHand
+else Valid bet
 
-Service -> Domain : game.checkInitialBlackjack()
-Domain --> Service : true or false
+    Service -> Domain : new GameImpl(null, userId, bet)
+    Domain --> Service : Game
 
-alt Blackjack detected
-    Service -> Domain : game.checkDealerBlackjack()
-    Domain --> Service : true or false
+    Service -> Adapter : saveGame(Game)
+    Adapter -> DB : INSERT INTO game (...)
+    DB --> Adapter : gameId
+    Adapter --> Service : savedGame
 
-    alt Dealer also has Blackjack
-        Service -> RepoPort : saveResult(userId, bet, result = "tie")
-    else Dealer does not have Blackjack
-        Service -> RepoPort : saveResult(userId, bet, result = "won")
+    Service -> Domain : handHasInitialBlackjack(playerHand)
+    Domain --> Service : playerBJ (true/false)
+    Service -> Domain : handHasInitialBlackjack(dealerHand)
+    Domain --> Service : dealerBJ (true/false)
+
+    alt Blackjack detected
+        alt Both player and dealer have Blackjack
+            Service -> Domain : setGameState(PUSH)
+            Service -> Adapter : updateGameState(gameId, PUSH)
+
+        else Only player has Blackjack
+            Service -> Domain : setGameState(BLACKJACK)
+            Service -> Adapter : updateGameState(gameId, BLACKJACK)
+
+        else Only dealer has Blackjack
+            Service -> Domain : setGameState(LOST)
+            Service -> Adapter : updateGameState(gameId, LOST)
+        end
+
+        Adapter -> DB : Query to update GameState
+        Service --> Controller : Result.success(savedGame)
+        Controller --> Player : 200 OK + game with final state
+
+    else No Blackjack
+        Service --> Controller : Result.success(savedGame)
+        Controller --> Player : 200 OK + game with ongoing state
     end
-    RepoPort -> RepoAdapter : save(result)
-    RepoAdapter -> DB : INSERT game result
-    Service --> Controller : gameStateDto (status=result)
-    Controller --> Player : 200 OK + game state with finished status
 
-else No Blackjack
-Service -> RepoPort : createNewGameInstance(userId, bet, playersHand, dealersHand)
-RepoPort -> RepoAdapter : createNewGame(playersHand, dealersHand)
-RepoAdapter -> DB : INSERT INTO game (userId, bet, playersHand, dealersHand)
-DB --> RepoAdapter : gameId
-RepoAdapter --> RepoPort : gameId
-RepoPort --> Service : gameId
-
-Service --> UseCase : gameStateDto
-UseCase --> Controller : gameStateDto
-Controller --> Player : 200 OK + full game state with gameId
 end
 @enduml
