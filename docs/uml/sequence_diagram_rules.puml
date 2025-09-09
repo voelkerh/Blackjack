@@ -1,4 +1,4 @@
-@startuml
+@startuml sequence_diagram_rules
 title API Endpoint /api/blackjack/rules
 actor Player
 

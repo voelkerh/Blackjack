@@ -1,211 +1,171 @@
 # README
 
-*Blackjack-Microservice*
+This repository contains a microservice with a RESTful API for the game Blackjack.
 
-Modul: B42 Softwareengineering und Softwarearchitekturen
-Studiengang: Informatik in Kultur und Gesundheit
-Semester: Sommersemester 2025
-Studierende: Johanna Menzler (S0591297), Henriette Voelker (S0589167)
+![Swagger UI](/docs/screenshots/swagger_ui.png "RESTful API via Swagger UI")
 
-## Projektbeschreibung
-
-Dieses Repository enthält einen Microservice mit RESTful-API für das Spiel Blackjack.
-Das Projekt ist mit Docker containerisiert.
-Die Implementierung orientiert sich an den Prinzipien YAGNI, KISS, SOLID und DRY.
-
-### Architektur
-
-Die Implementierung folgt der hexagonalen Architektur (auch "Ports und Adapters").
-Eine zentrale Referenz für die getroffenen Design-Entscheidungen war:
-Tom Hombergs, Clean Architecture. Praxisbuch für saubere Software-Architektur und wartbaren Code, mitp 2024.
-
-Die Implementierung umfasst einen REST-Controller mit differenzierten Controller-Klassen als Inbound-Adapter.
-Der Outbound-Adapter basiert auf Jakarta Persistence und kommuniziert mit einer PostgreSQL-DB.
-Im "Hexagon", also dem Applikationskern, sind vier Use Cases mit Service-Klassen implementiert.
-Diese Struktur deckt die Anwendungsfälle Regeln abrufen, Spiel spielen, Chancen berechnen und Statistiken abrufen ab.
-
-### Kollaboration
-
-Die Zusammenarbeit haben wir über ein GitLab Repository organisiert.
-Darin haben wir ein Kanban Board angelegt.
-Die Issues haben wir wöchentlich gemeinsam definiert und priorisiert.
-Wir haben mit Issue Branches und Merge Requests gearbeitet.
-
-### Dokumentation
-
-Für das Projekt liegen ein Zustandsdiagramm, Diagramme für alle API-Endpoints und ein Komponentendiagramm vor.
-Die Diagramme sind im docs-Ordner hinterlegt.
-
-Der Code ist mit JavaDoc dokumentiert.
-Die Dokumentation für Methoden findet sich, wo anwendbar, in den Interfaces.
-Ausgenommen sind dementsprechend mit @Override markierte Methoden und auch private Hilfsmethoden.
-
-Die API ist über Swagger UI dokumentiert (siehe http://localhost:8080/swagger-ui/index.html).
-
-### Verwendete Build Tools, Libraries und Frameworks
-
-Das Projekt ist in Java 21 mit Maven als Spring Boot Application mit Jakarta Persistence umgesetzt.
-Wo es möglich ist, nutzen wir Lombok-Annotationen für Getter, Setter und Konstruktoren.
-Die Tests basieren auf JUnit 5 und Mockito als Mocking-Framework.
-Die Diagramme wurden mit PlantUML erstellt.
-
-### Test-Strategie
-
-Das Projekt beschränkt sich auf Unit-Tests.
-Bezüglich der Testabdeckung haben wir uns an Line Coverage und diversifizierten Testfällen orientiert.
-Integrationstests werden den Anforderungen entsprechend nicht implementiert.
-Für Record-Klassen sowie alle Utility-Klassen wurde nach Absprache auf Tests verzichtet.
-
-## Installationsanweisung
+### Play the Game
 
 1. Clone the repository.
 2. cd into the project root.
 3. Start docker container with `docker compose up --build`.
 4. Access Swagger UI: http://localhost:8080/swagger-ui/index.html
+5. Play using HTTP-requests. For detailed instructions, please see below.
 
-## Bedienanleitung
+### Implementation
 
-Das Spiel basiert auf einer vereinfachten Version von Blackjack.
-Es lässt sich mit HTTP-Requests über die API spielen.
+The project is implemented in Java 21 with Maven as a Spring Boot application with Jakarta Persistence. Where possible, we use Lombok annotations for getters, setters and constructors. The tests are based on JUnit 5 and Mockito as the mocking framework. The diagrams were created with PlantUML.
 
-### Spielregeln
+The implementation follows the hexagonal architecture (also known as ‘ports and adapters’). The implementation comprises a REST controller with differentiated controller classes as inbound adapters. The outbound adapter is based on Jakarta Persistence and communicates with a PostgreSQL database. Four use cases with service classes are implemented in the ‘hexagon’, i.e. the application core. This structure covers the use cases of retrieving rules, playing games, calculating odds and retrieving statistics. The project is containerised with Docker. The implementation adheres to the principles of YAGNI, KISS, SOLID, and DRY. The code is documented using JavaDoc. 
 
-Der Spieler versucht, den Dealer zu schlagen.
-Er versucht, den Wert seines Blattes näher an 21 heranzubringen,
-ohne ihn zu überschreiten oder den Dealer zum Überlaufen zu bringen.
+![Components](/docs/uml/component_diagram.drawio.png "Components")
 
-Für die Karten gilt:
-- Die Karten 2-10 entsprechen dem Kartenwert
-- Buben, Damen und Könige zählen als 10
-- Asse können 1 oder 11 sein (nach Wahl des Spielers)
+For the design decisions made, see: Tom Hombergs, Clean Architecture. Practical guide to clean software architecture and maintainable code, mitp 2024.
 
-Aufbau:
-- 1 Spieler, 1 Dealer
-- 52-Karten-Deck ohne Joker, gemischt
-- Starthand:
-    - Spieler erhält zwei Karten
-    - Dealer erhält eine offene und eine verdeckte Karte
-- Wetten:
-    - Spieler gibt seinen Einsatz ab
+## Instructions and Background Information
 
-Spielablauf:
-- Wenn der Spieler mit einem Blatt von 21 (Ass + Bube/Dame/König) beginnt, hat er einen "Blackjack".
-- Der Spieler entscheidet sich für "Hit" oder "Stand"
-    - Hit: eine weitere Karte ziehen
-      -> Wenn die Hand des Spielers 21 übersteigt, ist er pleite und verliert.
-    - Stehen: das aktuelle Blatt behalten
+The game is based on a simplified version of blackjack.
+It can be played using HTTP requests via the API.
 
-- Der Spieler wählt "Hit", bis er "Stand" wählt.
+### Rules
 
-- Dealer deckt verdeckte Karte auf
-    - Asse zählen als 11, wenn der Dealer nicht „bust“ ist
-      --> Wenn die Hand des Dealers 21 überschreitet, ist er pleite und der Spieler gewinnt.
-      --> Wenn der Dealer einen Blackjack hat, verliert der Spieler, es sei denn, er hat selbst einen Blackjack.
-    - Wenn die Hand des Dealers < 17 ist - "Hit"
-    - Wenn die Hand des Dealers >= 17 ist, endet die Runde (außer es ist ein Ass - weiche 17, der Dealer schlägt weiter)
+The player tries to beat the dealer. They try to get the value of their hand closer to 21 without going over or pushing the dealer over.
 
-- Der Gewinner der Runde wird ermittelt:
-    - Wer näher an 21 ist, gewinnt
-    - Wenn die Hand des Spielers und die des Dealers den gleichen Wert haben - "Push"
+The following applies to the cards:
+- Cards 2-10 correspond to their card value
+- Jacks, queens and kings count as 10
+- Aces can be 1 or 11 (at the player's discretion)
+- Aces can be 1 or 11 (at the player's discretion)
 
-Gewinnverteilung:
-- Spieler und Dealer haben einen Blackjack: Spieler erhält seinen Einsatz zurück ("Push")
-- Spieler gewinnt: wird im Verhältnis 1 : 1 ausgezahlt
-- Spieler verliert: verliert seinen Einsatz
-- Spieler hat einen Blackjack (und Dealer nicht): wird im Verhältnis 2 : 3 ausgezahlt
+Setup:
+- 1 player, 1 dealer
+- 52-card deck without jokers, shuffled
+- Starting hand:
+- Player receives two cards
+- Dealer receives one face-up and one face-down card
+- Player places their bet
 
-Vereinfachung: kein Split, kein Double, kein Surrender, kein Side-Betting (Insurance)
+![Game states](/docs/screenshots/state_diagram.png "State diagram for blackjack service")
 
-### Berechnung der Chancen
+Gameplay:
+- If the player starts with a hand of 21 (ace + jack/queen/king), they have ‘blackjack’.
+- The player decides to ‘hit’ or ‘stand’.
+- Hit: draw another card.
+      -> If the player's hand exceeds 21, they go bust and lose.
+- Stand: keep the current hand.
 
-Für jeden Spielstand kann ausgegeben werden,
-wie hoch die Wahrscheinlichkeit für einen Blackjack oder einen Bust beim Ziehen der nächsten Karte ist.
+- The player chooses ‘hit’ until they choose ‘stand’.
 
-Verwendet wurden folgende Formeln:
+- Dealer reveals face-down card
+  - Aces count as 11 if the dealer is not ‘bust’
+        --> If the dealer's hand exceeds 21, they are bust and the player wins.
+        --> If the dealer has blackjack, the player loses unless they also have blackjack.
+      - If the dealer's hand is < 17 - ‘hit’
+  - If the dealer's hand is >= 17, the round ends (unless it is an ace - soft 17, the dealer continues to hit)
 
-m := 1 (Anzahl der genutzen CardDecks)
-x (Wert der Karte, für die die Auftrittswahrscheinlichkeit im nächsten Zug bestimmt wird)
-N = (Gesamtanzahl der bereits gezogenen Karten, die jetzt in Spieler- oder Dealerhand sind)
-n(x) (Anzahl der Karten mit dem Wert x, die bereits gezogen wurden und jetzt in Spieler- oder Dealerhand sind)
-P := Wahrscheinlichkeit
+- The winner of the round is determined:
+  - Whoever is closer to 21 wins
+  - If the player's hand and the dealer's hand have the same value - ‘push’
 
-Wenn x != 10: P(x) = [4m - n(x)] / [52m - N]
-Wenn x == 10: P(10) = [16m - n(10)] / [52m - N]
+Payout distribution: - Player and dealer have blackjack: player gets their stake back (‘push’)
+- Player wins: paid out at a ratio of 1:1 - Player loses: loses their stake
+- Player has blackjack (and dealer does not): paid out at a ratio of 2:3
 
-Wir bestimmen P(bj) und P(bu).
-bj (x-Wert, der für einen Blackjack benötigt wird)
-bu ({x | x > bj}, Kartenwerte, für die im nächsten Zug ein Bust eintreten würde)
+Simplification: no split, no double, no surrender, no side betting (insurance)
 
-bj = 21 - playerHandTotal
-P(bj) lässt sich unmittelbar mit den obenstehenden Formeln bestimmen.
+### Play via the API
 
-Für P(bu) summieren wir alle Wahrscheinlichkeiten für Karten, die einen Bust auslösen, auf.
-P(bu) = P(x1) + ... + P(xi)
-
-Über die Formeln haben wir uns auf dieser Seite informiert: https://probability.infarom.ro/blackjack.html.
-
-### Berechnung der Statistik
-
-Die Statistikdaten bieten eine Übersicht über das Spielverhalten entweder eines einzelnen Benutzers oder aller Spieler des Blackjack-Dienstes.
-
-**Hinweis:**
-Nur abgeschlossene Spiele (Status: BLACKJACK, WON, LOST, PUSH) werden berücksichtigt. Laufende Spiele (Status: PLAYING) sind ausgeschlossen.
-
-Benutzerspezifische Statistik
-- gamesPlayed: Anzahl der beendeten Spiele, die der Benutzer gespielt hat
-- winRatio: Siegverhältnis im Format blackjack:won:lost:push
-Beispiel: 3:12:5:2 bedeutet 3 Blackjacks, 12 gewonnene, 5 verlorene und 2 unentschiedene Spiele
-- totalBet: Gesamtsumme aller getätigten Einsätze durch den Benutzer
-- netResult: Netto-Gewinn oder -Verlust des Benutzers.
-  Berechnung: Auszahlungen – Einsätze
-
-  Auszahlungslogik pro Spiel:
-  * BLACKJACK: Auszahlung = 2.5 × Einsatz
-  * WON: Auszahlung = 2 × Einsatz
-  * PUSH: Auszahlung = 1 × Einsatz (kein Gewinn oder Verlust)
-  * LOST: keine Auszahlung (0)
-
-Allgemeine Statistik
-- totalGames: Gesamtanzahl aller beendeten Spiele aller Spieler
-- totalPlayers: Anzahl unterschiedlicher Benutzer, die mindestens ein Spiel beendet haben
-- totalBet: Summe aller Einsätze aller Benutzer in abgeschlossenen Spielen.
-- houseProfit: Gewinn des „Hauses“, berechnet als Differenz zwischen Einsätzen und Auszahlungen.
-
-  Berechnungslogik für den House Profit:
-  * BLACKJACK: Haus zahlt erhöhten Gewinn aus (−1.5 × Einsatz)
-  * WON: Haus zahlt den Gewinn aus (−Einsatz)
-  * PUSH: neutral (weder Gewinn noch Verlust für das Haus)
-  * LOST: Haus gewinnt den Einsatz (+Einsatz)
-
-### Spielen über die API
-
-Spielen:
-- Neues Spiel beginnen: POST /api/blackjack/play,
-  Body: { "userId": "...", "bet": ... }
-- Spielzüge durchführen:
-  * Karte ziehen (Hit):
+Playing:
+- Start a new game: POST /api/blackjack/play,
+  Body: { ‘userId’: ‘...’, ‘bet’: ... }
+- Perform game moves:
+  * Draw card (hit):
   PATCH /api/blackjack/play/{gameId}/hit
-  * Hand halten (Stand):
+  * Hold hand (stand):
   PATCH /api/blackjack/play/{gameId}/stand
-- Aktuellen Zustand eines Spiels abfragen:
+- Query current status of a game:
   GET /api/blackjack/play/{gameId}
 
-Regeln abrufen:
-- Generelle Regeln: GET /api/blackjack/rules
-- Aktionsspezifische Regeln: GET /api/blackjack/rules/{action}, mögliche Werte: HIT, STAND
+Retrieve rules:
+- General rules: GET /api/blackjack/rules
+- Action-specific rules: GET /api/blackjack/rules/{action}, possible values: HIT, STAND
 
-Chancen für die aktuell möglichen Spielzüge in laufendem Spiel abrufen:
+Retrieve odds for currently possible moves in a running game:
 - GET /api/blackjack/chances/{gameId}
 
-Statistik abrufen:
-- Allgemeine Statistik: GET /api/blackjack/stats/overview
-- Benutzerspezifische Statistik: GET /api/blackjack/stats/user/{userId}
+Retrieve statistics:
+- General statistics: GET /api/blackjack/stats/overview
+- User-specific statistics: GET /api/blackjack/stats/user/{userId}
 
-_Für mehr Informationen zu Statistiken, siehe [Berechnung der Statistik](#berechnung-der-statistik)_
+**Note:**  
+The URL structure `stats/user/{userId}` was deliberately chosen to enable possible future extensions such as `stats/game/{gameId}` and to keep the API consistent and expandable.
 
-**Hinweis:**  
-Die URL-Struktur `stats/user/{userId}` wurde bewusst gewählt, um mögliche Erweiterungen wie `stats/game/{gameId}` in Zukunft zu ermöglichen und die API konsistent und erweiterbar zu halten.
+![Play via API](/docs/screenshots/api_hit.png "Play via the API")
 
-## Lizenzverweis
+### Calculation of Chances
+
+For each game state, it is possible to calculate
+the probability of a blackjack or a bust when drawing the next card.
+
+The following formulas were used:
+
+m := 1 (number of card decks used)
+x (value of the card for which the probability of appearance in the next turn is determined)
+N = (total number of cards already drawn that are now in the player's or dealer's hand)
+n(x) (number of cards with value x that have already been drawn and are now in the player's or dealer's hand)
+P := probability
+
+If x ≠ 10: P(x) = [4m - n(x)] / [52m - N]
+If x == 10: P(10) = [16m - n(10)] / [52m - N]
+
+We determine P(bj) and P(bu).
+bj (x-value required for a blackjack)
+bu ({x | x > bj}, card values for which a bust would occur on the next turn)
+
+bj = 21 - playerHandTotal
+P(bj) can be determined directly using the above formulas.
+
+For P(bu), we add up all the probabilities for cards that trigger a bust.
+P(bu) = P(x1) + ... + P(xi)
+
+See also: https://probability.infarom.ro/blackjack.html.
+
+### Calcuation of Statistics
+
+The statistical data provides an overview of the gaming behaviour of either an individual user or all players of the blackjack service.
+
+**Note:**
+Only completed games (status: BLACKJACK, WON, LOST, PUSH) are taken into account. Ongoing games (status: PLAYING) are excluded.
+
+Benutzerspezifische Statistik
+User-specific statistics
+- gamesPlayed: Number of completed games played by the user
+- winRatio: Win ratio in the format blackjack:won:lost:push
+Example: 3:12:5:2 means 3 blackjacks, 12 wins, 5 losses and 2 ties
+- totalBet: Total amount of all bets placed by the user
+- netResult: Net profit or loss of the user.
+  Calculation: Payouts – bets
+
+    Payout logic per game:
+    * BLACKJACK: Payout = 2.5 × stake
+    * WON: Payout = 2 × stake
+    * PUSH: Payout = 1 × stake (no win or loss)
+    * LOST: No payout (0)
+
+General statistics
+- totalGames: Total number of games completed by all players
+- totalPlayers: Number of different users who have completed at least one game
+- totalBet: Total amount wagered by all users in completed games.
+- houseProfit: Profit for the ‘house’, calculated as the difference between wagers and payouts.
+
+  Calculation logic for house profit:
+  * BLACKJACK: House pays out increased profit (−1.5 × stake)
+  * WON: House pays out profit (−stake)
+  * PUSH: neutral (neither profit nor loss for the house)
+  * LOST: House wins the stake (+stake)
+
+## License
 
 Blackjack Micro-Service by Johanna Menzler and Henriette Voelker is marked CC0 1.0.
+
+The project is a coursework assignment for the Software Engineering and Software Architectures course. The authors are Johanna Menzler and Henriette Voelker.
